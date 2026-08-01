@@ -4,28 +4,28 @@
 
 ## About
 
-- [Home](https://www.seraphbuilder.com/)
-- [Our Services](https://www.seraphbuilder.com/#services)
-- [Featured Projects](https://www.seraphbuilder.com/#projects)
-- [About Us](https://www.seraphbuilder.com/#about)
-- [Client Testimonials](https://www.seraphbuilder.com/#testimonials)
-- [Contact](https://www.seraphbuilder.com/#contact)
+- [Home](/)
+- [Our Services](/#services)
+- [Featured Projects](/#projects)
+- [About Us](/#about)
+- [Client Testimonials](/#testimonials)
+- [Contact](/#contact)
 
 ## Services
 
-- [Construction](https://www.seraphbuilder.com/#services) — Turnkey residential and commercial construction with premium finishes.
-- [Interior Design](https://www.seraphbuilder.com/#services) — Bespoke interiors from concept and 3D visualisation to execution.
-- [Commercial](https://www.seraphbuilder.com/#services) — Commercial fit-outs and corporate spaces.
-- [Renovation](https://www.seraphbuilder.com/#services) — Structural upgrades and refined finish restoration.
+- [Construction](/#services) — Turnkey residential and commercial construction with premium finishes.
+- [Interior Design](/#services) — Bespoke interiors from concept and 3D visualisation to execution.
+- [Commercial](/#services) — Commercial fit-outs and corporate spaces.
+- [Renovation](/#services) — Structural upgrades and refined finish restoration.
 
 ## Featured Projects
 
-- [Villa Seraph](https://www.seraphbuilder.com/#projects) — Private residence.
-- [The Glasshouse](https://www.seraphbuilder.com/#projects) — Contemporary family home.
-- [Hotel Aurelia](https://www.seraphbuilder.com/#projects) — Boutique hotel interiors.
-- [Penthouse Noir](https://www.seraphbuilder.com/#projects) — Skyline penthouse.
-- [Garden Pavilion](https://www.seraphbuilder.com/#projects) — Heritage home restoration.
-- [Skyline Offices](https://www.seraphbuilder.com/#projects) — Corporate headquarters.
+- [Villa Seraph](/#projects) — Private residence.
+- [The Glasshouse](/#projects) — Contemporary family home.
+- [Hotel Aurelia](/#projects) — Boutique hotel interiors.
+- [Penthouse Noir](/#projects) — Skyline penthouse.
+- [Garden Pavilion](/#projects) — Heritage home restoration.
+- [Skyline Offices](/#projects) — Corporate headquarters.
 
 ## Contact
 
@@ -33,9 +33,8 @@
 - Address: 715-A, 7th Floor, Spencer Plaza, Anna Salai, Chennai 600002, Tamil Nadu, India
 - Phone: +91 90925 57722
 - Email: seraphbuildconstruction@gmail.com
-- Website: https://www.seraphbuilder.com
+- Website: www.seraphbuilder.com
 
 ## SEO
 
-- [Sitemap](https://www.seraphbuilder.com/sitemap.xml)
-- [Robots](https://www.seraphbuilder.com/robots.txt)
+- [Robots](/robots.txt)

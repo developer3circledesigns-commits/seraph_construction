@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://www.seraphbuilder.com/sitemap.xml
+Disallow: /assets/

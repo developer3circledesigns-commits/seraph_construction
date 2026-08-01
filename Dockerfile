@@ -8,7 +8,6 @@ COPY js ./js
 COPY images ./images
 COPY scroll-layouts ./scroll-layouts
 COPY robots.txt ./
-COPY sitemap.xml ./
 COPY llms.txt ./
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
