@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testimonials 01 — Single Split Carousel | SERAPH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#001431;--bg2:#0A2540;--gold:#E7C959;--white:#fff;--gray:#CFCFCF;--muted:#9D9D9D;
+    --font:'Poppins',sans-serif;--display:'Montserrat',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--gray);font-family:var(--font);line-height:1.7;overflow-x:hidden}
+  h1,h2,h3{font-family:var(--display);color:var(--white);line-height:1.15}
+  img{max-width:100%;display:block}
+  a{text-decoration:none}
+  .container{width:min(1200px,92%);margin:0 auto}
+  .topbar{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;z-index:1000;background:rgba(0,20,49,.65);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .topbar .brand{font-family:var(--display);color:var(--white);font-weight:700;letter-spacing:3px}
+  .topbar .brand em{color:var(--gold);font-style:normal}
+  .topbar a{font-family:var(--display);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  .topbar a:hover{color:var(--gold)}
+  .eyebrow{display:block;color:var(--gold);font-family:var(--display);font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+  /* Testimonials 01 */
+  .quotes{padding:150px 0 120px}
+  .quotes-head{max-width:640px;margin-bottom:72px}
+  .quotes-head h1{font-size:clamp(36px,6vw,64px);letter-spacing:-.02em;margin-bottom:20px}
+  .quotes-head p{color:var(--muted);font-size:16px}
+  .slide{display:grid;grid-template-columns:280px 1fr;gap:72px;align-items:center}
+  .slide__portrait{position:relative;width:280px;height:360px;overflow:hidden}
+  .slide__portrait img{width:100%;height:100%;object-fit:cover}
+  .slide__portrait::after{content:'';position:absolute;inset:auto 0 0 0;height:4px;background:var(--gold)}
+  .slide__quote{position:relative;padding-left:48px}
+  .slide__quote::before{content:'\201C';position:absolute;left:0;top:-24px;font-family:var(--display);font-size:120px;line-height:1;color:var(--gold);opacity:.5}
+  .slide__quote blockquote{font-size:clamp(20px,2.6vw,30px);line-height:1.5;color:var(--white);font-weight:500;margin-bottom:28px}
+  .slide__quote .who{font-family:var(--display);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+  .slide__quote .role{font-size:13px;color:var(--muted)}
+  /* Controls */
+  .carousel{position:relative;height:360px;overflow:hidden}
+  .carousel .slide{position:absolute;inset:0;opacity:0;visibility:hidden}
+  .carousel .slide.is-active{opacity:1;visibility:visible}
+  .controls{display:flex;gap:14px;margin-top:48px}
+  .controls button{width:52px;height:52px;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--white);font-size:18px;cursor:pointer;transition:.3s}
+  .controls button:hover{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+  .dots{display:flex;gap:8px;align-items:center;margin-left:8px}
+  .dots span{width:8px;height:8px;border-radius:50%;border:1px solid rgba(255,255,255,.45);cursor:pointer;transition:.3s}
+  .dots span.is-active{background:var(--gold);border-color:var(--gold)}
+  @media (max-width:768px){
+    .slide{grid-template-columns:1fr;gap:32px}
+    .slide__portrait{width:100%;height:320px}
+    .slide__quote{padding-left:0}
+  }
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand">SERAPH <em>01</em></span>
+  <a href="index.html">All Samples</a>
+</header>
+
+<section class="quotes">
+  <div class="container">
+    <div class="quotes-head">
+      <span class="eyebrow" data-reveal>Testimonials &middot; Single Split</span>
+      <h1 data-reveal>What Our Clients Say</h1>
+      <p data-reveal>One voice at a time, beside the face behind it. Click or tap through the carousel.</p>
+    </div>
+
+    <div class="carousel" id="quotesCarousel">
+      <article class="slide is-active">
+        <div class="slide__portrait"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80" alt="Anita Sharma" width="600" height="800"></div>
+        <div class="slide__quote">
+          <blockquote>They rebuilt our villa to the millimetre. Every deadline met, every detail honoured — the most painless build we have ever had.</blockquote>
+          <div class="who">Anita Sharma</div>
+          <div class="role">Villa Owner &middot; Palm Meadows</div>
+        </div>
+      </article>
+      <article class="slide">
+        <div class="slide__portrait"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80" alt="Rohit Menon" width="600" height="800"></div>
+        <div class="slide__quote">
+          <blockquote>The modular kitchen is flawless — soft-close everything, perfect lighting, and the team finished a week early.</blockquote>
+          <div class="who">Rohit Menon</div>
+          <div class="role">Homeowner &middot; Residency Towers</div>
+        </div>
+      </article>
+      <article class="slide">
+        <div class="slide__portrait"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=600&q=80" alt="Meera Iyer" width="600" height="800"></div>
+        <div class="slide__quote">
+          <blockquote>From concept to keys, one team handled everything. Transparent pricing and a finish that still turns heads three years on.</blockquote>
+          <div class="who">Meera Iyer</div>
+          <div class="role">Interior Client &middot; The Crest</div>
+        </div>
+      </article>
+    </div>
+
+    <div class="controls">
+      <button id="prevBtn" aria-label="Previous testimonial">&#8592;</button>
+      <button id="nextBtn" aria-label="Next testimonial">&#8594;</button>
+      <div class="dots" id="dots"></div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+gsap.utils.toArray('[data-reveal]').forEach((el) => {
+  gsap.from(el, {
+    opacity: 0, y: 40, duration: 0.9, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' },
+  });
+});
+
+const slides = gsap.utils.toArray('#quotesCarousel .slide');
+const dotsWrap = document.getElementById('dots');
+let index = 0;
+
+slides.forEach((s, i) => {
+  const d = document.createElement('span');
+  d.classList.toggle('is-active', i === 0);
+  d.addEventListener('click', () => go(i));
+  dotsWrap.appendChild(d);
+});
+
+function go(i) {
+  index = (i + slides.length) % slides.length;
+  slides.forEach((s, k) => s.classList.toggle('is-active', k === index));
+  Array.from(dotsWrap.children).forEach((d, k) => d.classList.toggle('is-active', k === index));
+  if (!reduce) {
+    gsap.fromTo(slides[index], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' });
+    gsap.fromTo(slides[index].querySelectorAll('blockquote,.who,.role'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: 'power2.out' });
+  }
+}
+
+document.getElementById('nextBtn').addEventListener('click', () => go(index + 1));
+document.getElementById('prevBtn').addEventListener('click', () => go(index - 1));
+
+setInterval(() => { if (!reduce) go(index + 1); }, 6000);
+</script>
+</body>
+</html>

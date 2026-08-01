@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Footer 03 — Stacked Giant Type | SERAPH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#001431;--bg2:#0A2540;--gold:#E7C959;--white:#fff;--gray:#CFCFCF;--muted:#9D9D9D;
+    --font:'Poppins',sans-serif;--display:'Montserrat',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--gray);font-family:var(--font);line-height:1.7;overflow-x:hidden}
+  h1,h2,h3{font-family:var(--display);color:var(--white);line-height:1.15}
+  a{text-decoration:none;color:inherit}
+  .container{width:min(1200px,92%);margin:0 auto}
+  .topbar{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;z-index:1000;background:rgba(0,20,49,.65);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .topbar .brand{font-family:var(--display);color:var(--white);font-weight:700;letter-spacing:3px}
+  .topbar .brand em{color:var(--gold);font-style:normal}
+  .topbar a{font-family:var(--display);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  .topbar a:hover{color:var(--gold)}
+  .eyebrow{display:block;color:var(--gold);font-family:var(--display);font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+  .spacer{height:60vh;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+  /* Footer 03 */
+  .footer{background:var(--bg2);border-top:1px solid rgba(255,255,255,.08);overflow:hidden}
+  .footer__type{padding:100px 0 40px;text-align:center}
+  .footer__type h2{font-family:var(--display);font-size:clamp(56px,13vw,180px);font-weight:800;letter-spacing:-.03em;line-height:.9;color:var(--white);text-transform:uppercase;overflow:hidden}
+  .footer__type .line{display:block;overflow:hidden}
+  .footer__type .line span{display:block;transform:translateY(110%)}
+  .footer__type .line--gold span{color:var(--gold)}
+  .footer__body{padding:64px 0 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:48px;border-top:1px solid rgba(255,255,255,.08)}
+  .footer__col h3{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--white);margin-bottom:20px}
+  .footer__col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .footer__col a{font-size:14px;color:var(--muted);transition:.3s}
+  .footer__col a:hover{color:var(--gold)}
+  .footer__bottom{padding:28px 0;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:13px}
+  .socials{display:flex;gap:12px}
+  .socials a{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.15);font-size:13px;transition:.3s}
+  .socials a:hover{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand">SERAPH <em>03</em></span>
+  <a href="index.html">All Samples</a>
+</header>
+
+<div class="spacer">Scroll down to the footer</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__type">
+      <h2 class="type-heading" aria-label="SERAPH BUILD CONSTRUCTION">
+        <span class="line"><span>SERAPH</span></span>
+        <span class="line line--gold"><span>BUILD</span></span>
+        <span class="line"><span>CONSTRUCTION</span></span>
+      </h2>
+    </div>
+
+    <div class="footer__body">
+      <div class="footer__col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Testimonials</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3>Work</h3>
+        <ul>
+          <li><a href="#">Interiors</a></li>
+          <li><a href="#">Kitchens</a></li>
+          <li><a href="#">Materials</a></li>
+          <li><a href="#">Renovation</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3>Contact</h3>
+        <ul>
+          <li><a href="#">+91 98 0000 0000</a></li>
+          <li><a href="#">hello@seraphbuild.com</a></li>
+          <li><a href="#">12 Craft Lane, Design District</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3>Follow</h3>
+        <div class="socials">
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="Facebook">FB</a>
+          <a href="#" aria-label="LinkedIn">IN</a>
+          <a href="#" aria-label="YouTube">YT</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <div class="container" style="display:flex;justify-content:space-between;width:100%;align-items:center;flex-wrap:wrap;gap:12px">
+      <span>&copy; 2026 SERAPH BUILD CONSTRUCTION. All rights reserved.</span>
+      <span>Built with craft &middot; Made to last</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!reduce) {
+  // Giant type rises out of its masks line by line as it enters
+  gsap.to('.footer__type .line span', {
+    y: '0%',
+    duration: 1.1,
+    stagger: 0.18,
+    ease: 'power4.out',
+    scrollTrigger: { trigger: '.footer__type', start: 'top 85%', toggleActions: 'play none none none' },
+  });
+
+  // Contact columns fade up beneath
+  gsap.from('.footer__body > *', {
+    opacity: 0, y: 40, duration: 0.8, stagger: 0.12, ease: 'power2.out',
+    scrollTrigger: { trigger: '.footer__body', start: 'top 92%', toggleActions: 'play none none none' },
+  });
+} else {
+  document.querySelectorAll('.footer__type .line span').forEach(el => el.style.transform = 'translateY(0)');
+}
+</script>
+</body>
+</html>

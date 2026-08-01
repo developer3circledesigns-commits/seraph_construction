@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layout 14 — Vertical Accordion | SERAPH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  .acc-sec{position:relative;height:400vh;background:var(--bg2)}
+  .acc-sticky{position:sticky;top:0;height:100vh;height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:90px 6vw 70px;overflow:hidden}
+  .acc-head{margin-bottom:24px}
+  .acc-head h2{font-size:clamp(26px,4vw,46px)}
+  .acc{flex:1;display:flex;flex-direction:column;gap:12px;min-height:0}
+  .acc-item{flex:1;border-radius:18px;overflow:hidden;position:relative;min-height:0;will-change:flex-grow}
+  .acc-item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .acc-item::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,20,49,.92))}
+  .acc-item__cap{position:absolute;left:24px;right:24px;bottom:20px;z-index:2}
+  .acc-item__cap h3{font-size:clamp(20px,3vw,32px);margin-bottom:4px}
+  .acc-item__cap p{color:var(--muted);font-size:13px;max-width:460px;opacity:0;transition:opacity .4s .2s}
+  .acc-item.is-open .acc-item__cap p{opacity:1}
+  @media (max-width:768px){
+    .acc-sticky{padding:90px 4vw 60px}
+    .acc{gap:8px}
+    .acc-item__cap p{display:none}
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand">SERAPH <em>14</em></span>
+  <a href="index.html">All Layouts</a>
+</header>
+
+<section class="intro">
+  <div class="container">
+    <span class="eyebrow">Layout 14 &middot; Vertical Accordion</span>
+    <h1>One panel opens, the rest listen</h1>
+  </div>
+</section>
+
+<div class="acc-sec">
+  <div class="acc-sticky">
+    <div class="acc-head">
+      <span class="eyebrow">Our Services</span>
+      <h2>Scroll — each stage takes its turn</h2>
+    </div>
+    <div class="acc" id="acc">
+      <div class="acc-item" data-acc>
+        <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80" alt="Architecture" width="1200" height="800">
+        <div class="acc-item__cap"><h3>Architecture</h3><p>Concept, massing and planning — born on the site, drawn in three dimensions.</p></div>
+      </div>
+      <div class="acc-item" data-acc>
+        <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1200&q=80" alt="Construction" width="1200" height="800">
+        <div class="acc-item__cap"><h3>Construction</h3><p>In-house site teams delivering structure, services and finishes to schedule.</p></div>
+      </div>
+      <div class="acc-item" data-acc>
+        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80" alt="Interiors" width="1200" height="800">
+        <div class="acc-item__cap"><h3>Interiors</h3><p>Custom joinery, lighting and material palettes that age gracefully.</p></div>
+      </div>
+      <div class="acc-item" data-acc>
+        <img src="https://images.unsplash.com/photo-1556912173-46c336c7fd55?auto=format&fit=crop&w=1200&q=80" alt="Kitchens" width="1200" height="800">
+        <div class="acc-item__cap"><h3>Modular Kitchens</h3><p>Precision-manufactured kitchens engineered for the way you live.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="intro" style="min-height:50vh;align-items:center;text-align:center">
+  <div class="container">
+    <span class="eyebrow">After the accordion</span>
+    <h1 style="margin:0 auto">A calm menu of four services</h1>
+    <p style="color:var(--muted);max-width:440px;margin:16px auto 28px">Scrub the timeline — one panel grows while the others yield.</p>
+    <a class="btn btn--solid" href="index.html">Choose This Layout</a>
+  </div>
+</section>
+
+<footer>SERAPH Construction &middot; Vertical Accordion Layout</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!reduce) {
+  gsap.from('.intro h1', { y: 60, opacity: 0, duration: 1, ease: 'power3.out' });
+
+  const items = gsap.utils.toArray('[data-acc]');
+  const N = items.length;
+
+  // Pinned scrub timeline — one panel expands per segment
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '.acc-sec',
+      start: 'top top',
+      end: 'bottom bottom',
+      pin: '.acc-sticky',
+      scrub: 1,
+    },
+  });
+
+  for (let i = 0; i < N; i++) {
+    const others = items.filter((_, j) => j !== i);
+    tl.call(() => {
+      items.forEach(it => it.classList.remove('is-open'));
+      items[i].classList.add('is-open');
+    });
+    tl.to(items[i], { flexGrow: 3.2, duration: 0.35, ease: 'power2.inOut' }, i * 0.1);
+    tl.to(others, { flexGrow: 0.6, duration: 0.35, ease: 'power2.inOut' }, i * 0.1);
+  }
+
+  // First item open by default before scroll reaches the pin
+  items[0].classList.add('is-open');
+} else {
+  document.querySelector('[data-acc]').classList.add('is-open');
+}
+</script>
+</body>
+</html>

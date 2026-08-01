@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About 03 — Sticky Stats | SERAPH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#001431;--bg2:#0A2540;--gold:#E7C959;--white:#fff;--gray:#CFCFCF;--muted:#9D9D9D;
+    --font:'Poppins',sans-serif;--display:'Montserrat',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--gray);font-family:var(--font);line-height:1.7;overflow-x:hidden}
+  h1,h2,h3{font-family:var(--display);color:var(--white);line-height:1.15}
+  img{max-width:100%;display:block}
+  a{text-decoration:none}
+  .container{width:min(1200px,92%);margin:0 auto}
+  .topbar{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;z-index:1000;background:rgba(0,20,49,.65);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .topbar .brand{font-family:var(--display);color:var(--white);font-weight:700;letter-spacing:3px}
+  .topbar .brand em{color:var(--gold);font-style:normal}
+  .topbar a{font-family:var(--display);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  .topbar a:hover{color:var(--gold)}
+  .eyebrow{display:block;color:var(--gold);font-family:var(--display);font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+  /* About 03 */
+  .about{padding:140px 0 120px}
+  .about-head{max-width:640px;margin-bottom:80px}
+  .about-head h1{font-size:clamp(36px,6vw,64px);letter-spacing:-.02em;margin-bottom:20px}
+  .about-head p{color:var(--muted);font-size:16px}
+  .pin-stage{position:relative;height:220vh}
+  .pin-inner{position:sticky;top:0;height:100vh;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;overflow:hidden}
+  .pin-media{height:100%;overflow:hidden}
+  .pin-media img{width:100%;height:100%;object-fit:cover}
+  .pin-copy{max-width:480px}
+  .pin-copy h2{font-size:clamp(28px,4vw,46px);margin-bottom:18px}
+  .pin-copy p{color:var(--muted);margin-bottom:36px}
+  .stat-row{display:flex;flex-wrap:wrap;gap:16px 40px}
+  .stat .num{font-family:var(--display);font-size:clamp(36px,4.5vw,52px);font-weight:700;color:var(--white)}
+  .stat .num sup{color:var(--gold);font-size:22px}
+  .stat p{font-family:var(--display);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+  @media (max-width:768px){
+    .pin-inner{grid-template-columns:1fr;gap:24px}
+    .pin-media{height:42vh}
+    .pin-copy{max-width:100%}
+  }
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand">SERAPH <em>03</em></span>
+  <a href="index.html">All Samples</a>
+</header>
+
+<section class="about">
+  <div class="container">
+    <div class="about-head">
+      <span class="eyebrow" data-reveal>About Us &middot; Sticky Stats</span>
+      <h1 data-reveal>Slow, Steady, Certain</h1>
+      <p data-reveal>The image holds while the story and numbers scrub past it — a measured reveal for a measured company.</p>
+    </div>
+  </div>
+
+  <div class="pin-stage">
+    <div class="pin-inner">
+      <div class="pin-media">
+        <img src="https://images.unsplash.com/photo-1556912173-46c336c7fd55?auto=format&fit=crop&w=1200&q=80" alt="Craftsperson at work" width="1200" height="1500">
+      </div>
+      <div class="pin-copy">
+        <span class="eyebrow">The Numbers That Matter</span>
+        <h2>Craft You Can Count</h2>
+        <p>We don't chase volume — we repeat excellence. These numbers are the quiet proof of twenty years of doing one thing properly.</p>
+        <div class="stat-row">
+          <div class="stat"><div class="num"><span class="counter" data-target="150">0</span><sup>+</sup></div><p>Projects</p></div>
+          <div class="stat"><div class="num"><span class="counter" data-target="20">0</span><sup>+</sup></div><p>Years</p></div>
+          <div class="stat"><div class="num"><span class="counter" data-target="98">0</span><sup>%</sup></div><p>Referrals</p></div>
+          <div class="stat"><div class="num"><span class="counter" data-target="50">0</span><sup>+</sup></div><p>Experts</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!reduce) {
+  gsap.from('.pin-copy', {
+    y: 0, opacity: 0, duration: 1, ease: 'power2.out',
+    scrollTrigger: { trigger: '.pin-stage', start: 'top top', end: 'top 30%', scrub: true },
+  });
+
+  // Image zoom during pin
+  gsap.fromTo('.pin-media img',
+    { scale: 1.12 },
+    {
+      scale: 1, ease: 'none',
+      scrollTrigger: { trigger: '.pin-stage', start: 'top top', end: 'bottom bottom', scrub: true },
+    });
+
+  // Counters fire when they enter
+  gsap.utils.toArray('.counter').forEach((c) => {
+    ScrollTrigger.create({
+      trigger: c, start: 'top 85%', once: true,
+      onEnter: () => {
+        const target = parseInt(c.dataset.target, 10);
+        const obj = { val: 0 };
+        gsap.to(obj, { val: target, duration: 2, ease: 'power2.out',
+          onUpdate: () => { c.textContent = Math.floor(obj.val); } });
+      },
+    });
+  });
+} else {
+  document.querySelectorAll('[data-reveal]').forEach(el => el.style.opacity = 1);
+  document.querySelectorAll('.counter').forEach(c => c.textContent = c.dataset.target);
+}
+</script>
+</body>
+</html>

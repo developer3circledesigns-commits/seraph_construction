@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layout 08 — Scroll-Driven Marquee | SERAPH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  .marquee-pin{position:relative;height:320vh}
+  .marquee-sticky{position:sticky;top:0;height:100vh;height:100dvh;display:flex;flex-direction:column;justify-content:center;gap:24px;overflow:hidden;background:var(--bg2)}
+  .marquee{display:flex;width:max-content;will-change:transform}
+  .marquee__track{display:flex;align-items:center;gap:56px;padding-right:56px;font-family:var(--display);font-weight:700;font-size:clamp(52px,10vw,130px);line-height:1.1;text-transform:uppercase;letter-spacing:.01em;white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.28)}
+  .marquee__track b{color:var(--gold);-webkit-text-stroke:0;font-weight:700}
+  .marquee--2 .marquee__track{color:var(--gold);-webkit-text-stroke:0;opacity:.95}
+  .marquee--2 .marquee__track b{color:var(--white)}
+  .marquee__label{position:absolute;left:0;right:0;bottom:24px;text-align:center;font-family:var(--display);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+  @media (max-width:768px){
+    .marquee__track{gap:32px;padding-right:32px}
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand">SERAPH <em>08</em></span>
+  <a href="index.html">All Layouts</a>
+</header>
+
+<section class="intro">
+  <div class="container">
+    <span class="eyebrow">Layout 08 &middot; Scroll-Driven Marquee</span>
+    <h1>Two rivers of words, driven by your scroll</h1>
+  </div>
+</section>
+
+<div class="marquee-pin">
+  <div class="marquee-sticky">
+    <div class="marquee" data-row="1">
+      <div class="marquee__track">Architecture <b>&#9670;</b> Interiors <b>&#9670;</b> Construction <b>&#9670;</b> Renovation <b>&#9670;</b> Design <b>&#9670;</b> </div>
+      <div class="marquee__track" aria-hidden="true">Architecture <b>&#9670;</b> Interiors <b>&#9670;</b> Construction <b>&#9670;</b> Renovation <b>&#9670;</b> Design <b>&#9670;</b> </div>
+    </div>
+    <div class="marquee" data-row="2">
+      <div class="marquee__track">Luxury <b>&#9670;</b> Precision <b>&#9670;</b> Timeless <b>&#9670;</b> Bespoke <b>&#9670;</b> Craft <b>&#9670;</b> </div>
+      <div class="marquee__track" aria-hidden="true">Luxury <b>&#9670;</b> Precision <b>&#9670;</b> Timeless <b>&#9670;</b> Bespoke <b>&#9670;</b> Craft <b>&#9670;</b> </div>
+    </div>
+    <div class="marquee__label">Keep scrolling — the rows sweep in opposite directions</div>
+  </div>
+</div>
+
+<section class="intro" style="min-height:60vh;align-items:center;text-align:center">
+  <div class="container">
+    <span class="eyebrow">After the marquee</span>
+    <h1 style="margin:0 auto">Scroll velocity becomes visual rhythm</h1>
+    <p style="color:var(--muted);max-width:480px;margin:16px auto 28px">Marquee bands are a bold separator — great between a hero and the first content block.</p>
+    <a class="btn btn--solid" href="index.html">Choose This Layout</a>
+  </div>
+</section>
+
+<footer>SERAPH Construction &middot; Scroll-Driven Marquee Layout</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!reduce) {
+  gsap.from('.intro h1', { y: 60, opacity: 0, duration: 1, ease: 'power3.out' });
+
+  // Seamless loop: two copies per row, so -50% equals exactly one copy width
+  const rows = gsap.utils.toArray('[data-row]');
+  rows.forEach((row, idx) => {
+    const dir = idx === 0 ? -1 : 1;
+    gsap.fromTo(row, { xPercent: 0 }, {
+      xPercent: dir * 50,
+      ease: 'none',
+      scrollTrigger: { trigger: '.marquee-pin', start: 'top bottom', end: 'bottom top', scrub: 1 },
+    });
+  });
+}
+</script>
+</body>
+</html>

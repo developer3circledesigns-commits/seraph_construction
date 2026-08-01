@@ -1,0 +1,65 @@
+# =====================================================================
+# SERAPH BUILD CONSTRUCTION — .gitignore
+# =====================================================================
+
+# ---- Dependencies ----
+node_modules/
+
+# ---- Build / output ----
+dist/
+build/
+out/
+
+# ---- Environment variables ----
+.env
+.env.*
+!.env.example
+
+# ---- Logs ----
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ---- OS-generated files ----
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Thumbs.db:encryptable
+desktop.ini
+
+# ---- Editor / IDE ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.sess
+*~
+*.code-workspace
+
+# ---- Temporary / backup files ----
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+*.backup
+*.sass-cache/
+*.css.map
+
+# ---- Unused original image sources (backup folder, not served by the site) ----
+images/_originals/
+
+# ---- Docker local data ----
+docker-volumes/
+
+# ---- Misc ----
+*.zip
+*.tar.gz

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About 02 — Image Mask + Timeline | SERAPH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#001431;--bg2:#0A2540;--gold:#E7C959;--white:#fff;--gray:#CFCFCF;--muted:#9D9D9D;
+    --font:'Poppins',sans-serif;--display:'Montserrat',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--gray);font-family:var(--font);line-height:1.7;overflow-x:hidden}
+  h1,h2,h3{font-family:var(--display);color:var(--white);line-height:1.15}
+  img{max-width:100%;display:block}
+  a{text-decoration:none}
+  .container{width:min(1200px,92%);margin:0 auto}
+  .topbar{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;z-index:1000;background:rgba(0,20,49,.65);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .topbar .brand{font-family:var(--display);color:var(--white);font-weight:700;letter-spacing:3px}
+  .topbar .brand em{color:var(--gold);font-style:normal}
+  .topbar a{font-family:var(--display);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  .topbar a:hover{color:var(--gold)}
+  .eyebrow{display:block;color:var(--gold);font-family:var(--display);font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+  /* About 02 */
+  .about{padding:150px 0 120px}
+  .about-head{max-width:720px;margin-bottom:80px}
+  .about-head h1{font-size:clamp(36px,6vw,64px);letter-spacing:-.02em;margin-bottom:20px}
+  .about-head p{color:var(--muted);font-size:16px}
+  .mask-wrap{overflow:hidden;margin-bottom:120px}
+  .mask-wrap img{width:100%;height:520px;object-fit:cover;clip-path:inset(0 100% 0 0)}
+  .about-text{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:120px}
+  .about-text h2{font-size:clamp(26px,3.5vw,40px);margin-bottom:18px}
+  .about-text p{color:var(--muted)}
+  /* Timeline */
+  .timeline{position:relative;max-width:760px;margin:0 auto}
+  .timeline__line{position:absolute;left:11px;top:0;bottom:0;width:2px;background:rgba(255,255,255,.12)}
+  .timeline__line-fill{position:absolute;left:0;top:0;width:100%;height:0;background:var(--gold)}
+  .tl-item{position:relative;padding:0 0 48px 56px}
+  .tl-item::before{content:'';position:absolute;left:4px;top:6px;width:16px;height:16px;border-radius:50%;border:2px solid var(--gold);background:var(--bg)}
+  .tl-item .year{font-family:var(--display);color:var(--gold);font-size:13px;letter-spacing:2px;text-transform:uppercase}
+  .tl-item h3{font-size:22px;margin:6px 0 8px}
+  .tl-item p{color:var(--muted);font-size:14px;max-width:520px}
+  @media (max-width:768px){
+    .about-text{grid-template-columns:1fr;gap:24px}
+    .mask-wrap img{height:300px}
+  }
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand">SERAPH <em>02</em></span>
+  <a href="index.html">All Samples</a>
+</header>
+
+<section class="about">
+  <div class="container">
+    <div class="about-head">
+      <span class="eyebrow" data-reveal>About Us &middot; Image Mask</span>
+      <h1 data-reveal>The Story Behind the Build</h1>
+      <p data-reveal>A cinematic wipe reveals who we are, then a timeline draws down through two decades of milestones.</p>
+    </div>
+
+    <div class="mask-wrap">
+      <img id="aboutMask" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80" alt="Construction team on site" width="1400" height="933">
+    </div>
+
+    <div class="about-text">
+      <div>
+        <span class="eyebrow" data-reveal>Who We Are</span>
+        <h2 data-reveal>A Family of Builders</h2>
+      </div>
+      <p data-reveal>SERAPH BUILD CONSTRUCTION began as two brothers, a truck and a promise to build things right. Today we are fifty craftspeople — architects, engineers and site teams — sharing that same promise on every project.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline__line"><div class="timeline__line-fill" id="tlFill"></div></div>
+      <div class="tl-item">
+        <span class="year">2005</span>
+        <h3>Founded in a Backyard Workshop</h3>
+        <p>First residential build completed in under four months — still standing, still flawless.</p>
+      </div>
+      <div class="tl-item">
+        <span class="year">2011</span>
+        <h3>First Modular Kitchen Studio</h3>
+        <p>Brought precision-engineered kitchens in-house, cutting delivery times in half.</p>
+      </div>
+      <div class="tl-item">
+        <span class="year">2018</span>
+        <h3>150th Project Delivered</h3>
+        <p>Crossed the milestone with a lakeside villa and a 98% referral rate.</p>
+      </div>
+      <div class="tl-item">
+        <span class="year">2024</span>
+        <h3>Full-Service Turnkey Studio</h3>
+        <p>Architecture, interiors, materials and renovation now under one accountable roof.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!reduce) {
+  gsap.utils.toArray('[data-reveal]').forEach((el) => {
+    gsap.from(el, {
+      opacity: 0, y: 40, duration: 0.9, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' },
+    });
+  });
+
+  // Cinematic clip-path wipe on the hero image
+  gsap.to('#aboutMask', {
+    clipPath: 'inset(0 0% 0 0)',
+    ease: 'power3.inOut',
+    scrollTrigger: { trigger: '.mask-wrap', start: 'top 80%', end: 'top 30%', scrub: true },
+  });
+
+  // Timeline line draws down + milestones slide in
+  gsap.to('#tlFill', {
+    height: '100%',
+    ease: 'none',
+    scrollTrigger: { trigger: '.timeline', start: 'top 75%', end: 'bottom 55%', scrub: true },
+  });
+  gsap.utils.toArray('.tl-item').forEach((item, i) => {
+    gsap.from(item, {
+      opacity: 0, x: i % 2 ? 60 : -60, duration: 0.9, ease: 'power3.out',
+      scrollTrigger: { trigger: item, start: 'top 82%', toggleActions: 'play none none none' },
+    });
+  });
+} else {
+  document.querySelectorAll('[data-reveal]').forEach(el => el.style.opacity = 1);
+  document.getElementById('aboutMask').style.clipPath = 'inset(0 0 0 0)';
+  document.getElementById('tlFill').style.height = '100%';
+}
+</script>
+</body>
+</html>

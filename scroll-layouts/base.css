@@ -1,0 +1,28 @@
+/* SERAPH Scroll-Layout Studio — shared base styles */
+:root{
+  --bg:#001431;--bg2:#0A2540;--gold:#E7C959;--white:#fff;--gray:#CFCFCF;--muted:#9D9D9D;
+  --font:'Poppins',sans-serif;--display:'Montserrat',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--gray);font-family:var(--font);line-height:1.7;overflow-x:hidden}
+h1,h2,h3,h4{font-family:var(--display);color:var(--white);line-height:1.15}
+img{max-width:100%;display:block}
+a{text-decoration:none}
+.container{width:min(1200px,92%);margin:0 auto}
+.topbar{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;z-index:1000;background:rgba(0,20,49,.65);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+.topbar .brand{font-family:var(--display);color:var(--white);font-weight:700;letter-spacing:3px}
+.topbar .brand em{color:var(--gold);font-style:normal}
+.topbar a{font-family:var(--display);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.topbar a:hover{color:var(--gold)}
+.eyebrow{display:block;color:var(--gold);font-family:var(--display);font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px}
+.btn{display:inline-block;border:1px solid var(--gold);color:var(--gold);padding:12px 28px;border-radius:50px;font-family:var(--display);letter-spacing:1.5px;font-size:12px;text-transform:uppercase;transition:.3s;background:transparent}
+.btn:hover{background:var(--gold);color:var(--bg)}
+.btn--solid{background:var(--gold);color:var(--white);border-color:var(--gold)}
+.btn--solid:hover{background:#c9a53a;border-color:#c9a53a}
+.line{display:block;overflow:hidden}
+.line-inner{display:block;transform:translateY(110%)}
+.intro{min-height:70vh;display:flex;align-items:flex-end;padding:140px 0 60px}
+.intro h1{font-size:clamp(38px,6vw,72px);letter-spacing:-.03em;max-width:720px}
+footer{padding:40px 0;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid rgba(255,255,255,.08)}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}

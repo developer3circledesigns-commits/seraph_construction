@@ -1,0 +1,7 @@
+services:
+  seraph:
+    build: .
+    container_name: seraph-construction
+    ports:
+      - "8090:80"
+    restart: unless-stopped

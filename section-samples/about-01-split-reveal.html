@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About 01 — Split Reveal | SERAPH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#001431;--bg2:#0A2540;--gold:#E7C959;--white:#fff;--gray:#CFCFCF;--muted:#9D9D9D;
+    --font:'Poppins',sans-serif;--display:'Montserrat',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--gray);font-family:var(--font);line-height:1.7;overflow-x:hidden}
+  h1,h2,h3{font-family:var(--display);color:var(--white);line-height:1.15}
+  img{max-width:100%;display:block}
+  a{text-decoration:none}
+  .container{width:min(1200px,92%);margin:0 auto}
+  .topbar{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;z-index:1000;background:rgba(0,20,49,.65);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .topbar .brand{font-family:var(--display);color:var(--white);font-weight:700;letter-spacing:3px}
+  .topbar .brand em{color:var(--gold);font-style:normal}
+  .topbar a{font-family:var(--display);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  .topbar a:hover{color:var(--gold)}
+  .eyebrow{display:block;color:var(--gold);font-family:var(--display);font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+  .line{display:block;overflow:hidden}
+  .line-inner{display:block;transform:translateY(110%)}
+  /* About 01 — split columns */
+  .about{padding:150px 0 80px}
+  .about-head{max-width:640px;margin-bottom:80px}
+  .about-head h1{font-size:clamp(36px,6vw,64px);letter-spacing:-.02em;margin-bottom:20px}
+  .about-head p{color:var(--muted);font-size:16px}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:120px}
+  .split--flip .split__media{order:2}
+  .split__media{overflow:hidden;border-radius:0}
+  .split__media img{width:100%;height:440px;object-fit:cover;transform:scale(1.08)}
+  .split__body h2{font-size:clamp(26px,3.5vw,40px);margin-bottom:18px}
+  .split__body p{color:var(--muted);margin-bottom:20px}
+  .split__body .btn{display:inline-block;border:1px solid var(--gold);color:var(--gold);padding:12px 28px;font-family:var(--display);letter-spacing:1.5px;font-size:12px;text-transform:uppercase;transition:.3s}
+  .split__body .btn:hover{background:var(--gold);color:var(--bg)}
+  /* Stats row */
+  .stats{padding:0 0 120px}
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:32px;text-align:center;border-top:1px solid rgba(255,255,255,.08);padding-top:56px}
+  .stat .num{font-family:var(--display);font-size:clamp(44px,6vw,64px);font-weight:700;color:var(--white)}
+  .stat .num sup{color:var(--gold);font-size:24px}
+  .stat p{font-family:var(--display);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:8px}
+  @media (max-width:768px){
+    .split{grid-template-columns:1fr;gap:32px;margin-bottom:80px}
+    .split--flip .split__media{order:0}
+    .split__media img{height:280px}
+  }
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand">SERAPH <em>01</em></span>
+  <a href="index.html">All Samples</a>
+</header>
+
+<section class="about">
+  <div class="container">
+    <div class="about-head">
+      <span class="eyebrow" data-reveal>About Us &middot; Split Reveal</span>
+      <h1>
+        <span class="line"><span class="line-inner">Built on Craft,</span></span>
+        <span class="line"><span class="line-inner">Driven by Detail</span></span>
+      </h1>
+      <p data-reveal>For twenty years we have shaped homes, offices and landmarks with an obsessive eye for proportion, light and material.</p>
+    </div>
+
+    <div class="split">
+      <div class="split__media" data-img><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=80" alt="Luxury interior" width="1000" height="667"></div>
+      <div class="split__body">
+        <span class="eyebrow" data-reveal>Our Story</span>
+        <h2 data-reveal>From First Sketch to Final Walkthrough</h2>
+        <p data-reveal>Every project begins with listening. We pair architectural thinking with hands-on construction so nothing is lost between drawing and build.</p>
+        <p data-reveal>Our in-house carpenters, masons and engineers treat each site like a signature — because to us, it is.</p>
+        <a class="btn" data-reveal href="#">Meet the Team</a>
+      </div>
+    </div>
+
+    <div class="split split--flip">
+      <div class="split__media" data-img><img src="https://images.unsplash.com/photo-1556912173-46c336c7fd55?auto=format&fit=crop&w=1000&q=80" alt="Modular kitchen" width="1000" height="667"></div>
+      <div class="split__body">
+        <span class="eyebrow" data-reveal>Our Approach</span>
+        <h2 data-reveal>One Team, One Promise</h2>
+        <p data-reveal>Architecture, interiors, modular kitchens and renovation — delivered by a single accountable team from concept to keys.</p>
+        <p data-reveal>That means one budget, one timeline and one standard: flawless.</p>
+        <a class="btn" data-reveal href="#">See How We Work</a>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stats-grid">
+        <div class="stat"><div class="num"><span class="counter" data-target="150">0</span><sup>+</sup></div><p>Projects Delivered</p></div>
+        <div class="stat"><div class="num"><span class="counter" data-target="20">0</span><sup>+</sup></div><p>Years of Craft</p></div>
+        <div class="stat"><div class="num"><span class="counter" data-target="98">0</span><sup>%</sup></div><p>Client Satisfaction</p></div>
+        <div class="stat"><div class="num"><span class="counter" data-target="50">0</span><sup>+</sup></div><p>In-House Experts</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!reduce) {
+  gsap.to('.line-inner', { y: '0%', duration: 1, stagger: 0.15, ease: 'power4.out', delay: 0.2 });
+
+  gsap.utils.toArray('[data-reveal]').forEach((el) => {
+    gsap.from(el, {
+      opacity: 0, y: 40, duration: 0.9, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' },
+    });
+  });
+
+  // Split images: blur to focus + scale settle
+  gsap.utils.toArray('[data-img] img').forEach((img) => {
+    gsap.fromTo(img,
+      { scale: 1.08, filter: 'blur(10px)' },
+      {
+        scale: 1, filter: 'blur(0px)', duration: 1.2, ease: 'power2.out',
+        scrollTrigger: { trigger: img, start: 'top 85%', toggleActions: 'play none none none' },
+      });
+  });
+
+  // Stats stagger
+  gsap.from('.stat', {
+    opacity: 0, y: 50, duration: 0.8, stagger: 0.15, ease: 'power2.out',
+    scrollTrigger: { trigger: '.stats-grid', start: 'top 85%', toggleActions: 'play none none none' },
+  });
+
+  gsap.utils.toArray('.counter').forEach((c) => {
+    ScrollTrigger.create({
+      trigger: c, start: 'top 85%', once: true,
+      onEnter: () => {
+        const target = parseInt(c.dataset.target, 10);
+        const obj = { val: 0 };
+        gsap.to(obj, { val: target, duration: 2, ease: 'power2.out',
+          onUpdate: () => { c.textContent = Math.floor(obj.val); } });
+      },
+    });
+  });
+} else {
+  document.querySelectorAll('.line-inner,[data-reveal]').forEach(el => el.style.opacity = 1);
+  document.querySelectorAll('.counter').forEach(c => c.textContent = c.dataset.target);
+}
+</script>
+</body>
+</html>

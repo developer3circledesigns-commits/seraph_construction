@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testimonials 02 — Stagger Grid | SERAPH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#001431;--bg2:#0A2540;--gold:#E7C959;--white:#fff;--gray:#CFCFCF;--muted:#9D9D9D;
+    --font:'Poppins',sans-serif;--display:'Montserrat',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--gray);font-family:var(--font);line-height:1.7;overflow-x:hidden}
+  h1,h2,h3{font-family:var(--display);color:var(--white);line-height:1.15}
+  a{text-decoration:none}
+  .container{width:min(1200px,92%);margin:0 auto}
+  .topbar{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;z-index:1000;background:rgba(0,20,49,.65);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .topbar .brand{font-family:var(--display);color:var(--white);font-weight:700;letter-spacing:3px}
+  .topbar .brand em{color:var(--gold);font-style:normal}
+  .topbar a{font-family:var(--display);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  .topbar a:hover{color:var(--gold)}
+  .eyebrow{display:block;color:var(--gold);font-family:var(--display);font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+  /* Testimonials 02 */
+  .quotes{padding:150px 0 120px}
+  .quotes-head{text-align:center;max-width:640px;margin:0 auto 72px}
+  .quotes-head h1{font-size:clamp(36px,6vw,64px);letter-spacing:-.02em;margin-bottom:20px}
+  .quotes-head p{color:var(--muted);font-size:16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+  .tcard{position:relative;border:1px solid rgba(255,255,255,.08);background:var(--bg2);padding:40px 32px;display:flex;flex-direction:column;gap:20px;transition:transform .4s,border-color .4s,box-shadow .4s}
+  .tcard:hover{transform:translateY(-8px);border-color:rgba(231,201,89,.4);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+  .tcard .mark{font-family:var(--display);font-size:64px;line-height:.6;color:var(--gold);opacity:.6}
+  .tcard blockquote{font-size:15px;color:var(--gray);flex:1}
+  .stars{letter-spacing:3px;color:var(--gold);font-size:14px}
+  .who{display:flex;align-items:center;gap:14px}
+  .who .avatar{width:46px;height:46px;border-radius:50%;object-fit:cover;flex:none}
+  .who b{display:block;font-family:var(--display);font-size:14px;color:var(--white);font-weight:600}
+  .who span{font-size:12px;color:var(--muted)}
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand">SERAPH <em>02</em></span>
+  <a href="index.html">All Samples</a>
+</header>
+
+<section class="quotes">
+  <div class="container">
+    <div class="quotes-head">
+      <span class="eyebrow" data-reveal>Testimonials &middot; Stagger Grid</span>
+      <h1 data-reveal>Kind Words, Real Clients</h1>
+      <p data-reveal>Cards rise in staggered columns as you scroll — dense, scannable social proof.</p>
+    </div>
+
+    <div class="grid">
+      <article class="tcard">
+        <div class="mark">&#8220;</div>
+        <blockquote>They rebuilt our villa to the millimetre. Every deadline met, every detail honoured — the most painless build we have ever had.</blockquote>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="who"><img class="avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=70" alt="Anita Sharma"><div><b>Anita Sharma</b><span>Villa Owner</span></div></div>
+      </article>
+      <article class="tcard">
+        <div class="mark">&#8220;</div>
+        <blockquote>The modular kitchen is flawless — soft-close everything, perfect lighting, and the team finished a week early.</blockquote>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="who"><img class="avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=70" alt="Rohit Menon"><div><b>Rohit Menon</b><span>Homeowner</span></div></div>
+      </article>
+      <article class="tcard">
+        <div class="mark">&#8220;</div>
+        <blockquote>From concept to keys, one team handled everything. Transparent pricing and a finish that still turns heads three years on.</blockquote>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="who"><img class="avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=70" alt="Meera Iyer"><div><b>Meera Iyer</b><span>Interior Client</span></div></div>
+      </article>
+      <article class="tcard">
+        <div class="mark">&#8220;</div>
+        <blockquote>Rare to find a builder who returns calls after the paint dries. SERAPH still checks in a year later.</blockquote>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+        <div class="who"><img class="avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=70" alt="Karan Sethi"><div><b>Karan Sethi</b><span>Office Renovation</span></div></div>
+      </article>
+      <article class="tcard">
+        <div class="mark">&#8220;</div>
+        <blockquote>Our lake house came in under budget. Under budget. I am still checking my emails for the catch.</blockquote>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="who"><img class="avatar" src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=200&q=70" alt="Priya Nair"><div><b>Priya Nair</b><span>Lake House</span></div></div>
+      </article>
+      <article class="tcard">
+        <div class="mark">&#8220;</div>
+        <blockquote>Their in-house kitchen studio saved us months. Measured, designed, installed — flawless fit, first time.</blockquote>
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="who"><img class="avatar" src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=70" alt="Dev Kapoor"><div><b>Dev Kapoor</b><span>Modular Kitchen</span></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+gsap.utils.toArray('[data-reveal]').forEach((el) => {
+  gsap.from(el, {
+    opacity: 0, y: 40, duration: 0.9, ease: 'power3.out',
+    scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' },
+  });
+});
+
+if (!reduce) {
+  // Cards rise with slight stagger, alternating from left/right for rhythm
+  gsap.utils.toArray('.tcard').forEach((card, i) => {
+    gsap.from(card, {
+      opacity: 0,
+      y: 60,
+      x: i % 2 ? 40 : -40,
+      duration: 0.8,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: 'play none none none' },
+    });
+  });
+}
+</script>
+</body>
+</html>
