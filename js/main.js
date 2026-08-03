@@ -17,15 +17,47 @@
         var id = link.getAttribute('href');
         return id ? document.getElementById(id.slice(1)) : null;
       });
+      var sideNavPositions = [];
+
+      /* Resolve the real document-offset of every side-nav target.
+         Sections that GSAP pins report a bogus getBoundingClientRect
+         while pinned, so reuse ScrollTrigger's known pin start offsets;
+         otherwise read the layout offset directly. */
+      var measureSideNav = function () {
+        var scrollY = window.lenis ? window.lenis.scroll : window.scrollY;
+        sideNavSections.forEach(function (sec, i) {
+          if (!sec) { sideNavPositions[i] = Infinity; return; }
+          var start = NaN;
+          if (window.ScrollTrigger) {
+            var triggers = window.ScrollTrigger.getAll();
+            for (var j = 0; j < triggers.length; j++) {
+              var t = triggers[j];
+              if (!t.vars || !t.vars.pin) { continue; }
+              var triggerEl = (t.trigger && t.trigger.nodeType === 1) ? t.trigger : null;
+              if (triggerEl === sec ||
+                  (sec.id && triggerEl && triggerEl.id === sec.id)) {
+                start = t.start;
+                break;
+              }
+            }
+          }
+          if (isNaN(start)) {
+            start = sec.getBoundingClientRect().top + scrollY;
+          }
+          sideNavPositions[i] = start;
+        });
+      };
 
       var updateSideNav = function () {
+        var scrollY = window.lenis ? window.lenis.scroll : window.scrollY;
         var mid = window.innerHeight / 2;
         var active = 0;
-        sideNavSections.forEach(function (sec, i) {
-          if (sec && sec.getBoundingClientRect().top <= mid) {
+        for (var i = 0; i < sideNavSections.length; i++) {
+          if (!sideNavSections[i]) { continue; }
+          if (sideNavPositions[i] <= scrollY + mid && sideNavPositions[i] >= 0) {
             active = i;
           }
-        });
+        }
         sideNavLinks.forEach(function (link, i) {
           link.classList.toggle('is-active', i === active);
         });
@@ -38,7 +70,28 @@
         }
       };
 
+      /* Re-measure after layout/animations/pins settle, and on resize. */
+      measureSideNav();
+      var scheduleMeasure = function () {
+        measureSideNav();
+        updateSideNav();
+      };
+      if (document.readyState === 'complete') {
+        scheduleMeasure();
+      } else {
+        window.addEventListener('load', scheduleMeasure, { once: true });
+        scheduleMeasure();
+      }
+      window.addEventListener('resize', scheduleMeasure, { passive: true });
+      if (window.ScrollTrigger) {
+        window.ScrollTrigger.addEventListener('refresh', scheduleMeasure);
+      }
+
+      /* Update on both native scroll and Lenis' virtual scroll. */
       window.addEventListener('scroll', updateSideNav, { passive: true });
+      if (window.lenis) {
+        window.lenis.on('scroll', updateSideNav);
+      }
       updateSideNav();
     }
 

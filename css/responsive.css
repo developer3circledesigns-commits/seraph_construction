@@ -254,8 +254,12 @@
   }
 
   .footer-grid {
-    grid-template-columns: 1.5fr 1fr 1fr;
+    grid-template-columns: 0.85fr 0.95fr minmax(17.5rem, 1.35fr);
     gap: 2rem;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
   }
 
   .split {
