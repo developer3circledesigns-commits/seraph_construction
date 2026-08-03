@@ -132,7 +132,7 @@ h1, h2, h3, h4 {
   align-items: center;
   padding: 18px 28px;
   z-index: 1000;
-  background: transparent;
+  background: #ffffff;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -140,7 +140,7 @@ h1, h2, h3, h4 {
 }
 
 .topbar.is-scrolled {
-  background: transparent;
+  background: #ffffff;
   box-shadow: none;
 }
 
@@ -179,7 +179,7 @@ h1, h2, h3, h4 {
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--bg);
   text-decoration: none;
   padding-bottom: 4px;
 }
@@ -249,8 +249,8 @@ h1, h2, h3, h4 {
   z-index: 950;
   background: rgba(0, 20, 49, 0.98);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.4s var(--ease), visibility 0.4s;
@@ -266,6 +266,8 @@ h1, h2, h3, h4 {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin: auto;
+  padding: 96px 24px;
 }
 
 .mobile-menu__link {
@@ -311,7 +313,7 @@ h1, h2, h3, h4 {
 
 .side-nav__label {
   font-family: var(--display);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--muted);
@@ -359,7 +361,7 @@ h1, h2, h3, h4 {
   transform: translateY(-50%);
   white-space: nowrap;
   font-family: var(--display);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--white);
@@ -499,10 +501,61 @@ h1, h2, h3, h4 {
   margin: 0 auto 24px;
 }
 
-/* Hero — Center Bottom alignment (option 04) */
+/* Hero — Right side middle alignment (laptops and desktops) */
 .blur-panel__content.hero__content {
-  margin: auto auto 0;
-  padding-bottom: 17vh;
+  position: relative;
+  z-index: 2;
+  width: min(640px, 50%);
+  max-width: 740px;
+  margin: auto 8vw auto auto;
+  padding: clamp(2rem, 6vh, 4rem) 0 clamp(6vh, 12vw, 12rem) 0;
+  text-align: left;
+}
+
+/* Hero-specific font sizes - decreased from default */
+.blur-panel__content.hero__content h1,
+.blur-panel__content.hero__content h2 {
+  font-size: clamp(22px, 3vw, 36px);
+  line-height: 1.15;
+  margin: 0 0 16px 0;
+  max-width: 96%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.hero__title .line {
+  display: block;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.hero__title .line-inner {
+  display: block;
+  max-width: 100%;
+}
+
+.blur-panel__content.hero__content p {
+  font-size: clamp(14px, 1.2vw, 16px);
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+  max-width: 96%;
+}
+
+.blur-panel__content.hero__content .eyebrow {
+  font-size: clamp(10px, 0.8vw, 12px);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  display: inline-block;
+  max-width: 96%;
+}
+
+.blur-panel__content.hero__content h1,
+.blur-panel__content.hero__content h2,
+.blur-panel__content.hero__content p,
+.blur-panel__content.hero__content .btn {
+  margin-left: 0;
+  margin-right: auto;
 }
 
 .blur-panel__no {
@@ -736,7 +789,7 @@ h1, h2, h3, h4 {
   align-items: center;
   gap: 0.75rem;
   font-family: var(--display);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--muted);
@@ -822,6 +875,7 @@ h1, h2, h3, h4 {
 
 .materials-section .h-head {
   flex: 0 0 38vw;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -923,10 +977,10 @@ h1, h2, h3, h4 {
   z-index: 2;
 }
 
-.materials-section .material-card__body h3 {
-  font-size: 26px;
-  margin-bottom: 4px;
-}
+  .materials-section .material-card__body h3 {
+    font-size: clamp(18px, 3vw, 26px);
+    margin-bottom: 4px;
+  }
 
 .materials-section .material-card__type {
   font-family: var(--display);
@@ -1014,7 +1068,7 @@ h1, h2, h3, h4 {
 }
 
 .service-card {
-  padding: 2rem;
+  padding: clamp(1.5rem, 3vw, 2rem);
   transition: transform 0.4s var(--ease), border-color 0.4s;
 }
 
@@ -1030,7 +1084,7 @@ h1, h2, h3, h4 {
 }
 
 .service-card h3 {
-  font-size: 20px;
+  font-size: clamp(16px, 2.5vw, 20px);
   margin-bottom: 8px;
 }
 
@@ -1325,8 +1379,8 @@ h1, h2, h3, h4 {
 
 .testimonial-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1.5rem, 4vw, 2.5rem);
   margin-bottom: 4rem;
 }
 
@@ -1339,7 +1393,7 @@ h1, h2, h3, h4 {
 }
 
 .testimonial-card {
-  padding: 2rem;
+  padding: clamp(1.5rem, 4vw, 2rem);
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -1412,15 +1466,15 @@ h1, h2, h3, h4 {
   margin-bottom: 0.75rem;
 }
 
-.stat-item__number {
-  font-family: var(--display);
-  font-size: 52px;
-  font-weight: 700;
-  color: var(--white);
-  line-height: 1;
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.02em;
-}
+  .stat-item__number {
+    font-family: var(--display);
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
 
 .stat-item__label {
   font-family: var(--display);
@@ -1443,8 +1497,8 @@ h1, h2, h3, h4 {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1.4fr;
-  gap: 2.5rem;
+  grid-template-columns: 1.5fr repeat(3, 1fr);
+  gap: clamp(2rem, 4vw, 2.5rem);
   padding-bottom: 3rem;
 }
 
@@ -1455,12 +1509,12 @@ h1, h2, h3, h4 {
   letter-spacing: 3px;
   font-size: 16px;
   display: inline-block;
-  margin-bottom: 1rem;
+  margin-bottom: 0rem;
 }
 
 .footer-brand .brand img {
   display: block;
-  height: 44px;
+  height: clamp(80px, 16vw, 110px);
   width: auto;
   object-fit: contain;
 }
@@ -1534,6 +1588,13 @@ h1, h2, h3, h4 {
   margin-bottom: 0.85rem;
   font-size: 14px;
   color: var(--muted);
+}
+
+.footer-contact li > a,
+.footer-contact li > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .footer-contact i {
@@ -1726,12 +1787,12 @@ h1, h2, h3, h4 {
   padding-top: 56px;
 }
 
-.stat .num {
-  font-family: var(--display);
-  font-size: clamp(44px, 6vw, 64px);
-  font-weight: 700;
-  color: var(--white);
-}
+  .stat .num {
+    font-family: var(--display);
+    font-size: clamp(32px, 6vw, 52px);
+    font-weight: 700;
+    color: var(--white);
+  }
 
 .stat .num sup {
   color: var(--gold);

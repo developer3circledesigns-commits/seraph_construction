@@ -19,10 +19,27 @@
   .card__cap p{color:var(--muted);font-size:13px;max-width:340px}
   .stack-note{text-align:center;padding:40px 0 100px}
   .stack-note h2{font-size:clamp(26px,4vw,44px);margin-bottom:12px}
+  @media (max-width:1024px){
+    .topbar{padding:14px 22px}
+    .intro{padding:120px 0 50px}
+    .stack{gap:30vh}
+    .card{top:6vh;height:76vh}
+    .stack-note{padding:40px 0 80px}
+  }
   @media (max-width:768px){
     .stack{gap:28vh}
     .card{height:66vh}
     .card__cap p{display:none}
+  }
+  @media (max-width:480px){
+    .topbar{padding:10px 14px}
+    .intro{padding:100px 0 50px}
+    .stack{gap:24vh}
+    .card{top:6vh;height:70vh;min-height:320px}
+    .card__cap h2{font-size:clamp(20px,4vw,30px)}
+    .card__cap span{font-size:10px}
+    .stack-note{padding:40px 0 80px}
+    .stack-note h2{font-size:clamp(22px,6vw,34px)}
   }
 </style>
 </head>

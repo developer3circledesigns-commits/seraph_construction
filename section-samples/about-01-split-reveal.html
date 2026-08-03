@@ -45,10 +45,29 @@
   .stat .num{font-family:var(--display);font-size:clamp(44px,6vw,64px);font-weight:700;color:var(--white)}
   .stat .num sup{color:var(--gold);font-size:24px}
   .stat p{font-family:var(--display);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:8px}
+  @media (max-width:1024px){
+    .topbar{padding:14px 22px}
+    .about{padding:120px 0 60px}
+    .about-head{margin-bottom:60px}
+    .split{gap:48px;margin-bottom:100px}
+    .split__media img{height:400px}
+    .stats{padding:0 0 100px}
+    .stats-grid{padding-top:48px}
+  }
   @media (max-width:768px){
     .split{grid-template-columns:1fr;gap:32px;margin-bottom:80px}
     .split--flip .split__media{order:0}
     .split__media img{height:280px}
+  }
+  @media (max-width:480px){
+    .topbar{padding:10px 14px}
+    .about{padding:80px 0 40px}
+    .about-head{margin-bottom:40px}
+    .split{margin-bottom:60px}
+    .split__body .btn{padding:10px 20px;font-size:11px}
+    .stats{padding:0 0 60px}
+    .stat .num{font-size:clamp(34px,8vw,44px)}
+    .stat p{font-size:11px}
   }
   @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
 </style>

@@ -25,4 +25,33 @@ a{text-decoration:none}
 .intro{min-height:70vh;display:flex;align-items:flex-end;padding:140px 0 60px}
 .intro h1{font-size:clamp(38px,6vw,72px);letter-spacing:-.03em;max-width:720px}
 footer{padding:40px 0;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid rgba(255,255,255,.08)}
+
+/* ============ TABLET (<= 1024) ============ */
+@media (max-width:1024px){
+  .topbar{padding:14px 22px}
+  .intro{padding:120px 0 50px}
+  .container{width:min(1200px,94%)}
+}
+
+/* ============ MOBILE (<= 768) ============ */
+@media (max-width:768px){
+  .topbar{padding:12px 16px}
+  .topbar .brand{font-size:18px}
+  .intro{padding:100px 0 40px}
+  .container{width:min(1200px,96%)}
+  .eyebrow{margin-bottom:10px}
+}
+
+/* ============ SMALL PHONES (<= 480) ============ */
+@media (max-width:480px){
+  .topbar{padding:10px 14px}
+  .intro{padding:80px 0 30px}
+  .container{width:min(1200px,96%)}
+}
+
+/* ============ TINY PHONES (<= 360) ============ */
+@media (max-width:360px){
+  .topbar a{font-size:10px}
+  .eyebrow{font-size:11px}
+}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}

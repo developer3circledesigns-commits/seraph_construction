@@ -55,8 +55,34 @@
   .jump a{font-family:var(--display);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid transparent;border-radius:50px}
   .jump a:hover{color:var(--gold);border-color:rgba(231,201,89,.4)}
 
-  footer{text-align:center;color:var(--muted);font-size:13px;padding:40px 20px}
-  @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:40px 20px}
+@media (max-width:1024px){
+  header{padding:90px 20px 30px}
+  .sample__content{width:min(1200px,94%)}
+  .jump{padding:12px 16px;gap:6px}
+}
+@media (max-width:768px){
+  header{padding:70px 16px 24px}
+  .sample__content{width:min(1200px,96%)}
+  .sample h1{font-size:clamp(26px,6vw,42px)}
+  .sample__content p{max-width:400px;font-size:14px}
+  .jump{font-size:13px}
+  .jump a{padding:5px 10px;font-size:10px}
+  .back{top:14px;left:14px;font-size:11px}
+  .tag{font-size:10px;padding:6px 12px}
+}
+@media (max-width:480px){
+  header{padding:50px 12px 16px}
+  .sample__content{width:94%}
+  .align-left-bottom{padding-bottom:6vh}
+  .align-center-bottom{padding-bottom:6vh}
+  .align-left-top{padding-top:12vh}
+  .sample h1{font-size:clamp(22px,7vw,32px)}
+  .eyebrow{font-size:10px}
+  .jump{position:static;background:none;padding:10px 12px;gap:4px}
+  .back{top:10px;left:10px;font-size:9px;padding:5px 10px}
+}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
 </style>
 </head>
 <body>

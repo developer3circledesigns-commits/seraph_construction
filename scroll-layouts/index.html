@@ -31,8 +31,32 @@
   .tag{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(231,201,89,.3);padding:3px 10px;border-radius:50px}
   .back{position:fixed;top:18px;left:24px;z-index:1000;font-family:var(--display);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none}
   .back:hover{color:var(--gold)}
-  footer{margin-top:48px;text-align:center;color:var(--muted);font-size:13px}
-  @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+footer{margin-top:48px;text-align:center;color:var(--muted);font-size:13px}
+@media (max-width:1024px){
+  .wrap{padding:70px 16px 50px}
+  .grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+  .back{top:14px;left:16px;font-size:11px}
+  .card-body{padding:20px}
+}
+@media (max-width:768px){
+  .wrap{padding:60px 16px 40px}
+  .grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+  .card-body{padding:18px}
+  .card-body h2{font-size:18px}
+  .card-body p{font-size:12px}
+  h1{font-size:clamp(28px,6vw,40px)}
+  .sub{font-size:13px}
+}
+@media (max-width:480px){
+  .wrap{padding:40px 12px 30px}
+  .grid{grid-template-columns:1fr 1fr;gap:14px}
+  .card-body{padding:16px}
+  h1{font-size:clamp(24px,7vw,32px);margin:16px 0 4px}
+  .sub{margin:0 auto 32px;font-size:12px}
+  footer{margin-top:32px;font-size:12px}
+  .back{top:10px;left:10px;font-size:10px}
+}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
 </style>
 </head>
 <body>

@@ -68,10 +68,34 @@
   .cta h2{font-size:clamp(28px,5vw,52px);max-width:720px;margin:0 auto 20px}
   .cta p{color:var(--muted);margin-bottom:32px}
   footer{padding:40px 0;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid rgba(255,255,255,.08)}
+  @media (max-width:1024px){
+    .topbar{padding:14px 22px}
+    .hero{padding:100px 0}
+    .hero p{font-size:15px}
+    .about{padding:120px 0}
+    .services{padding:120px 0}
+    .cta{padding:140px 0}
+    .grid{gap:20px}
+    .section-head{margin:0 auto 48px}
+  }
   @media (max-width:768px){
     .split{grid-template-columns:1fr;gap:32px}
     .split--flip .split__media{order:0}
     .split__media img{height:280px}
+  }
+  @media (max-width:480px){
+    .topbar{padding:10px 14px}
+    .hero{padding:80px 0}
+    .hero h1{font-size:clamp(32px,9vw,44px)}
+    .about{padding:100px 0}
+    .services{padding:100px 0}
+    .cta{padding:120px 0}
+    .grid{gap:16px}
+    .section-head{margin:0 auto 40px}
+    .stats-grid{gap:20px}
+    .stat .num{font-size:clamp(34px,8vw,48px)}
+    .cta h2{font-size:clamp(26px,8vw,40px)}
+    .hero .meta{gap:8px 16px}
   }
   @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
 </style>

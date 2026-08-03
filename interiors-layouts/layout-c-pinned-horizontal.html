@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interiors — C. Pinned Horizontal | SERAPH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#001431;--bg2:#0A2540;--gold:#E7C959;--white:#fff;--gray:#CFCFCF;--muted:#9D9D9D;
+    --font:'Poppins',sans-serif;--display:'Montserrat',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--gray);font-family:var(--font);line-height:1.7;overflow-x:hidden}
+  h1,h2,h3{font-family:var(--display);color:var(--white);line-height:1.15}
+  a{text-decoration:none}
+  .topbar{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;z-index:1000;background:rgba(0,20,49,.65);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .topbar .brand{font-family:var(--display);color:var(--white);font-weight:700;letter-spacing:3px}
+  .topbar .brand em{color:var(--gold);font-style:normal}
+  .topbar a{font-family:var(--display);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  .topbar a:hover{color:var(--gold)}
+
+  .pin-section{position:relative;overflow:hidden}
+  .h-pin{height:100vh;display:flex;align-items:center}
+  .h-track{display:flex;gap:6vw;align-items:center;padding:0 8vw;will-change:transform}
+  .head{min-width:34vw;max-width:380px;flex-shrink:0}
+  .head .eyebrow{color:var(--gold);font-family:var(--display);font-size:12px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+  .head h1{font-size:clamp(30px,4vw,52px);letter-spacing:-.02em;margin-bottom:16px}
+  .head p{color:var(--muted);font-size:15px}
+  .panel{width:min(62vw,720px);flex-shrink:0;position:relative;border-radius:14px;overflow:hidden}
+  .panel img{width:100%;height:70vh;object-fit:cover;display:block}
+  .panel__meta{position:absolute;left:0;right:0;bottom:0;padding:70px 24px 20px;background:linear-gradient(to top,rgba(0,10,25,.9),transparent);color:#fff}
+  .panel__meta .num{font-family:var(--display);font-size:11px;letter-spacing:2px;color:var(--gold)}
+  .panel__meta h3{font-size:clamp(20px,3vw,30px)}
+  .panel__meta p{color:var(--gray);font-size:14px;margin-top:6px}
+
+  @media (max-width:640px){
+    .panel{width:76vw}
+    .panel img{height:60vh}
+  }
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="brand">SERAPH <em>C</em></span>
+  <a href="index.html">All Layouts</a>
+</header>
+
+<section class="pin-section" id="pinSection">
+  <div class="h-pin">
+    <div class="h-track" id="hTrack">
+      <div class="head">
+        <span class="eyebrow">Interiors &middot; Horizontal Tour</span>
+        <h1>Scroll. The Rooms Slide Sideways.</h1>
+        <p>Keep scrolling and the space reveals itself panel by panel — a cinematic walk through our best interiors.</p>
+      </div>
+
+      <div class="panel">
+        <img src="../images/interior-living-room.webp" alt="Living room" width="720" height="500">
+        <div class="panel__meta"><span class="num">01</span><h3>Living Room</h3><p>Tailored joinery and ambient light.</p></div>
+      </div>
+
+      <div class="panel">
+        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80" alt="Bedroom" width="720" height="1000">
+        <div class="panel__meta"><span class="num">02</span><h3>Bedroom</h3><p>Soft textures, warm cabinetry.</p></div>
+      </div>
+
+      <div class="panel">
+        <img src="../images/modular_kitchen/kitchen-view-4-cooking.webp" alt="Kitchen" width="720" height="484">
+        <div class="panel__meta"><span class="num">03</span><h3>Modular Kitchen</h3><p>Engineered around how you cook.</p></div>
+      </div>
+
+      <div class="panel">
+        <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=800&q=80" alt="Bathroom" width="720" height="480">
+        <div class="panel__meta"><span class="num">04</span><h3>Bathroom</h3><p>Stone, chrome, and soft glow.</p></div>
+      </div>
+
+      <div class="panel">
+        <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=800&q=80" alt="Study room" width="720" height="480">
+        <div class="panel__meta"><span class="num">05</span><h3>Study &amp; Lounge</h3><p>A quiet corner for focused work.</p></div>
+      </div>
+
+      <div class="panel">
+        <img src="../images/modular_kitchen/kitchen-view-5-dining.webp" alt="Dining" width="720" height="484">
+        <div class="panel__meta"><span class="num">06</span><h3>Dining</h3><p>Space for hosting and gathering.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar" style="position:absolute;left:0;bottom:0;width:100%;height:3px;background:rgba(255,255,255,.1)">
+    <div id="hProg" style="height:100%;width:0;background:var(--gold)"></div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!reduce) {
+  const track = document.getElementById('hTrack');
+  const getScroll = () => track.scrollWidth - window.innerWidth;
+
+  const tween = gsap.to(track, {
+    x: () => -getScroll(),
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#pinSection',
+      start: 'top top',
+      end: () => '+=' + getScroll(),
+      scrub: 1,
+      pin: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+    },
+  });
+
+  gsap.to('#hProg', {
+    width: '100%', ease: 'none',
+    scrollTrigger: { trigger: '#pinSection', start: 'top top', end: () => '+=' + getScroll(), scrub: true },
+  });
+} else {
+  document.getElementById('hTrack').style.display = 'block';
+}
+</script>
+</body>
+</html>

@@ -17,6 +17,19 @@
   .zoom-panel__content h2{font-size:clamp(34px,6vw,68px);max-width:640px;margin-bottom:16px}
   .zoom-panel__content p{color:var(--gray);max-width:420px;margin-bottom:24px}
   .zoom-panel__no{position:absolute;right:4vw;bottom:5vh;z-index:2;font-family:var(--display);font-weight:700;font-size:clamp(90px,16vw,190px);color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.18);line-height:1}
+  @media (max-width:1024px){
+    .topbar{padding:14px 22px}
+    .zoom-panel__content h2{font-size:clamp(28px,5vw,52px)}
+    .zoom-panel__content p{max-width:400px}
+    .zoom-panel__no{font-size:clamp(70px,12vw,150px)}
+  }
+  @media (max-width:480px){
+    .topbar{padding:10px 14px}
+    .intro{padding:100px 0 50px}
+    .zoom-panel__content h2{font-size:clamp(26px,7vw,42px)}
+    .zoom-panel__content p{max-width:380px}
+    .zoom-panel__no{font-size:clamp(50px,12vw,110px)}
+  }
 </style>
 </head>
 <body>

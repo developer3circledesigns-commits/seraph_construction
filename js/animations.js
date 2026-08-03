@@ -121,7 +121,7 @@
      the next image forward (blurred/zoomed in from behind → sharp).
      After the 5th image is shown the pin releases and the next
      section (materials) scrolls into view. */
-  var kitchenSection = document.getElementById('kitchen');
+  var kitchenSection = document.getElementById('homeplan');
   if (kitchenSection) {
     var kitchenImgs = gsap.utils.toArray('.kitchen-sequence__img');
     var kitchenStep = document.getElementById('kitchenStepCurrent');

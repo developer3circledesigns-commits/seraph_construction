@@ -21,10 +21,26 @@
   .acc-item__cap h3{font-size:clamp(20px,3vw,32px);margin-bottom:4px}
   .acc-item__cap p{color:var(--muted);font-size:13px;max-width:460px;opacity:0;transition:opacity .4s .2s}
   .acc-item.is-open .acc-item__cap p{opacity:1}
+  @media (max-width:1024px){
+    .topbar{padding:14px 22px}
+    .intro{padding:120px 0 50px}
+    .acc-sticky{padding:80px 4vw 60px}
+    .acc{gap:10px}
+    .acc-item__cap h3{font-size:clamp(18px,3vw,28px)}
+    .acc-item__cap p{max-width:420px}
+  }
   @media (max-width:768px){
     .acc-sticky{padding:90px 4vw 60px}
     .acc{gap:8px}
     .acc-item__cap p{display:none}
+  }
+  @media (max-width:480px){
+    .topbar{padding:10px 14px}
+    .intro{padding:100px 0 50px}
+    .intro h1{font-size:clamp(28px,9vw,40px)}
+    .acc-sticky{padding:70px 3vw 50px}
+    .acc-head h2{font-size:clamp(22px,5vw,38px)}
+    .acc-item__cap h3{font-size:clamp(16px,4vw,24px)}
   }
 </style>
 </head>

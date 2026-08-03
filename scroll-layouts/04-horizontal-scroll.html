@@ -51,9 +51,28 @@
   .closing h2{font-size:clamp(30px,5vw,56px);max-width:640px;margin-bottom:20px}
   .closing p{color:var(--muted);max-width:460px;margin-bottom:32px}
   footer{padding:40px 0;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid rgba(255,255,255,.08)}
+  @media (max-width:1024px){
+    .topbar{padding:14px 22px}
+    .intro{padding:120px 0 50px}
+    .h-track{gap:30px;padding:0 8vw}
+    .h-head{flex:0 0 42vw}
+    .project{flex:0 0 68vw}
+    .closing{padding:120px 0}
+  }
   @media (max-width:768px){
     .h-head{flex:0 0 80vw}
     .project{flex:0 0 78vw;height:52vh}
+  }
+  @media (max-width:480px){
+    .topbar{padding:10px 14px}
+    .intro{padding:100px 0 50px}
+    .intro h1{font-size:clamp(30px,8vw,46px)}
+    .h-track{gap:20px;padding:0 6vw}
+    .h-head{flex:0 0 80vw}
+    .project{flex:0 0 88vw;height:50vh}
+    .project__cap h3{font-size:20px}
+    .closing{padding:100px 0}
+    .closing h2{font-size:clamp(24px,7vw,44px)}
   }
   @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
 </style>

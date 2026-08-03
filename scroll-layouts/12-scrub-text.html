@@ -17,6 +17,21 @@
   .word-inner.gold{color:var(--gold)}
   .scrub-hint{position:absolute;bottom:32px;font-family:var(--display);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
   .counter{position:absolute;right:4vw;top:50%;transform:translateY(-50%);font-family:var(--display);font-weight:700;font-size:clamp(60px,10vw,140px);color:transparent;-webkit-text-stroke:1px rgba(199,154,86,.35);line-height:1}
+  @media (max-width:1024px){
+    .topbar{padding:14px 22px}
+    .intro{padding:120px 0 50px}
+    .scrub-sticky{padding:0 4vw}
+    .scrub-text{font-size:clamp(26px,6vw,68px);max-width:720px}
+    .counter{font-size:clamp(44px,8vw,110px)}
+  }
+  @media (max-width:480px){
+    .topbar{padding:10px 14px}
+    .intro{padding:100px 0 50px}
+    .scrub-sticky{padding:0 3vw}
+    .scrub-text{font-size:clamp(24px,9vw,56px);max-width:680px}
+    .counter{font-size:clamp(36px,8vw,80px)}
+    #scrubLine{font-size:10px}
+  }
 </style>
 </head>
 <body>
