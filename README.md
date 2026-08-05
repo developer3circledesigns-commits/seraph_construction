@@ -30,19 +30,25 @@ In Hostinger hPanel → Databases → MySQL:
 
 ### 3. Set DB credentials
 Create a `.env` file **inside `public_html/`** (or one level above it) with your
-Hostinger database credentials. Copy `.env.example` as a starting point:
+Hostinger database credentials. A ready-to-fill template (your live values, kept
+out of the repo) is shipped as `.env.production` (gitignored — never committed).
+Copy it to `.env` on the server and adjust `DB_HOST` if your plan uses a
+non-default host:
 
 ```
 APP_ENV=production
 DB_HOST=localhost
 DB_PORT=3306
-DB_DATABASE=u123456789_seraph
-DB_USERNAME=u123456789_seraph
-DB_PASSWORD=YourStrongPassword
+DB_DATABASE=<your_db_name>
+DB_USERNAME=<your_db_user>
+DB_PASSWORD=<your_db_password>
 ```
 
 > Security:
 > - `.env` is gitignored and blocked from HTTP by `.htaccess` (`<FilesMatch>` → 403).
+> - `.env.production` is also gitignored — it is a local-only template, so your live
+>   credentials never reach the repo. Do not paste real secrets into README.md or
+>   `.env.example` (both are git-tracked).
 > - Best practice: place `.env` one level **above** `public_html/` (the account root)
 >   — the app checks `<repo>/.env` and `<repo>/../.env` — so credentials can never be
 >   served over HTTP.
