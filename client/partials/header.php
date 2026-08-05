@@ -1,0 +1,48 @@
+<?php
+/**
+ * Client portal — shared header + topbar.
+ * Expects: $user (authenticated client array), $title.
+ */
+declare(strict_types=1);
+
+$title = $title ?? 'My Portal';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><?php echo e($title); ?> — Client Portal</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="/css/panel/base.css">
+  <link rel="stylesheet" href="/css/panel/client.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<header class="client-topbar">
+  <div class="client-topbar__brand">
+    <img src="/images/seraph-logo@204w.webp" alt="Seraph Build" height="30">
+    <span>Client Portal</span>
+  </div>
+  <div class="client-topbar__right">
+    <span class="live-dot" id="liveIndicator">Live</span>
+    <div class="user-menu" id="userMenuWrap">
+      <button class="user-menu__btn" id="userMenuBtn">
+        <span class="user-menu__avatar"><?php echo e(strtoupper(substr($user['contact_person'], 0, 1))); ?></span>
+        <span class="small"><?php echo e($user['contact_person']); ?></span>
+        <i class="fa-solid fa-chevron-down small"></i>
+      </button>
+      <div class="user-menu__dropdown" id="userMenuDropdown">
+        <div class="user-menu__info">
+          <div class="user-menu__name"><?php echo e($user['contact_person']); ?></div>
+          <div class="user-menu__email"><?php echo e($user['email']); ?></div>
+        </div>
+        <a href="/client/"><i class="fa-solid fa-house"></i> My Projects</a>
+        <a href="/" target="_blank"><i class="fa-solid fa-globe"></i> View Website</a>
+        <a href="/client/logout.php" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="client-content">

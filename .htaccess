@@ -1,9 +1,28 @@
 # =====================================================================
 # SERAPH BUILD CONSTRUCTION — Apache/LiteSpeed .htaccess (Hostinger)
-# Place in public_html alongside index.html
+# Place the CONTENTS of this repo into public_html/
 # =====================================================================
 
+# No directory browsing
 Options -Indexes
+
+# Serve the PHP entry point first
+DirectoryIndex index.php
+
+# ---------------------------------------------------------------------
+# PRODUCTION DATABASE CREDENTIALS (Hostinger)
+# Fill these in from your Hostinger hPanel -> Databases -> MySQL
+# and UNCOMMENT the block. They override the local dev defaults in
+# api/config/database.php. Works on Apache (mod_env) and LiteSpeed.
+# ---------------------------------------------------------------------
+# <IfModule mod_env.c>
+#   SetEnv DB_HOST "localhost"
+#   SetEnv DB_PORT "3306"
+#   SetEnv DB_DATABASE "u123456789_seraph"
+#   SetEnv DB_USERNAME "u123456789_seraph"
+#   SetEnv DB_PASSWORD "YourStrongPassword"
+#   SetEnv APP_ENV "production"
+# </IfModule>
 
 # ---------------------------------------------------------------------
 # 1. Compression (gzip / deflate)
@@ -16,8 +35,6 @@ Options -Indexes
 
 # ---------------------------------------------------------------------
 # 2. Browser caching
-#    - images / fonts / css / js : 1 year (matches nginx.conf)
-#    - html                      : 1 hour (so content edits show up)
 # ---------------------------------------------------------------------
 <IfModule mod_expires.c>
   ExpiresActive On
@@ -59,7 +76,7 @@ Options -Indexes
 </IfModule>
 
 # ---------------------------------------------------------------------
-# 4. Security headers (mirror nginx.conf)
+# 4. Security headers
 # ---------------------------------------------------------------------
 <IfModule mod_headers.c>
   Header set X-Content-Type-Options "nosniff"
@@ -68,3 +85,46 @@ Options -Indexes
   Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
   Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
 </IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # --- Never run PHP inside uploads (defense in depth) ---
+  RewriteRule ^uploads/.*\.php$ - [F,L]
+
+  # --- Block direct access to backend folders (server-served only) ---
+  RewriteRule ^api(/|$) - [F,L]
+  RewriteRule ^config(/|$) - [F,L]
+  RewriteRule ^database(/|$) - [F,L]
+  RewriteRule ^docker(/|$) - [F,L]
+
+  # --- Include-only template partials (not meant to be hit directly) ---
+  RewriteRule ^partials(/|$) - [F,L]
+  RewriteRule ^admin/partials(/|$) - [F,L]
+  RewriteRule ^client/partials(/|$) - [F,L]
+
+  # --- Block sensitive files inside uploads ---
+  RewriteRule ^uploads/\.htaccess$ - [F,L]
+</IfModule>
+
+# ---------------------------------------------------------------------
+# Block sensitive files anywhere in the tree
+# ---------------------------------------------------------------------
+<FilesMatch "^(\.env|\.env\.example|\.gitignore|\.dockerignore|config\.php|database\.php)$">
+  Require all denied
+</FilesMatch>
+
+# SQL dumps, docker/dev artifacts, deploy helpers must never be served
+<FilesMatch "\.(sql|log|ini|bak|old|orig)$">
+  Require all denied
+</FilesMatch>
+
+<FilesMatch "^(Dockerfile|docker-compose\.yml|nginx\.conf|start-dev-server\.cmd)$">
+  Require all denied
+</FilesMatch>
+
+# Default deny policy for servers using Allow/Deny (older Apache / LiteSpeed)
+<FilesMatch "^(\.env|\.env\.example|\.gitignore|\.dockerignore|Dockerfile|docker-compose\.yml|nginx\.conf|start-dev-server\.cmd)$">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>

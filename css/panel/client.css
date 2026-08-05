@@ -1,0 +1,98 @@
+/* =====================================================================
+   SERAPH CONSTRUCTION — Client portal layout (/client)
+   Top nav + project cards + timeline
+   ===================================================================== */
+
+.client-topbar {
+  height: var(--topbar-h);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+.client-topbar__brand { display: flex; align-items: center; gap: 12px; }
+.client-topbar__brand img { height: 30px; }
+.client-topbar__brand span { font-family: var(--font-heading); font-weight: 700; color: var(--color-primary); letter-spacing: 0.06em; font-size: 0.9rem; }
+.client-topbar__right { display: flex; align-items: center; gap: 16px; }
+
+.client-content { max-width: 1200px; margin: 0 auto; padding: 30px 28px 70px; }
+
+.welcome h1 { font-size: 1.5rem; }
+.welcome .muted { font-size: 0.9rem; }
+
+/* Project cards */
+.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+@media (max-width: 720px) { .project-grid { grid-template-columns: 1fr; } }
+
+.project-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: var(--transition);
+  text-decoration: none;
+  color: var(--color-text);
+  position: relative;
+  overflow: hidden;
+}
+.project-card:hover { border-color: rgba(199,154,86,0.6); transform: translateY(-3px); box-shadow: var(--shadow-lg); text-decoration: none; color: var(--color-text); }
+.project-card__top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.project-card__name { font-family: var(--font-heading); font-weight: 600; font-size: 1.08rem; margin: 0; }
+.project-card__bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.project-card__meta { font-size: 0.78rem; color: var(--color-text-muted); display: flex; flex-direction: column; gap: 3px; }
+.project-card__progress { display: flex; align-items: center; gap: 12px; }
+
+/* Timeline page */
+.project-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.project-head h1 { font-size: 1.4rem; }
+.project-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+.summary-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  flex: 1;
+  min-width: 160px;
+  box-shadow: var(--shadow);
+}
+.summary-card__label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); }
+.summary-card__value { font-weight: 600; font-size: 0.95rem; margin-top: 4px; }
+
+.client-footer {
+  text-align: center;
+  padding: 22px;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 640px) {
+  .client-topbar { padding: 0 16px; gap: 10px; }
+  .client-content { padding: 22px 16px 60px; }
+  .client-topbar__brand span { display: none; }
+  .user-menu__btn .small { display: none; }
+}

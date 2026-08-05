@@ -1,7 +1,45 @@
 services:
-  seraph:
+  app:
     build: .
-    container_name: seraph-construction
+    container_name: seraph-construction-php
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    environment:
+      - APP_ENV=local
+      - DB_HOST=db
+      - DB_DATABASE=seraph_construction
+      - DB_USERNAME=seraph
+      - DB_PASSWORD=seraph_password
+    depends_on:
+      - db
+
+  web:
+    image: nginx:1.27-alpine
+    container_name: seraph-construction-nginx
+    depends_on:
+      - app
     ports:
       - "8090:80"
     restart: unless-stopped
+    volumes:
+      - .:/var/www/html:ro
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  db:
+    image: mariadb:11.4
+    container_name: seraph-construction-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: seraph_construction
+      MYSQL_USER: seraph
+      MYSQL_PASSWORD: seraph_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/migrations:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  db_data:

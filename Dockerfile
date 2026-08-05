@@ -1,13 +1,21 @@
-# ---- Static web server ----
-FROM nginx:1.27-alpine
-WORKDIR /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY index.html ./
-COPY css ./css
-COPY js ./js
-COPY images ./images
-COPY scroll-layouts ./scroll-layouts
-COPY robots.txt ./
-COPY llms.txt ./
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# ---- PHP-FPM application server ----
+FROM php:8.2-fpm-alpine
+WORKDIR /var/www/html
+
+# Install OS deps + PHP extensions needed for the app
+RUN apk add --no-cache \
+      oniguruma-dev \
+      libzip-dev \
+    && docker-php-ext-install \
+      pdo pdo_mysql \
+      mbstring \
+      zip \
+      fileinfo
+
+# Copy application source
+COPY . .
+
+# Expose FPM port (behind nginx)
+EXPOSE 9000
+
+CMD ["php-fpm"]
