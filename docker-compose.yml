@@ -8,9 +8,9 @@ services:
     environment:
       - APP_ENV=local
       - DB_HOST=db
-      - DB_DATABASE=seraph_construction
-      - DB_USERNAME=seraph
-      - DB_PASSWORD=seraph_password
+      - DB_DATABASE=<your_db_name>
+      - DB_USERNAME=<your_db_user>
+      - DB_PASSWORD=change_me
     depends_on:
       - db
 
@@ -31,10 +31,10 @@ services:
     container_name: seraph-construction-db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: seraph_construction
-      MYSQL_USER: seraph
-      MYSQL_PASSWORD: seraph_password
+      MYSQL_ROOT_PASSWORD: change_me_root
+      MYSQL_DATABASE: <your_db_name>
+      MYSQL_USER: <your_db_user>
+      MYSQL_PASSWORD: change_me
     ports:
       - "3307:3306"
     volumes:

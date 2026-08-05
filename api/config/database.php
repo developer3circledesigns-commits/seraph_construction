@@ -58,10 +58,10 @@ function db_config(): array
     }
 
     // --- Local dev defaults (XAMPP / docker-compose) only outside production. ---
+    // DB name/creds come ONLY from .env; no hardcoded database name here.
     if (!$prod) {
         $host     = $host     ?? '127.0.0.1'; // docker-compose overrides to "db"
         $port     = $port     ?? '3306';
-        $database = $database ?? 'seraph_construction';
         $username = $username ?? 'seraph';
         $password = $password ?? 'seraph_password';
     }

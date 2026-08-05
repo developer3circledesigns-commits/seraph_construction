@@ -29,8 +29,8 @@ DirectoryIndex index.php
 #   APP_ENV=production
 #   DB_HOST=localhost
 #   DB_PORT=3306
-#   DB_DATABASE=u123456789_seraph
-#   DB_USERNAME=u123456789_seraph
+#   DB_DATABASE=<your_db_name>
+#   DB_USERNAME=<your_db_user>
 #   DB_PASSWORD=YourStrongPassword
 #
 # ALTERNATIVE (if you cannot use a .env file): uncomment the block below.
@@ -39,8 +39,8 @@ DirectoryIndex index.php
 # <IfModule mod_env.c>
 #   SetEnv DB_HOST "localhost"
 #   SetEnv DB_PORT "3306"
-#   SetEnv DB_DATABASE "u123456789_seraph"
-#   SetEnv DB_USERNAME "u123456789_seraph"
+#   SetEnv DB_DATABASE "<your_db_name>"
+#   SetEnv DB_USERNAME "<your_db_user>"
 #   SetEnv DB_PASSWORD "YourStrongPassword"
 #   SetEnv APP_ENV "production"
 # </IfModule>
