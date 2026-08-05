@@ -14,7 +14,13 @@ function e(?string $value): string
 /** Return JSON response and stop. */
 function json_response($data, int $status = 200): void
 {
-    http_response_code($status);
+    // 419 has no reason phrase in PHP's table; Apache rejects the empty
+    // phrase as HTTP/1.1 500, so send it explicitly.
+    if ($status === 419) {
+        header('HTTP/1.1 419 Authentication Timeout', true, 419);
+    } else {
+        http_response_code($status);
+    }
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;

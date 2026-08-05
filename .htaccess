@@ -9,12 +9,33 @@ Options -Indexes
 # Serve the PHP entry point first
 DirectoryIndex index.php
 
+# Hide the PHP version banner (X-Powered-By). ServerTokens is managed
+# by the host, but this strips the PHP-level header on Apache/LiteSpeed.
+<IfModule mod_headers.c>
+  Header unset X-Powered-By
+</IfModule>
+<IfModule mod_php.c>
+  php_flag expose_php Off
+</IfModule>
+
 # ---------------------------------------------------------------------
-# PRODUCTION DATABASE CREDENTIALS (Hostinger)
-# Fill these in from your Hostinger hPanel -> Databases -> MySQL
-# and UNCOMMENT the block. They override the local dev defaults in
-# api/config/database.php. Works on Apache (mod_env) and LiteSpeed.
-# ---------------------------------------------------------------------
+# DATABASE CREDENTIALS (Hostinger)
+# Preferred: create a .env file. Place it either inside public_html/
+# (the app loads <repo>/.env — it is blocked from HTTP by the rules below)
+# or, ideally, one level ABOVE public_html (the app also checks ../.env).
+# See .env.example for the format. Never edit api/config/database.php.
+#
+# Example .env (inside public_html):
+#   APP_ENV=production
+#   DB_HOST=localhost
+#   DB_PORT=3306
+#   DB_DATABASE=u123456789_seraph
+#   DB_USERNAME=u123456789_seraph
+#   DB_PASSWORD=YourStrongPassword
+#
+# ALTERNATIVE (if you cannot use a .env file): uncomment the block below.
+# It works on Apache (mod_env) and LiteSpeed, but keeps secrets in the
+# served folder and is only a fallback.
 # <IfModule mod_env.c>
 #   SetEnv DB_HOST "localhost"
 #   SetEnv DB_PORT "3306"
@@ -92,6 +113,11 @@ DirectoryIndex index.php
   # --- Never run PHP inside uploads (defense in depth) ---
   RewriteRule ^uploads/.*\.php$ - [F,L]
 
+  # --- Block direct access to the VCS metadata (source/secret disclosure) ---
+  RewriteRule ^\.git(/|$) - [F,L]
+  RewriteRule ^\.hg(/|$) - [F,L]
+  RewriteRule ^\.svn(/|$) - [F,L]
+
   # --- Block direct access to backend folders (server-served only) ---
   RewriteRule ^api(/|$) - [F,L]
   RewriteRule ^config(/|$) - [F,L]
@@ -124,7 +150,7 @@ DirectoryIndex index.php
 </FilesMatch>
 
 # Default deny policy for servers using Allow/Deny (older Apache / LiteSpeed)
-<FilesMatch "^(\.env|\.env\.example|\.gitignore|\.dockerignore|Dockerfile|docker-compose\.yml|nginx\.conf|start-dev-server\.cmd)$">
+<FilesMatch "^(\.env|\.env\.example|\.gitignore|\.git|\.hg|\.svn|Dockerfile|docker-compose\.yml|nginx\.conf|start-dev-server\.cmd)$">
   Order Allow,Deny
   Deny from all
 </FilesMatch>

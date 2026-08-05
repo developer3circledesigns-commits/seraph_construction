@@ -18,13 +18,21 @@ if (PHP_SAPI !== 'cli') {
 
 require dirname(__DIR__) . '/api/config/database.php';
 
-$c = db_config();
-$dsn = sprintf('mysql:host=%s;port=%s;charset=utf8mb4', $c['host'], $c['port']);
+try {
+    $c = db_config();
+    $dsn = sprintf('mysql:host=%s;port=%s;charset=utf8mb4', $c['host'], $c['port']);
 
-echo "Connecting to {$c['host']}:{$c['port']}...\n";
-$pdo = new PDO($dsn, $c['username'], $c['password'], [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-]);
+    echo "Connecting to {$c['host']}:{$c['port']}...\n";
+    $pdo = new PDO($dsn, $c['username'], $c['password'], [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    ]);
+} catch (\RuntimeException $e) {
+    fwrite(STDERR, "Configuration error: {$e->getMessage()}\n");
+    exit(1);
+} catch (PDOException $e) {
+    fwrite(STDERR, "Database connection failed: {$e->getMessage()}\n");
+    exit(1);
+}
 
 $migrations = glob(dirname(__DIR__) . '/database/migrations/*.sql');
 natsort($migrations);

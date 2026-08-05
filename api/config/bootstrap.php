@@ -14,6 +14,10 @@ date_default_timezone_set('Asia/Kolkata');
 
 define('ROOT_PATH', dirname(__DIR__, 2));
 
+// Load credentials & settings from .env BEFORE anything reads them.
+require_once __DIR__ . '/env.php';
+load_env();
+
 $app_env = getenv('APP_ENV') ?: 'production';
 define('APP_ENV', $app_env);
 

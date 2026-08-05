@@ -13,6 +13,13 @@ if (PHP_SAPI !== 'cli') {
 
 require dirname(__DIR__) . '/api/config/database.php';
 
+// Never seed demo/login users into a production database.
+if (is_production()) {
+    fwrite(STDERR, "Refusing to seed demo data. This script is dev/demo only and must not run with APP_ENV=production.\n");
+    fwrite(STDERR, "Set APP_ENV=local in .env to run the seeder, or import demo_data.sql on a scratch database.\n");
+    exit(1);
+}
+
 // Re-hash real Argon2id hashes at runtime so the SQL seed becomes accurate.
 $c = db_config();
 $pdo = new PDO(

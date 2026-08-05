@@ -16,7 +16,21 @@ class Database
             return self::$pdo;
         }
 
-        $c = db_config();
+        try {
+            $c = db_config();
+        } catch (\RuntimeException $e) {
+            error_log($e->getMessage());
+            http_response_code(500);
+            if (PHP_SAPI === 'cli') {
+                fwrite(STDERR, "Configuration error: {$e->getMessage()}\n");
+                exit(1);
+            }
+            header('Content-Type: text/html; charset=utf-8');
+            echo '<!DOCTYPE html><html><head><title>Service Unavailable</title></head><body style="font-family:sans-serif;background:#0a0e14;color:#eef2f7;display:grid;place-items:center;height:100vh;margin:0">'
+                . '<div style="text-align:center"><h1 style="color:#C79A56">Not Configured</h1>'
+                . '<p>The application is missing required environment settings. Please configure your <code>.env</code> file and try again.</p></div></body></html>';
+            exit;
+        }
 
         $dsn = sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',

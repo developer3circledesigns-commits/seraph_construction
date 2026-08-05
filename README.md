@@ -29,21 +29,33 @@ In Hostinger hPanel → Databases → MySQL:
    - Import `database/seeds/demo_data.sql` (optional — seed demo data)
 
 ### 3. Set DB credentials
-Open `public_html/.htaccess`, find the **PRODUCTION DATABASE CREDENTIALS** block
-near the top, fill in your Hostinger values, and uncomment it:
+Create a `.env` file **inside `public_html/`** (or one level above it) with your
+Hostinger database credentials. Copy `.env.example` as a starting point:
 
 ```
-<IfModule mod_env.c>
-  SetEnv DB_HOST "localhost"
-  SetEnv DB_DATABASE "u123456789_seraph"
-  SetEnv DB_USERNAME "u123456789_seraph"
-  SetEnv DB_PASSWORD "YourStrongPassword"
-  SetEnv APP_ENV "production"
-</IfModule>
+APP_ENV=production
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=u123456789_seraph
+DB_USERNAME=u123456789_seraph
+DB_PASSWORD=YourStrongPassword
 ```
 
-> Tip: put these `SetEnv` lines in an `.htaccess` **outside** `public_html`
-> (e.g. the account root) if you prefer, to keep secrets off the document root.
+> Security:
+> - `.env` is gitignored and blocked from HTTP by `.htaccess` (`<FilesMatch>` → 403).
+> - Best practice: place `.env` one level **above** `public_html/` (the account root)
+>   — the app checks `<repo>/.env` and `<repo>/../.env` — so credentials can never be
+>   served over HTTP.
+> - With `APP_ENV=production` the app **fails closed**: missing DB credentials cause a
+>   clear error instead of falling back to local defaults. Never edit
+>   `api/config/database.php` to hardcode passwords.
+> - **Never import `demo_data.sql` on the live database.** It contains demo accounts
+>   whose password (`Seraph@123`) is public in the repo. Use it on a scratch database
+>   only, or create real accounts via the admin panel instead.
+
+> Alternative (only if you can't use `.env`): the `SetEnv` block at the top of
+> `.htaccess` can be uncommented instead — it works on Apache/LiteSpeed but keeps
+> secrets inside the served folder.
 
 ### 4. Set permissions
 - Ensure `uploads/` is writable by PHP (Hostinger usually 755; use 775 if uploads fail).
@@ -63,8 +75,10 @@ near the top, fill in your Hostinger values, and uncomment it:
 ```powershell
 .\start-dev-server.cmd        # serves http://seraph.dev:8080 via Apache
 ```
-Local DB defaults (when no `SetEnv` present): host `127.0.0.1`, db `seraph_construction`,
-user `seraph`, password `seraph_password` (see `api/config/database.php`).
+Credentials come from `.env` (in the repo root, gitignored) or real environment
+variables. In `APP_ENV=local` (the shipped `.env`) missing DB_* vars fall back to
+XAMPP defaults: host `127.0.0.1`, db `seraph_construction`, user `seraph`,
+password `seraph_password`. In production they never fall back.
 
 ## Docker (optional, not needed for Hostinger)
 `docker-compose.yml` + `Dockerfile` + `docker/nginx.conf` are included for an
