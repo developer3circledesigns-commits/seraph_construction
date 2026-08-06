@@ -199,7 +199,7 @@
         'font-size:.88rem;transition:opacity .3s,transform .3s;';
       document.body.appendChild(toast);
     }
-    toast.textContent = '🔔 ' + msg;
+    toast.textContent = msg;
     toast.style.opacity = '1';
     toast.style.transform = 'translateY(0)';
     clearTimeout(toast._t);

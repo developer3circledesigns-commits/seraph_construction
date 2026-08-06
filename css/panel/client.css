@@ -5,7 +5,9 @@
 
 .client-topbar {
   height: var(--topbar-h);
-  background: var(--color-surface);
+  background: rgba(253, 251, 244, 0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
@@ -15,16 +17,15 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: var(--shadow);
 }
 .client-topbar__brand { display: flex; align-items: center; gap: 12px; }
 .client-topbar__brand img { height: 30px; }
-.client-topbar__brand span { font-family: var(--font-heading); font-weight: 700; color: var(--color-primary); letter-spacing: 0.06em; font-size: 0.9rem; }
+.client-topbar__brand span { font-family: var(--font-heading); font-weight: 520; color: var(--color-text); letter-spacing: 0.08em; font-size: 0.82rem; text-transform: uppercase; }
 .client-topbar__right { display: flex; align-items: center; gap: 16px; }
 
-.client-content { max-width: 1200px; margin: 0 auto; padding: 30px 28px 70px; }
+.client-content { max-width: 1200px; margin: 0 auto; padding: 34px 28px 70px; }
 
-.welcome h1 { font-size: 1.5rem; }
+.welcome h1 { font-size: 1.65rem; }
 .welcome .muted { font-size: 0.9rem; }
 
 /* Project cards */
@@ -35,7 +36,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 22px;
+  padding: 24px;
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
@@ -46,53 +47,66 @@
   position: relative;
   overflow: hidden;
 }
-.project-card:hover { border-color: rgba(199,154,86,0.6); transform: translateY(-3px); box-shadow: var(--shadow-lg); text-decoration: none; color: var(--color-text); }
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-border-light);
+  transition: background var(--transition);
+}
+.project-card:hover { border-color: var(--color-gold); transform: translateY(-3px); text-decoration: none; color: var(--color-text); }
+.project-card:hover::before { background: var(--color-gold); }
 .project-card__top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.project-card__name { font-family: var(--font-heading); font-weight: 600; font-size: 1.08rem; margin: 0; }
+.project-card__name { font-family: var(--font-heading); font-weight: 520; font-size: 1.14rem; margin: 0; letter-spacing: -0.01em; }
 .project-card__bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.project-card__meta { font-size: 0.78rem; color: var(--color-text-muted); display: flex; flex-direction: column; gap: 3px; }
+.project-card__meta { font-size: 0.74rem; color: var(--color-text-muted); display: flex; flex-direction: column; gap: 3px; }
 .project-card__progress { display: flex; align-items: center; gap: 12px; }
 
 /* Timeline page */
 .project-head {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 10px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--color-border);
 }
-.project-head h1 { font-size: 1.4rem; }
+.project-head h1 { font-size: 1.6rem; }
 .project-summary {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 26px;
+  margin-bottom: 28px;
 }
 .summary-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 14px 18px;
+  padding: 16px 18px;
   flex: 1;
   min-width: 160px;
   box-shadow: var(--shadow);
 }
-.summary-card__label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); }
-.summary-card__value { font-weight: 600; font-size: 0.95rem; margin-top: 4px; }
+.summary-card__label { font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--color-text-muted); }
+.summary-card__value { font-family: var(--font-heading); font-weight: 520; font-size: 1rem; margin-top: 5px; }
 
 .client-footer {
   text-align: center;
   padding: 22px;
   color: var(--color-text-muted);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   border-top: 1px solid var(--color-border);
 }
 
 /* ---------- Responsive tweaks ---------- */
 @media (max-width: 640px) {
   .client-topbar { padding: 0 16px; gap: 10px; }
-  .client-content { padding: 22px 16px 60px; }
+  .client-content { padding: 24px 16px 60px; }
   .client-topbar__brand span { display: none; }
   .user-menu__btn .small { display: none; }
 }

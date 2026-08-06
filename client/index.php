@@ -15,7 +15,7 @@ include __DIR__ . '/partials/header.php';
 <?php echo flash(); ?>
 
 <div class="welcome">
-  <h1>Hello, <?php echo e($user['contact_person']); ?> 👋</h1>
+  <h1>Hello, <?php echo e($user['contact_person']); ?></h1>
   <p class="muted">Here are the latest updates for your projects with Seraph Build Construction.</p>
 </div>
 
