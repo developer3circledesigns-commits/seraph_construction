@@ -5,7 +5,7 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::CLIENT, '/client/login.php');
+$user = Auth::requireUser(Auth::CLIENT, '/client/login');
 
 $id = (int)($_GET['id'] ?? 0);
 $project = Project::findForClient($id, (int)$user['id']);
@@ -90,7 +90,10 @@ include dirname(__DIR__) . '/partials/header.php';
         <?php if (!empty($images)): ?>
           <div class="gallery">
             <?php foreach ($images as $img): ?>
-              <div class="gallery__item"><img src="<?php echo e($img); ?>" alt="Construction photo" loading="lazy" data-lightbox></div>
+              <div class="gallery__item">
+                <img src="/image?id=<?php echo $img; ?>" alt="Construction photo" loading="lazy" data-lightbox>
+                <div class="image-id" style="display:none;"><?php echo $img; ?></div>
+              </div>
             <?php endforeach; ?>
           </div>
         <?php endif; ?>

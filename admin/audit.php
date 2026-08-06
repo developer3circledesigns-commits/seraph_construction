@@ -5,7 +5,7 @@
 declare(strict_types=1);
 require dirname(__DIR__) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $logs = Audit::recent(200);
 

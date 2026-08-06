@@ -5,7 +5,7 @@
 declare(strict_types=1);
 require dirname(__DIR__) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 $isSuper = Auth::isSuper($user);
 
 $stats = Project::stats();
@@ -33,7 +33,7 @@ include __DIR__ . '/partials/header.php';
   </div>
   <div class="flex">
     <span class="live-dot" id="liveIndicator">Live</span>
-    <a href="/admin/projects/create.php" class="btn btn--primary">
+    <a href="/admin/projects/create" class="btn btn--primary">
       <i class="fa-solid fa-circle-plus"></i> New Project
     </a>
   </div>
@@ -71,7 +71,7 @@ include __DIR__ . '/partials/header.php';
     <div class="card">
       <div class="card__header">
         <h2 class="card__title">Your Projects</h2>
-        <a href="/admin/projects/index.php" class="btn btn--ghost btn--sm">View all</a>
+        <a href="/admin/projects" class="btn btn--ghost btn--sm">View all</a>
       </div>
       <div class="table-wrap">
         <table class="table">
@@ -99,7 +99,7 @@ include __DIR__ . '/partials/header.php';
                   <span class="small muted"><?php echo (int)$p['progress_percentage']; ?>%</span>
                 </div>
               </td>
-              <td><a class="btn btn--secondary btn--sm" href="/admin/projects/view.php?id=<?php echo (int)$p['id']; ?>" aria-label="View project <?php echo e($p['name']); ?>">View</a></td>
+              <td><a class="btn btn--secondary btn--sm" href="/admin/projects/view?id=<?php echo (int)$p['id']; ?>" aria-label="View project <?php echo e($p['name']); ?>">View</a></td>
             </tr>
           <?php endforeach; ?>
           </tbody>

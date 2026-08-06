@@ -39,7 +39,7 @@ $title = $title ?? 'My Portal';
         </div>
         <a href="/client/"><i class="fa-solid fa-house"></i> My Projects</a>
         <a href="/" target="_blank"><i class="fa-solid fa-globe"></i> View Website</a>
-        <a href="/client/logout.php" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+        <a href="/client/logout" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
       </div>
     </div>
   </div>

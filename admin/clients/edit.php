@@ -5,11 +5,11 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $id = (int)($_GET['id'] ?? 0);
 $client = Database::one('SELECT * FROM clients WHERE id = :id', [':id' => $id]);
-if (!$client) redirect('/admin/clients/index.php', 'Client not found.', 'error');
+if (!$client) redirect('/admin/clients', 'Client not found.', 'error');
 
 $errors = [];
 $old = $client;
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$errors) {
             Audit::admin((int)$user['id'], 'client_update', 'client', $id);
-            redirect('/admin/clients/index.php', 'Client updated successfully.');
+            redirect('/admin/clients', 'Client updated successfully.');
         }
     }
 }
@@ -80,7 +80,7 @@ include dirname(__DIR__) . '/partials/header.php';
   </div>
 </div>
 
-<form method="POST" action="/admin/clients/edit.php?id=<?php echo (int)$id; ?>">
+<form method="POST" action="/admin/clients/edit?id=<?php echo (int)$id; ?>">
   <?php echo CSRF::field(); ?>
   <div class="card" style="max-width:640px">
     <div class="form-group">
@@ -119,14 +119,14 @@ include dirname(__DIR__) . '/partials/header.php';
   </div>
   <div class="flex mt-2">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Save Changes</button>
-    <a href="/admin/clients/index.php" class="btn btn--ghost">Cancel</a>
+    <a href="/admin/clients" class="btn btn--ghost">Cancel</a>
   </div>
 </form>
 
 <div class="card mt-3">
   <div class="card__header">
     <h2 class="card__title">Client Projects</h2>
-    <a href="/admin/projects/create.php" class="btn btn--primary btn--sm"><i class="fa-solid fa-plus"></i> Add Project</a>
+    <a href="/admin/projects/create" class="btn btn--primary btn--sm"><i class="fa-solid fa-plus"></i> Add Project</a>
   </div>
   <?php if (empty($projects)): ?>
     <p class="muted small">No projects assigned to this client yet.</p>
@@ -139,7 +139,7 @@ include dirname(__DIR__) . '/partials/header.php';
       </div>
       <div class="flex">
         <span class="badge badge--<?php echo e($p['status']); ?>"><?php echo e(str_replace('_', ' ', $p['status'])); ?></span>
-        <a class="btn btn--secondary btn--sm" href="/admin/projects/view.php?id=<?php echo (int)$p['id']; ?>" aria-label="View project <?php echo e($p['name']); ?>">View</a>
+        <a class="btn btn--secondary btn--sm" href="/admin/projects/view?id=<?php echo (int)$p['id']; ?>" aria-label="View project <?php echo e($p['name']); ?>">View</a>
       </div>
     </div>
   <?php endforeach; ?>

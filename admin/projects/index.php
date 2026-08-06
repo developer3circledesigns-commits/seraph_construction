@@ -5,7 +5,7 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 $isSuper = Auth::isSuper($user);
 
 $filters = [
@@ -26,13 +26,13 @@ include dirname(__DIR__) . '/partials/header.php';
     <h1>Projects</h1>
     <p><?php echo count($projects); ?> project(s) found.</p>
   </div>
-  <a href="/admin/projects/create.php" class="btn btn--primary">
+  <a href="/admin/projects/create" class="btn btn--primary">
     <i class="fa-solid fa-circle-plus"></i> New Project
   </a>
 </div>
 
 <div class="filters">
-  <form method="GET" action="/admin/projects/index.php" class="flex flex--wrap" style="gap:12px;width:100%">
+  <form method="GET" action="/admin/projects" class="flex flex--wrap" style="gap:12px;width:100%">
     <input class="form-control" type="search" name="search" placeholder="Search by name, client..." value="<?php echo e($filters['search']); ?>" style="flex:1;min-width:220px">
     <select class="form-control" name="status" onchange="this.form.submit()">
       <option value="">All statuses</option>
@@ -78,9 +78,9 @@ include dirname(__DIR__) . '/partials/header.php';
         </td>
         <td class="muted"><?php echo (int)$p['update_count']; ?></td>
         <td style="white-space:nowrap">
-          <a class="btn btn--secondary btn--sm" href="/admin/projects/view.php?id=<?php echo (int)$p['id']; ?>" aria-label="View project <?php echo e($p['name']); ?>"><i class="fa-solid fa-eye"></i></a>
-          <a class="btn btn--secondary btn--sm" href="/admin/projects/edit.php?id=<?php echo (int)$p['id']; ?>" aria-label="Edit project <?php echo e($p['name']); ?>"><i class="fa-solid fa-pen"></i></a>
-          <a class="btn btn--secondary btn--sm" href="/admin/projects/assign.php?id=<?php echo (int)$p['id']; ?>" aria-label="Assign admins to project <?php echo e($p['name']); ?>"><i class="fa-solid fa-user-gear"></i></a>
+          <a class="btn btn--secondary btn--sm" href="/admin/projects/view?id=<?php echo (int)$p['id']; ?>" aria-label="View project <?php echo e($p['name']); ?>"><i class="fa-solid fa-eye"></i></a>
+          <a class="btn btn--secondary btn--sm" href="/admin/projects/edit?id=<?php echo (int)$p['id']; ?>" aria-label="Edit project <?php echo e($p['name']); ?>"><i class="fa-solid fa-pen"></i></a>
+          <a class="btn btn--secondary btn--sm" href="/admin/projects/assign?id=<?php echo (int)$p['id']; ?>" aria-label="Assign admins to project <?php echo e($p['name']); ?>"><i class="fa-solid fa-user-gear"></i></a>
         </td>
       </tr>
     <?php endforeach; ?>

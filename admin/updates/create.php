@@ -5,11 +5,11 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $projectId = (int)($_GET['project_id'] ?? 0);
 $project = Project::find($projectId);
-if (!$project) redirect('/admin/projects/index.php', 'Project not found.', 'error');
+if (!$project) redirect('/admin/projects', 'Project not found.', 'error');
 
 // Only super admins or assigned admins can post
 if (!Auth::isSuper($user)) {
@@ -46,63 +46,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$errors) {
-        // Handle image uploads
-        $images = [];
+        $body['project_id'] = $projectId;
+        $body['admin_id'] = (int)$user['id'];
+        $body['images'] = [];
+
+        $updateId = DailyUpdate::create($body);
+
+        // Store photos against the freshly-created update row (DB blobs)
+        $imageIds = [];
         if (!empty($_FILES['images'])) {
-            $targetDir = ROOT_PATH . '/uploads/updates';
-            $webPath   = '/uploads/updates';
-            try {
-                $images = Uploader::storeMany($_FILES['images'], $targetDir, $webPath);
-            } catch (RuntimeException $e) {
-                $errors[] = $e->getMessage();
-            }
+            $imageIds = Image::storeMany($_FILES['images'], $updateId);
+        }
+        if (!empty($imageIds)) {
+            DailyUpdate::setImages($updateId, $imageIds);
         }
 
-        if (!$errors) {
-            $body['project_id'] = $projectId;
-            $body['admin_id'] = (int)$user['id'];
-            $body['images'] = $images;
+        // Sync project status/progress
+        Project::update($projectId, [
+            'client_id'           => $project['client_id'],
+            'name'                => $project['name'],
+            'description'         => $project['description'],
+            'location'            => $project['location'],
+            'start_date'          => $project['start_date'],
+            'estimated_end_date'  => $project['estimated_end_date'],
+            'actual_end_date'     => null,
+            'status'              => $body['status'],
+            'progress_percentage' => (int)$body['progress_percentage'],
+            'budget'              => $project['budget'],
+        ]);
 
-            $updateId = DailyUpdate::create($body);
+        Audit::admin((int)$user['id'], 'update_create', 'daily_update', $updateId, ['project_id' => $projectId]);
 
-            // Sync project status/progress
-            Project::update($projectId, [
-                'client_id'           => $project['client_id'],
-                'name'                => $project['name'],
-                'description'         => $project['description'],
-                'location'            => $project['location'],
-                'start_date'          => $project['start_date'],
-                'estimated_end_date'  => $project['estimated_end_date'],
-                'actual_end_date'     => null,
-                'status'              => $body['status'],
-                'progress_percentage' => (int)$body['progress_percentage'],
-                'budget'              => $project['budget'],
-            ]);
+        // Real-time broadcast to project channel + notifications
+        $eventType = !empty($body['is_milestone']) ? 'milestone' : 'status_update';
+        SSE::broadcast(SSE::projectChannel($projectId), $eventType, [
+            'project_id' => $projectId,
+            'update_id'  => $updateId,
+            'status'     => $body['status'],
+            'progress'   => (int)$body['progress_percentage'],
+            'title'      => $body['title'],
+            'date'       => $body['update_date'],
+        ]);
 
-            Audit::admin((int)$user['id'], 'update_create', 'daily_update', $updateId, ['project_id' => $projectId]);
+        Notification::notifyProjectParties(
+            $projectId,
+            (int)$project['client_id'],
+            $eventType,
+            ($body['is_milestone'] ? 'Milestone: ' : '') . $body['title'],
+            'Progress is now at ' . (int)$body['progress_percentage'] . '% for ' . $project['name'] . '.',
+            $updateId
+        );
 
-            // Real-time broadcast to project channel + notifications
-            $eventType = !empty($body['is_milestone']) ? 'milestone' : 'status_update';
-            SSE::broadcast(SSE::projectChannel($projectId), $eventType, [
-                'project_id' => $projectId,
-                'update_id'  => $updateId,
-                'status'     => $body['status'],
-                'progress'   => (int)$body['progress_percentage'],
-                'title'      => $body['title'],
-                'date'       => $body['update_date'],
-            ]);
-
-            Notification::notifyProjectParties(
-                $projectId,
-                (int)$project['client_id'],
-                $eventType,
-                ($body['is_milestone'] ? 'Milestone: ' : '') . $body['title'],
-                'Progress is now at ' . (int)$body['progress_percentage'] . '% for ' . $project['name'] . '.',
-                $updateId
-            );
-
-            redirect('/admin/projects/view.php?id=' . $projectId, 'Daily update posted successfully.');
-        }
+        redirect('/admin/projects/view?id=' . $projectId, 'Daily update posted successfully.');
     }
 }
 
@@ -115,11 +110,11 @@ include __DIR__ . '/../partials/header.php';
 <div class="page-header">
   <div>
     <h1>Daily Update</h1>
-    <p><a href="/admin/projects/view.php?id=<?php echo (int)$projectId; ?>">&larr; <?php echo e($project['name']); ?></a></p>
+    <p><a href="/admin/projects/view?id=<?php echo (int)$projectId; ?>">&larr; <?php echo e($project['name']); ?></a></p>
   </div>
 </div>
 
-<form method="POST" action="/admin/updates/create.php?project_id=<?php echo (int)$projectId; ?>" enctype="multipart/form-data">
+<form method="POST" action="/admin/updates/create?project_id=<?php echo (int)$projectId; ?>" enctype="multipart/form-data">
   <?php echo CSRF::field(); ?>
   <div class="card">
     <div class="form-row">
@@ -193,7 +188,7 @@ include __DIR__ . '/../partials/header.php';
 
   <div class="flex mt-2">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-paper-plane"></i> Post Update</button>
-    <a href="/admin/projects/view.php?id=<?php echo (int)$projectId; ?>" class="btn btn--ghost">Cancel</a>
+    <a href="/admin/projects/view?id=<?php echo (int)$projectId; ?>" class="btn btn--ghost">Cancel</a>
   </div>
 </form>
 <?php include __DIR__ . '/../partials/footer.php'; ?>

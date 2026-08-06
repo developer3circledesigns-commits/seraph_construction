@@ -5,7 +5,7 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 Auth::requireRole($user, 'super_admin');
 
 $errors = [];
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]
         );
         Audit::admin((int)$user['id'], 'admin_create', 'admin', null, ['email' => $body['email']]);
-        redirect('/admin/admins/index.php', 'Admin account created.');
+        redirect('/admin/admins', 'Admin account created.');
     }
 }
 
@@ -52,7 +52,7 @@ include dirname(__DIR__) . '/partials/header.php';
   <div><h1>New Admin</h1><p>Create an admin account for your team.</p></div>
 </div>
 
-<form method="POST" action="/admin/admins/create.php">
+<form method="POST" action="/admin/admins/create">
   <?php echo CSRF::field(); ?>
   <div class="card" style="max-width:560px">
     <div class="form-group">
@@ -84,7 +84,7 @@ include dirname(__DIR__) . '/partials/header.php';
   </div>
   <div class="flex mt-2">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Create Admin</button>
-    <a href="/admin/admins/index.php" class="btn btn--ghost">Cancel</a>
+    <a href="/admin/admins" class="btn btn--ghost">Cancel</a>
   </div>
 </form>
 <?php include dirname(__DIR__) . '/partials/footer.php'; ?>

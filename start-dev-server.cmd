@@ -25,7 +25,7 @@ if not exist "%HTTPD%" (
 )
 
 rem If Apache is already serving the project, nothing to do.
-powershell -NoProfile -Command "try { $r = Invoke-WebRequest -Uri 'http://127.0.0.1:8080/admin/login.php' -UseBasicParsing -TimeoutSec 4; exit 0 } catch { exit 1 }"
+powershell -NoProfile -Command "try { $r = Invoke-WebRequest -Uri 'http://127.0.0.1:8080/admin/login' -UseBasicParsing -TimeoutSec 4; exit 0 } catch { exit 1 }"
 if %errorlevel% equ 0 (
   echo Seraph dev server is already running on http://127.0.0.1:8080/
   echo (Apache %HTTPD%)
@@ -42,5 +42,5 @@ powershell -NoProfile -Command "Start-Sleep -Seconds 4"
 :show
 echo.
 echo URL:   http://127.0.0.1:8080/
-echo Admin: http://127.0.0.1:8080/admin/login.php
+echo Admin: http://127.0.0.1:8080/admin/login
 echo Restart Apache with:  taskkill /IM httpd.exe /F   then re-run this script

@@ -5,11 +5,11 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $id = (int)($_GET['id'] ?? 0);
 $update = DailyUpdate::find($id);
-if (!$update) redirect('/admin/projects/index.php', 'Update not found.', 'error');
+if (!$update) redirect('/admin/projects', 'Update not found.', 'error');
 
 $project = Project::find((int)$update['project_id']);
 
@@ -38,6 +38,7 @@ $old = [
 ];
 
 $existingImages = json_decode_col($update['images'] ?? null) ?: [];
+$existingImageIds = array_values(array_filter(array_map('intval', (array)$existingImages), fn($v) => $v > 0));
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     CSRF::validate();
@@ -53,28 +54,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $images = $existingImages;
+    $imageIds = $existingImageIds;
 
     if (!empty($_FILES['images'])) {
-        $targetDir = ROOT_PATH . '/uploads/updates';
-        $webPath   = '/uploads/updates';
-        try {
-            $newImages = Uploader::storeMany($_FILES['images'], $targetDir, $webPath);
-            $images = array_merge($images, $newImages);
-        } catch (RuntimeException $e) {
-            $errors[] = $e->getMessage();
-        }
+        $newIds = Image::storeMany($_FILES['images'], (int)$update['id']);
+        $imageIds = array_merge($imageIds, $newIds);
     }
 
-    // Remove images flagged for deletion
-    if (!empty($body['remove_images'])) {
-        $remove = (array)$body['remove_images'];
-        $images = array_values(array_filter($images, fn($img) => !in_array($img, $remove, true)));
+    // Remove images flagged for deletion (the JS keeps them in a
+    // comma-separated hidden field).
+    $remove = [];
+    foreach ((array)($body['remove_images'] ?? []) as $chunk) {
+        foreach (explode(',', (string)$chunk) as $v) {
+            $v = (int)trim($v);
+            if ($v > 0) {
+                $remove[] = $v;
+            }
+        }
+    }
+    if (!empty($remove)) {
+        $imageIds = array_values(array_diff($imageIds, $remove));
+        Image::deleteMany($remove);
     }
 
     if (!$errors) {
-        $body['images'] = $images;
-        DailyUpdate::update($id, $body);
+        $body['images'] = $imageIds;
+        DailyUpdate::update((int)$update['id'], $body);
 
         // Sync project status/progress
         Project::update((int)$project['id'], [
@@ -101,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'date'       => $body['update_date'],
         ]);
 
-        redirect('/admin/projects/view.php?id=' . (int)$project['id'], 'Update saved successfully.');
+        redirect('/admin/projects/view?id=' . (int)$project['id'], 'Update saved successfully.');
     }
 }
 
@@ -114,11 +119,11 @@ include __DIR__ . '/../partials/header.php';
 <div class="page-header">
   <div>
     <h1>Edit Update</h1>
-    <p><a href="/admin/projects/view.php?id=<?php echo (int)$project['id']; ?>">&larr; <?php echo e($project['name']); ?></a></p>
+    <p><a href="/admin/projects/view?id=<?php echo (int)$project['id']; ?>">&larr; <?php echo e($project['name']); ?></a></p>
   </div>
 </div>
 
-<form method="POST" action="/admin/updates/edit.php?id=<?php echo (int)$id; ?>" enctype="multipart/form-data">
+<form method="POST" action="/admin/updates/edit?id=<?php echo (int)$id; ?>" enctype="multipart/form-data">
   <?php echo CSRF::field(); ?>
   <div class="card">
     <div class="form-row">
@@ -177,8 +182,9 @@ include __DIR__ . '/../partials/header.php';
         <div class="gallery">
           <?php foreach ($existingImages as $img): ?>
             <div class="gallery__item" style="cursor:default">
-              <img src="<?php echo e($img); ?>" alt="Existing">
-              <button type="button" class="remove-img-btn" data-src="<?php echo e($img); ?>"
+              <img src="/image?id=<?php echo $img; ?>" alt="Existing">
+              <div class="image-id" style="display:none;"><?php echo $img; ?></div>
+              <button type="button" class="remove-img-btn" data-id="<?php echo $img; ?>"
                 style="position:absolute;top:6px;right:6px;background:rgba(224,91,91,0.9);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer" title="Remove photo">
                 <i class="fa-solid fa-xmark"></i>
               </button>
@@ -210,7 +216,7 @@ include __DIR__ . '/../partials/header.php';
 
   <div class="flex mt-2">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Save Changes</button>
-    <a href="/admin/projects/view.php?id=<?php echo (int)$project['id']; ?>" class="btn btn--ghost">Cancel</a>
+    <a href="/admin/projects/view?id=<?php echo (int)$project['id']; ?>" class="btn btn--ghost">Cancel</a>
   </div>
 </form>
 <?php include __DIR__ . '/../partials/footer.php'; ?>

@@ -33,7 +33,7 @@ $pdo->exec('USE `' . $c['database'] . '`');
 $hash = password_hash('Seraph@123', PASSWORD_ARGON2ID);
 
 // Clear existing to make seeding idempotent
-foreach (['daily_updates', 'notifications', 'login_attempts', 'admin_projects', 'user_sessions', 'audit_log', 'sse_events', 'projects', 'clients', 'admins'] as $t) {
+foreach (['update_images', 'daily_updates', 'notifications', 'login_attempts', 'admin_projects', 'user_sessions', 'audit_log', 'sse_events', 'projects', 'clients', 'admins'] as $t) {
     $pdo->exec("SET FOREIGN_KEY_CHECKS=0; TRUNCATE TABLE `$t`; SET FOREIGN_KEY_CHECKS=1;");
 }
 

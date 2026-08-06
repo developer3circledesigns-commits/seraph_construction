@@ -109,6 +109,15 @@ class DailyUpdate
         );
     }
 
+    /** Replace the stored image-id list for an update. */
+    public static function setImages(int $id, array $imageIds): void
+    {
+        Database::execute(
+            'UPDATE daily_updates SET images = :images WHERE id = :id',
+            [':images' => json_encode($imageIds), ':id' => $id]
+        );
+    }
+
     public static function delete(int $id): void
     {
         Database::execute('DELETE FROM daily_updates WHERE id = :id', [':id' => $id]);

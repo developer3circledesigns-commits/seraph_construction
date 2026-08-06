@@ -7,4 +7,4 @@ if ($user) {
     Audit::admin((int)$user['id'], 'logout');
 }
 Auth::logout(Auth::ADMIN);
-redirect('/admin/login.php', 'You have been signed out.', 'info');
+redirect('/admin/login', 'You have been signed out.', 'info');

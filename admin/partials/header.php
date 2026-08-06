@@ -37,23 +37,23 @@ $unread = Notification::unreadCount('admin', (int)$user['id']);
       </a>
 
       <div class="sidebar__label">Projects</div>
-      <a class="sidebar__link <?php echo $active === 'projects' ? 'active' : ''; ?>" href="/admin/projects/index.php">
+      <a class="sidebar__link <?php echo $active === 'projects' ? 'active' : ''; ?>" href="/admin/projects">
         <i class="fa-solid fa-building"></i> All Projects
       </a>
-      <a class="sidebar__link <?php echo $active === 'project_new' ? 'active' : ''; ?>" href="/admin/projects/create.php">
+      <a class="sidebar__link <?php echo $active === 'project_new' ? 'active' : ''; ?>" href="/admin/projects/create">
         <i class="fa-solid fa-circle-plus"></i> New Project
       </a>
 
       <div class="sidebar__label">People</div>
-      <a class="sidebar__link <?php echo $active === 'clients' ? 'active' : ''; ?>" href="/admin/clients/index.php">
+      <a class="sidebar__link <?php echo $active === 'clients' ? 'active' : ''; ?>" href="/admin/clients">
         <i class="fa-solid fa-users"></i> Clients
       </a>
       <?php if (Auth::isSuper($user)): ?>
-      <a class="sidebar__link <?php echo $active === 'admins' ? 'active' : ''; ?>" href="/admin/admins/index.php">
+      <a class="sidebar__link <?php echo $active === 'admins' ? 'active' : ''; ?>" href="/admin/admins">
         <i class="fa-solid fa-user-shield"></i> Admins
       </a>
       <?php endif; ?>
-      <a class="sidebar__link <?php echo $active === 'audit' ? 'active' : ''; ?>" href="/admin/audit.php">
+      <a class="sidebar__link <?php echo $active === 'audit' ? 'active' : ''; ?>" href="/admin/audit">
         <i class="fa-solid fa-clipboard-list"></i> Activity Log
       </a>
     </nav>
@@ -73,7 +73,7 @@ $unread = Notification::unreadCount('admin', (int)$user['id']);
       </div>
 
       <div class="topbar__actions">
-        <form class="topbar__search" action="/admin/projects/index.php" method="GET">
+        <form class="topbar__search" action="/admin/projects" method="GET">
           <i class="fa-solid fa-magnifying-glass"></i>
           <input type="search" name="search" placeholder="Search projects..." value="<?php echo e($_GET['search'] ?? ''); ?>">
         </form>
@@ -103,7 +103,7 @@ $unread = Notification::unreadCount('admin', (int)$user['id']);
             </div>
             <a href="/admin/"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
             <a href="/" target="_blank"><i class="fa-solid fa-globe"></i> View Website</a>
-            <a href="/admin/logout.php" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+            <a href="/admin/logout" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
           </div>
         </div>
       </div>

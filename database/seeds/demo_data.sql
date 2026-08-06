@@ -8,13 +8,13 @@ USE seraph_construction;
 
 -- Admins
 INSERT INTO admins (email, password_hash, full_name, phone, role) VALUES
-('suresh@seraphbuild.com', '$argon2id$v=19$m=65536,t=4,p=1$c2VyYXBoLXNhbHQtdmFsdWUtMjAyNg$uPa7hPKXJDx7h2Xm0qZUqFgSnw0ZRrW/Q1XG3VQq0Ys', 'Sureshkumar M', '+91 90925 57722', 'super_admin'),
-('admin@seraphbuild.com',  '$argon2id$v=19$m=65536,t=4,p=1$c2VyYXBoLXNhbHQtdmFsdWUtMjAyNg$uPa7hPKXJDx7h2Xm0qZUqFgSnw0ZRrW/Q1XG3VQq0Ys', 'Admin User',      '+91 90000 00001', 'admin');
+('suresh@seraphbuild.com', '$argon2id$v=19$m=65536,t=4,p=1$R1hIR1dIQ0cuSzU0L3hmdw$DAzg92G5Dh58tZ81JPC/eCb8zbDzAjyFW8u2WhhJKY8', 'Sureshkumar M', '+91 90925 57722', 'super_admin'),
+('admin@seraphbuild.com',  '$argon2id$v=19$m=65536,t=4,p=1$R1hIR1dIQ0cuSzU0L3hmdw$DAzg92G5Dh58tZ81JPC/eCb8zbDzAjyFW8u2WhhJKY8', 'Admin User',      '+91 90000 00001', 'admin');
 
 -- Clients
 INSERT INTO clients (email, password_hash, company_name, contact_person, phone, address) VALUES
-('client1@example.com', '$argon2id$v=19$m=65536,t=4,p=1$c2VyYXBoLXNhbHQtdmFsdWUtMjAyNg$uPa7hPKXJDx7h2Xm0qZUqFgSnw0ZRrW/Q1XG3VQq0Ys', 'Azure Enterprises', 'Rajesh Kumar', '+91 90000 00002', '12, Anna Nagar, Chennai'),
-('client2@example.com', '$argon2id$v=19$m=65536,t=4,p=1$c2VyYXBoLXNhbHQtdmFsdWUtMjAyNg$uPa7hPKXJDx7h2Xm0qZUqFgSnw0ZRrW/Q1XG3VQq0Ys', 'Camel Living',       'Priya Sharma',  '+91 90000 00003', '45, T. Nagar, Chennai');
+('client1@example.com', '$argon2id$v=19$m=65536,t=4,p=1$R1hIR1dIQ0cuSzU0L3hmdw$DAzg92G5Dh58tZ81JPC/eCb8zbDzAjyFW8u2WhhJKY8', 'Azure Enterprises', 'Rajesh Kumar', '+91 90000 00002', '12, Anna Nagar, Chennai'),
+('client2@example.com', '$argon2id$v=19$m=65536,t=4,p=1$R1hIR1dIQ0cuSzU0L3hmdw$DAzg92G5Dh58tZ81JPC/eCb8zbDzAjyFW8u2WhhJKY8', 'Camel Living',       'Priya Sharma',  '+91 90000 00003', '45, T. Nagar, Chennai');
 
 -- Projects
 INSERT INTO projects (client_id, name, description, location, start_date, estimated_end_date, status, progress_percentage, budget) VALUES

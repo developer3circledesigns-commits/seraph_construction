@@ -5,7 +5,7 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $search = trim((string)($_GET['search'] ?? ''));
 if ($search !== '') {
@@ -35,11 +35,11 @@ include dirname(__DIR__) . '/partials/header.php';
     <h1>Clients</h1>
     <p><?php echo count($clients); ?> client(s) registered.</p>
   </div>
-  <a href="/admin/clients/create.php" class="btn btn--primary"><i class="fa-solid fa-user-plus"></i> New Client</a>
+  <a href="/admin/clients/create" class="btn btn--primary"><i class="fa-solid fa-user-plus"></i> New Client</a>
 </div>
 
 <div class="filters">
-  <form method="GET" action="/admin/clients/index.php" class="flex" style="gap:12px;width:100%">
+  <form method="GET" action="/admin/clients" class="flex" style="gap:12px;width:100%">
     <input class="form-control" type="search" name="search" placeholder="Search by name, company or email..." value="<?php echo e($search); ?>" style="flex:1;min-width:220px">
     <button class="btn btn--secondary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
   </form>
@@ -75,7 +75,7 @@ include dirname(__DIR__) . '/partials/header.php';
           </span>
         </td>
         <td style="white-space:nowrap">
-          <a class="btn btn--secondary btn--sm" href="/admin/clients/edit.php?id=<?php echo (int)$c['id']; ?>" aria-label="Edit client <?php echo e($c['company_name'] ?: $c['contact_person']); ?>"><i class="fa-solid fa-pen"></i> Edit</a>
+          <a class="btn btn--secondary btn--sm" href="/admin/clients/edit?id=<?php echo (int)$c['id']; ?>" aria-label="Edit client <?php echo e($c['company_name'] ?: $c['contact_person']); ?>"><i class="fa-solid fa-pen"></i> Edit</a>
         </td>
       </tr>
     <?php endforeach; ?>

@@ -5,7 +5,7 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $errors = [];
 $old = [
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         Audit::admin((int)$user['id'], 'project_create', 'project', $id, ['name' => $body['name']]);
         SSE::broadcast(SSE::projectChannel($id), 'project', ['action' => 'created', 'project_id' => $id]);
-        redirect('/admin/projects/view.php?id=' . $id, 'Project created successfully.');
+        redirect('/admin/projects/view?id=' . $id, 'Project created successfully.');
     }
 }
 
@@ -58,7 +58,7 @@ include dirname(__DIR__) . '/partials/header.php';
   </div>
 </div>
 
-<form method="POST" action="/admin/projects/create.php">
+<form method="POST" action="/admin/projects/create">
   <?php echo CSRF::field(); ?>
   <div class="card">
     <h2 class="card__title mb-2">Project Details</h2>
@@ -140,7 +140,7 @@ include dirname(__DIR__) . '/partials/header.php';
 
   <div class="flex mt-2">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Create Project</button>
-    <a href="/admin/projects/index.php" class="btn btn--ghost">Cancel</a>
+    <a href="/admin/projects" class="btn btn--ghost">Cancel</a>
   </div>
 </form>
 <?php include dirname(__DIR__) . '/partials/footer.php'; ?>

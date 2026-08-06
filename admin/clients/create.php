@@ -5,7 +5,7 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $errors = [];
 $old = [
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]
         );
         Audit::admin((int)$user['id'], 'client_create', 'client', $clientId, ['email' => $body['email']]);
-        redirect('/admin/clients/edit.php?id=' . $clientId, 'Client account created. Now create a project for them.');
+        redirect('/admin/clients/edit?id=' . $clientId, 'Client account created. Now create a project for them.');
     }
 }
 
@@ -58,7 +58,7 @@ include dirname(__DIR__) . '/partials/header.php';
   <div><h1>New Client</h1><p>Create a portal account for a client.</p></div>
 </div>
 
-<form method="POST" action="/admin/clients/create.php">
+<form method="POST" action="/admin/clients/create">
   <?php echo CSRF::field(); ?>
   <div class="card" style="max-width:640px">
     <div class="form-group">
@@ -91,7 +91,7 @@ include dirname(__DIR__) . '/partials/header.php';
   </div>
   <div class="flex mt-2">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Create Client</button>
-    <a href="/admin/clients/index.php" class="btn btn--ghost">Cancel</a>
+    <a href="/admin/clients" class="btn btn--ghost">Cancel</a>
   </div>
 </form>
 <?php include dirname(__DIR__) . '/partials/footer.php'; ?>

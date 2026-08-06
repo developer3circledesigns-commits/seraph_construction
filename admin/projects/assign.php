@@ -5,11 +5,11 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $id = (int)($_GET['id'] ?? 0);
 $project = Project::find($id);
-if (!$project) redirect('/admin/projects/index.php', 'Project not found.', 'error');
+if (!$project) redirect('/admin/projects', 'Project not found.', 'error');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     CSRF::validate();
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $adminIds = isset($body['admin_ids']) ? array_map('intval', (array)$body['admin_ids']) : [];
     Project::assignAdmins($id, $adminIds);
     Audit::admin((int)$user['id'], 'project_assign', 'project', $id, ['admins' => $adminIds]);
-    redirect('/admin/projects/view.php?id=' . $id, 'Admin assignments updated.');
+    redirect('/admin/projects/view?id=' . $id, 'Admin assignments updated.');
 }
 
 $admins = Database::all("SELECT id, full_name, email, role FROM admins WHERE is_active = 1 ORDER BY full_name");
@@ -34,7 +34,7 @@ include dirname(__DIR__) . '/partials/header.php';
   </div>
 </div>
 
-<form method="POST" action="/admin/projects/assign.php?id=<?php echo (int)$id; ?>">
+<form method="POST" action="/admin/projects/assign?id=<?php echo (int)$id; ?>">
   <?php echo CSRF::field(); ?>
   <div class="card" style="max-width:560px">
     <div class="checklist">
@@ -51,7 +51,7 @@ include dirname(__DIR__) . '/partials/header.php';
     </div>
     <div class="flex mt-2">
       <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Save Assignments</button>
-      <a href="/admin/projects/view.php?id=<?php echo (int)$id; ?>" class="btn btn--ghost">Cancel</a>
+      <a href="/admin/projects/view?id=<?php echo (int)$id; ?>" class="btn btn--ghost">Cancel</a>
     </div>
   </div>
 </form>

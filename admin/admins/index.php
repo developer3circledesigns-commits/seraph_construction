@@ -5,7 +5,7 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 Auth::requireRole($user, 'super_admin');
 
 $admins = Database::all(
@@ -25,7 +25,7 @@ include dirname(__DIR__) . '/partials/header.php';
     <h1>Admins</h1>
     <p><?php echo count($admins); ?> admin account(s).</p>
   </div>
-  <a href="/admin/admins/create.php" class="btn btn--primary"><i class="fa-solid fa-user-shield"></i> New Admin</a>
+  <a href="/admin/admins/create" class="btn btn--primary"><i class="fa-solid fa-user-shield"></i> New Admin</a>
 </div>
 
 <div class="table-wrap">
@@ -56,7 +56,7 @@ include dirname(__DIR__) . '/partials/header.php';
         <td><span class="badge <?php echo $a['is_active'] ? 'badge--in_progress' : 'badge--cancelled'; ?>"><?php echo $a['is_active'] ? 'Active' : 'Inactive'; ?></span></td>
         <td style="white-space:nowrap">
           <?php if ((int)$a['id'] !== (int)$user['id']): ?>
-            <a class="btn btn--secondary btn--sm" href="/admin/admins/edit.php?id=<?php echo (int)$a['id']; ?>" aria-label="Edit admin <?php echo e($a['full_name']); ?>"><i class="fa-solid fa-pen"></i> Edit</a>
+            <a class="btn btn--secondary btn--sm" href="/admin/admins/edit?id=<?php echo (int)$a['id']; ?>" aria-label="Edit admin <?php echo e($a['full_name']); ?>"><i class="fa-solid fa-pen"></i> Edit</a>
           <?php else: ?>
             <span class="muted small">(you)</span>
           <?php endif; ?>

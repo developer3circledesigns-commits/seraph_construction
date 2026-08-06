@@ -42,12 +42,12 @@ $paths = [
     $apiDir . '/classes/Auth.php',
     $apiDir . '/classes/CSRF.php',
     $apiDir . '/classes/RateLimiter.php',
-    $apiDir . '/classes/Uploader.php',
     $apiDir . '/classes/Project.php',
     $apiDir . '/classes/DailyUpdate.php',
     $apiDir . '/classes/Notification.php',
     $apiDir . '/classes/Audit.php',
     $apiDir . '/classes/SSE.php',
+    $apiDir . '/classes/Image.php',
 ];
 
 foreach ($paths as $file) {

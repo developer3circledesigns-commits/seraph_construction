@@ -26,6 +26,7 @@ In Hostinger hPanel → Databases → MySQL:
 2. Run the schema + seed scripts (via **phpMyAdmin** → Import, or the CLI runner):
    - Import `database/migrations/001_initial_schema.sql`
    - Import `database/migrations/002_sse_events.sql`
+   - Import `database/migrations/003_update_images.sql`
    - Import `database/seeds/demo_data.sql` (optional — seed demo data)
 
 ### 3. Set DB credentials
@@ -69,8 +70,17 @@ DB_PASSWORD=<your_db_password>
 
 ### 5. Go live
 - Open `https://yourdomain/` — you should see the marketing site.
-- `https://yourdomain/admin/login.php` — admin panel.
-- `https://yourdomain/client/login.php` — client portal.
+- `https://yourdomain/admin/login` — admin panel.
+- `https://yourdomain/client/login` — client portal.
+- `.php` extensions are hidden by `.htaccess` rewrite rules; legacy `*.php` URLs
+  are 301-redirected to the clean URLs automatically.
+
+### 6. Test the DB connection (optional)
+Upload `test-db-connection.php` to `public_html/`, temporarily remove its
+`<FilesMatch>` block in `.htaccess` (search "test-db-connection"), open it in the
+browser, then **restore `.htaccess` and delete the file**. It reads your `.env`
+and reports the DB version + tables. It is blocked by default so it can never
+leak if you forget to delete it.
 
 ## What the .htaccess protects
 - `api/`, `config/`, `database/`, `docker/` → HTTP 403 (still run server-side via PHP `require`).

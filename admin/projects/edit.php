@@ -5,11 +5,11 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $id = (int)($_GET['id'] ?? 0);
 $project = Project::find($id);
-if (!$project) redirect('/admin/projects/index.php', 'Project not found.', 'error');
+if (!$project) redirect('/admin/projects', 'Project not found.', 'error');
 
 $errors = [];
 $old = $project;
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         Audit::admin((int)$user['id'], 'project_update', 'project', $id);
         SSE::broadcast(SSE::projectChannel($id), 'project', ['action' => 'updated', 'project_id' => $id]);
-        redirect('/admin/projects/view.php?id=' . $id, 'Project updated successfully.');
+        redirect('/admin/projects/view?id=' . $id, 'Project updated successfully.');
     }
 }
 
@@ -48,11 +48,11 @@ include dirname(__DIR__) . '/partials/header.php';
 <div class="page-header">
   <div>
     <h1>Edit: <?php echo e($project['name']); ?></h1>
-    <p><a href="/admin/projects/view.php?id=<?php echo (int)$project['id']; ?>">&larr; Back to project</a></p>
+    <p><a href="/admin/projects/view?id=<?php echo (int)$project['id']; ?>">&larr; Back to project</a></p>
   </div>
 </div>
 
-<form method="POST" action="/admin/projects/edit.php?id=<?php echo (int)$id; ?>">
+<form method="POST" action="/admin/projects/edit?id=<?php echo (int)$id; ?>">
   <?php echo CSRF::field(); ?>
   <div class="card">
     <h2 class="card__title mb-2">Project Details</h2>
@@ -137,7 +137,7 @@ include dirname(__DIR__) . '/partials/header.php';
 
   <div class="flex mt-2">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Save Changes</button>
-    <a href="/admin/projects/view.php?id=<?php echo (int)$id; ?>" class="btn btn--ghost">Cancel</a>
+    <a href="/admin/projects/view?id=<?php echo (int)$id; ?>" class="btn btn--ghost">Cancel</a>
   </div>
 </form>
 <?php include dirname(__DIR__) . '/partials/footer.php'; ?>

@@ -48,7 +48,7 @@
     const list = $('#notifList');
 
     loadNotifs = function loadNotifs() {
-      fetch('/admin/api/notifications.php?action=list')
+      fetch('/admin/api/notifications?action=list')
         .then((r) => r.json())
         .then((res) => {
           if (!res.success) return;
@@ -86,7 +86,7 @@
     function markRead(id) {
       const form = new FormData();
       form.append('id', id);
-      fetch('/admin/api/notifications.php?action=read', { method: 'POST', body: form })
+      fetch('/admin/api/notifications?action=read', { method: 'POST', body: form })
         .then((r) => r.json())
         .then(() => loadNotifs());
     }
@@ -108,7 +108,7 @@
     });
     document.addEventListener('click', (e) => {
       if (e.target.id === 'markAllRead') {
-        fetch('/admin/api/notifications.php?action=read_all', { method: 'POST' })
+        fetch('/admin/api/notifications?action=read_all', { method: 'POST' })
           .then((r) => r.json())
           .then(() => loadNotifs());
       }
@@ -133,7 +133,7 @@
   }
 
   function connectSSE() {
-    const es = new EventSource('/admin/api/sse.php');
+    const es = new EventSource('/admin/api/sse');
     liveConn = es;
     let offlineTimer = null;
     let pendingReload = false;
@@ -181,9 +181,9 @@
 
     // Auto-refresh current page data (dashboard / project view)
     if (type === 'status_update' && data.project_id && location.pathname.includes('/admin/')) {
-      const onProject = location.pathname === '/admin/projects/view.php'
+      const onProject = location.pathname === '/admin/projects/view'
         && new URLSearchParams(location.search).get('id') === String(data.project_id);
-      const onDashboard = location.pathname === '/admin/' || location.pathname === '/admin/index.php';
+      const onDashboard = location.pathname === '/admin/' || location.pathname === '/admin/index';
       if (onProject || onDashboard) scheduleReload();
     }
   }
@@ -255,11 +255,11 @@
       const btn = e.target.closest('.remove-img-btn');
       if (!btn) return;
       e.preventDefault();
-      const src = btn.dataset.src;
+      const id = btn.dataset.id;
       const hidden = $('#removeImages');
       if (hidden) {
         const existing = hidden.value ? hidden.value.split(',') : [];
-        existing.push(src);
+        existing.push(id);
         hidden.value = existing.join(',');
       }
       btn.closest('.gallery__item').remove();

@@ -38,7 +38,7 @@
   }
 
   function connectSSE() {
-    const es = new EventSource('/client/api/sse.php');
+    const es = new EventSource('/client/api/sse');
     liveConn = es;
     let offlineTimer = null;
 
@@ -68,10 +68,10 @@
 
     // If viewing this project's timeline, refresh to show the new update
     const params = new URLSearchParams(location.search);
-    if (location.pathname === '/client/projects/view.php' && params.get('id') === String(data.project_id)) {
+    if (location.pathname === '/client/projects/view' && params.get('id') === String(data.project_id)) {
       flashNotice(type === 'milestone' ? '🎉 Milestone reached!' : '🔄 New update posted — refreshing…');
       setTimeout(() => location.reload(), 1200);
-    } else if (location.pathname === '/client/' || location.pathname === '/client/index.php') {
+    } else if (location.pathname === '/client/' || location.pathname === '/client/index') {
       flashNotice('🔄 A project was updated — refreshing…');
       setTimeout(() => location.reload(), 1200);
     }

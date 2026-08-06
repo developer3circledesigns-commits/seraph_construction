@@ -5,7 +5,7 @@
 declare(strict_types=1);
 require dirname(__DIR__) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::CLIENT, '/client/login.php');
+$user = Auth::requireUser(Auth::CLIENT, '/client/login');
 $projects = Project::allForClient((int)$user['id']);
 
 $title = 'My Projects';
@@ -31,7 +31,7 @@ include __DIR__ . '/partials/header.php';
 
 <div class="project-grid mt-3">
   <?php foreach ($projects as $p): ?>
-    <a class="project-card" href="/client/projects/view.php?id=<?php echo (int)$p['id']; ?>">
+    <a class="project-card" href="/client/projects/view?id=<?php echo (int)$p['id']; ?>">
       <div class="project-card__top">
         <h2 class="project-card__name"><?php echo e($p['name']); ?></h2>
         <span class="badge badge--<?php echo e($p['status']); ?>"><?php echo e(str_replace('_', ' ', $p['status'])); ?></span>

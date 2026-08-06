@@ -5,11 +5,11 @@
 declare(strict_types=1);
 require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
-$user = Auth::requireUser(Auth::ADMIN, '/admin/login.php');
+$user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $id = (int)($_GET['id'] ?? 0);
 $project = Project::find($id);
-if (!$project) redirect('/admin/projects/index.php', 'Project not found.', 'error');
+if (!$project) redirect('/admin/projects', 'Project not found.', 'error');
 
 $updates = DailyUpdate::forProject($id);
 $assignedAdmins = Project::assignedAdmins($id);
@@ -40,11 +40,11 @@ include dirname(__DIR__) . '/partials/header.php';
   </div>
   <div class="flex flex--wrap">
     <span class="live-dot" id="liveIndicator">Live</span>
-    <a href="/admin/updates/create.php?project_id=<?php echo (int)$id; ?>" class="btn btn--primary">
+    <a href="/admin/updates/create?project_id=<?php echo (int)$id; ?>" class="btn btn--primary">
       <i class="fa-solid fa-calendar-plus"></i> Add Daily Update
     </a>
-    <a href="/admin/projects/edit.php?id=<?php echo (int)$id; ?>" class="btn btn--secondary"><i class="fa-solid fa-pen"></i> Edit</a>
-    <a href="/admin/projects/assign.php?id=<?php echo (int)$id; ?>" class="btn btn--secondary"><i class="fa-solid fa-user-gear"></i> Assign</a>
+    <a href="/admin/projects/edit?id=<?php echo (int)$id; ?>" class="btn btn--secondary"><i class="fa-solid fa-pen"></i> Edit</a>
+    <a href="/admin/projects/assign?id=<?php echo (int)$id; ?>" class="btn btn--secondary"><i class="fa-solid fa-user-gear"></i> Assign</a>
   </div>
 </div>
 
@@ -72,7 +72,7 @@ include dirname(__DIR__) . '/partials/header.php';
     <div class="card">
       <div class="card__header">
         <h2 class="card__title">Timeline</h2>
-        <a href="/admin/updates/create.php?project_id=<?php echo (int)$id; ?>" class="btn btn--primary btn--sm"><i class="fa-solid fa-plus"></i> Update</a>
+        <a href="/admin/updates/create?project_id=<?php echo (int)$id; ?>" class="btn btn--primary btn--sm"><i class="fa-solid fa-plus"></i> Update</a>
       </div>
 
       <?php if (empty($updates)): ?>
@@ -102,7 +102,10 @@ include dirname(__DIR__) . '/partials/header.php';
             <?php if (!empty($images)): ?>
               <div class="gallery">
                 <?php foreach ($images as $img): ?>
-                  <div class="gallery__item"><img src="<?php echo e($img); ?>" alt="Update photo" loading="lazy"></div>
+                  <div class="gallery__item">
+                    <img src="/image?id=<?php echo $img; ?>" alt="Update photo" loading="lazy">
+                    <div class="image-id" style="display:none;"><?php echo $img; ?></div>
+                  </div>
                 <?php endforeach; ?>
               </div>
             <?php endif; ?>
@@ -118,7 +121,7 @@ include dirname(__DIR__) . '/partials/header.php';
             <?php endif; ?>
 
             <div class="flex mt-1">
-              <a class="btn btn--ghost btn--sm" href="/admin/updates/edit.php?id=<?php echo (int)$u['id']; ?>" aria-label="Edit update <?php echo e($u['title']); ?>"><i class="fa-solid fa-pen"></i> Edit</a>
+              <a class="btn btn--ghost btn--sm" href="/admin/updates/edit?id=<?php echo (int)$u['id']; ?>" aria-label="Edit update <?php echo e($u['title']); ?>"><i class="fa-solid fa-pen"></i> Edit</a>
             </div>
           </div>
         <?php endforeach; ?>

@@ -3,8 +3,11 @@
 # Place the CONTENTS of this repo into public_html/
 # =====================================================================
 
-# No directory browsing
-Options -Indexes
+# No directory browsing. -MultiViews is REQUIRED: without it Apache's
+# content negotiation serves HTTP 406 to EventSource (Accept:
+# text/event-stream) instead of hitting the rewrite rules below, so the
+# real-time SSE feeds (admin/client panels) break.
+Options -Indexes -MultiViews +FollowSymLinks
 
 # Serve the PHP entry point first
 DirectoryIndex index.php
@@ -104,7 +107,7 @@ DirectoryIndex index.php
   Header set X-Frame-Options "SAMEORIGIN"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
   Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
-  Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://images.unsplash.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
 </IfModule>
 
 <IfModule mod_rewrite.c>
@@ -131,6 +134,22 @@ DirectoryIndex index.php
 
   # --- Block sensitive files inside uploads ---
   RewriteRule ^uploads/\.htaccess$ - [F,L]
+
+  # ---------------------------------------------------------------------
+  # Pretty URLs: hide the .php extension.
+  # Internal rewrite: /admin/login  ->  /admin/login.php  (when file exists)
+  # ---------------------------------------------------------------------
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.php -f
+  RewriteRule ^(.+)$ $1.php [L]
+
+  # ---------------------------------------------------------------------
+  # 301 redirect any legacy /foo.php request to the clean /foo URL so the
+  # extension never shows in the address bar (bookmarks/caches preserved).
+  # ---------------------------------------------------------------------
+  RewriteCond %{THE_REQUEST} \.php[?\s] [NC]
+  RewriteRule ^(.+)\.php$ /$1 [R=301,L,QSA]
 </IfModule>
 
 # ---------------------------------------------------------------------
@@ -142,6 +161,12 @@ DirectoryIndex index.php
 
 # SQL dumps, docker/dev artifacts, deploy helpers must never be served
 <FilesMatch "\.(sql|log|ini|bak|old|orig)$">
+  Require all denied
+</FilesMatch>
+
+# Temporary test helpers — blocked unless the rule is removed
+# for the few seconds it takes to run. Delete the files after testing.
+<FilesMatch "^(test-db-connection|test-admin-login|test-client-login)\.php$">
   Require all denied
 </FilesMatch>
 

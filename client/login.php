@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endforeach; ?>
     <?php echo flash(); ?>
 
-    <form method="POST" action="/client/login.php" novalidate>
+    <form method="POST" action="/client/login" novalidate>
       <div class="form-group">
         <label class="form-label" for="email">Email address</label>
         <input class="form-control" type="email" id="email" name="email"
