@@ -1,0 +1,52 @@
+/* ==============================================================
+   SERAPH PANELS - Font Awesome 6.5.1 solid subset (self-hosted)
+   Only the icons used by /admin and /client. Built by
+   build_fa_subset.py - do not hand-edit the glyph map.
+   ============================================================== */
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('fonts/fa-solid-900.woff2') format('woff2');
+}
+.fa-solid { font-family: 'Font Awesome 6 Free'; font-weight: 900; -webkit-font-smoothing: antialiased; font-style: normal; font-variant: normal; text-rendering: auto; line-height: 1; }
+.fa-bars:before { content: "\f0c9"; }
+.fa-bell:before { content: "\f0f3"; }
+.fa-building:before { content: "\f1ad"; }
+.fa-building-circle-exclamation:before { content: "\e4d3"; }
+.fa-calendar-day:before { content: "\f783"; }
+.fa-calendar-plus:before { content: "\f271"; }
+.fa-calendar-xmark:before { content: "\f273"; }
+.fa-check:before { content: "\f00c"; }
+.fa-chevron-down:before { content: "\f078"; }
+.fa-circle-check:before { content: "\f058"; }
+.fa-circle-info:before { content: "\f05a"; }
+.fa-circle-plus:before { content: "\f055"; }
+.fa-clipboard:before { content: "\f328"; }
+.fa-clipboard-list:before { content: "\f46d"; }
+.fa-cloud-arrow-up:before { content: "\f0ee"; }
+.fa-cloud-sun:before { content: "\f6c4"; }
+.fa-eye:before { content: "\f06e"; }
+.fa-filter:before { content: "\f0b0"; }
+.fa-forward:before { content: "\f04e"; }
+.fa-gauge-high:before { content: "\f625"; }
+.fa-globe:before { content: "\f0ac"; }
+.fa-hard-hat:before { content: "\f807"; }
+.fa-house:before { content: "\f015"; }
+.fa-layer-group:before { content: "\f5fd"; }
+.fa-magnifying-glass:before { content: "\f002"; }
+.fa-paper-plane:before { content: "\f1d8"; }
+.fa-pen:before { content: "\f304"; }
+.fa-plus:before { content: "\2b"; }
+.fa-right-from-bracket:before { content: "\f2f5"; }
+.fa-shield-halved:before { content: "\f3ed"; }
+.fa-star:before { content: "\f005"; }
+.fa-user-check:before { content: "\f4fc"; }
+.fa-user-gear:before { content: "\f4fe"; }
+.fa-user-group:before { content: "\f500"; }
+.fa-user-plus:before { content: "\f234"; }
+.fa-user-shield:before { content: "\f505"; }
+.fa-users:before { content: "\f0c0"; }
+.fa-users-slash:before { content: "\e073"; }
+.fa-xmark:before { content: "\f00d"; }
