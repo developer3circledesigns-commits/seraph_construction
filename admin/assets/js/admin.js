@@ -241,7 +241,7 @@
       Array.from(imageInput.files).forEach((f) => {
         const url = URL.createObjectURL(f);
         const el = document.createElement('div');
-        el.style.cssText = 'position:relative;width:110px;height:82px;border-radius:8px;overflow:hidden;border:1px solid #e3e8f0;';
+        el.style.cssText = 'position:relative;width:110px;height:82px;border-radius:8px;overflow:hidden;border:1px solid var(--color-border);';
         el.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
         preview.appendChild(el);
       });
