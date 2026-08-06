@@ -60,10 +60,10 @@ include __DIR__ . '/partials/header.php';
     <div class="stat-card__label">Clients</div>
     <div class="stat-card__value"><?php echo $stats['clients']; ?></div>
   </div>
-  <div class="stat-card">
+  <!-- <div class="stat-card">
     <div class="stat-card__label">Updates (30d)</div>
     <div class="stat-card__value"><?php echo $stats['updates30']; ?></div>
-  </div>
+  </div> -->
 </div>
 
 <div class="grid-2">
