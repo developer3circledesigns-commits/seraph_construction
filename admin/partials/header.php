@@ -27,7 +27,6 @@ $unread = Notification::unreadCount('admin', (int)$user['id']);
   <aside class="sidebar" id="sidebar">
     <div class="sidebar__brand">
       <img src="/images/seraph-logo@204w.webp" alt="Seraph Build" height="34">
-      <span>Seraph Admin</span>
     </div>
 
     <nav class="sidebar__nav">
