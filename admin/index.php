@@ -11,14 +11,29 @@ $isSuper = Auth::isSuper($user);
 $stats = Project::stats();
 $projects = Project::allForAdmin((int)$user['id'], $isSuper, ['limit' => 6]);
 
-$recentUpdates = Database::all(
-    "SELECT u.*, p.name AS project_name, c.company_name
-       FROM daily_updates u
-       JOIN projects p ON p.id = u.project_id
-       JOIN clients c ON c.id = p.client_id
-      ORDER BY u.created_at DESC
-      LIMIT 8"
-);
+// Non-super admins only see updates for the projects they are assigned to.
+if ($isSuper) {
+    $recentUpdates = Database::all(
+        "SELECT u.*, p.name AS project_name, c.company_name
+           FROM daily_updates u
+           JOIN projects p ON p.id = u.project_id
+           JOIN clients c ON c.id = p.client_id
+          ORDER BY u.created_at DESC
+          LIMIT 8"
+    );
+} else {
+    $recentUpdates = Database::all(
+        "SELECT u.*, p.name AS project_name, c.company_name
+           FROM daily_updates u
+           JOIN projects p ON p.id = u.project_id
+           JOIN clients c ON c.id = p.client_id
+           JOIN admin_projects ap ON ap.project_id = p.id
+          WHERE ap.admin_id = :admin_id
+          ORDER BY u.created_at DESC
+          LIMIT 8",
+        [':admin_id' => (int)$user['id']]
+    );
+}
 
 $title = 'Dashboard';
 $active = 'dashboard';

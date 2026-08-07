@@ -481,6 +481,23 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 }
 .user-menu__dropdown a:hover { background: var(--color-surface-2); color: var(--color-text); }
 .user-menu__dropdown a.logout { color: var(--color-danger); }
+.user-menu__dropdown .logout-form { margin: 0; }
+.user-menu__dropdown .logout-form button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  background: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: left;
+}
+.user-menu__dropdown .logout-form button:hover { background: var(--color-surface-2); color: var(--color-text); }
+.user-menu__dropdown .logout-form button.logout { color: var(--color-danger); }
 
 /* Notification bell dropdown */
 .notif { position: relative; }

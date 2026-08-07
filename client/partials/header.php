@@ -45,7 +45,10 @@ $title = $title ?? 'My Portal';
         </div>
         <a href="/client/"><i class="fa-solid fa-house"></i> My Projects</a>
         <a href="/" target="_blank"><i class="fa-solid fa-globe"></i> View Website</a>
-        <a href="/client/logout" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+        <form method="post" action="/client/logout" class="logout-form">
+          <?php echo CSRF::field(); ?>
+          <button type="submit" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+        </form>
       </div>
     </div>
   </div>

@@ -11,6 +11,17 @@ $id = (int)($_GET['id'] ?? 0);
 $project = Project::find($id);
 if (!$project) redirect('/admin/projects', 'Project not found.', 'error');
 
+$isSuper = Auth::isSuper($user);
+
+// Permission: super admin, or an admin assigned to this project
+if (!$isSuper) {
+    $assigned = array_column(Project::assignedAdmins($id), 'id');
+    if (!in_array((int)$user['id'], $assigned)) {
+        http_response_code(403);
+        exit('Forbidden — you are not assigned to this project.');
+    }
+}
+
 $errors = [];
 $old = $project;
 
@@ -26,7 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$errors) {
         Project::update($id, $body);
-        if (!empty($body['admin_ids'])) {
+        // Only super admins may change who manages the project (prevents
+        // non-super admins from granting themselves access to any project).
+        if ($isSuper && !empty($body['admin_ids'])) {
             Project::assignAdmins($id, (array)$body['admin_ids']);
         }
         Audit::admin((int)$user['id'], 'project_update', 'project', $id);
@@ -119,6 +132,7 @@ include dirname(__DIR__) . '/partials/header.php';
     </div>
   </div>
 
+  <?php if ($isSuper): ?>
   <div class="card">
     <h2 class="card__title mb-2">Assign Admins</h2>
     <div class="checklist">
@@ -134,6 +148,7 @@ include dirname(__DIR__) . '/partials/header.php';
       <?php endforeach; ?>
     </div>
   </div>
+  <?php endif; ?>
 
   <div class="flex mt-2">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Save Changes</button>

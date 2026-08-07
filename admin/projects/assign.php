@@ -7,6 +7,12 @@ require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
 $user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
+// Only super admins may manage project admin assignments.
+if (!Auth::isSuper($user)) {
+    http_response_code(403);
+    exit('Forbidden — only super admins can assign admins to projects.');
+}
+
 $id = (int)($_GET['id'] ?? 0);
 $project = Project::find($id);
 if (!$project) redirect('/admin/projects', 'Project not found.', 'error');

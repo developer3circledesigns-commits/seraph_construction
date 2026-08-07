@@ -50,8 +50,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $body['admin_id'] = (int)$user['id'];
         $body['images'] = [];
 
-        $updateId = DailyUpdate::create($body);
+        // The uq_project_date unique key is the real guard against a
+        // concurrent duplicate; catch it here so it fails gracefully
+        // instead of surfacing as a 500.
+        try {
+            $updateId = DailyUpdate::create($body);
+        } catch (\PDOException $e) {
+            $sqlState = (string)($e->errorInfo[0] ?? '');
+            if ($sqlState === '23000' && DailyUpdate::existsForDate($projectId, $body['update_date'] ?? '')) {
+                $errors[] = 'An update already exists for this date. Choose another date or edit the existing one.';
+            } else {
+                throw $e;
+            }
+        }
 
+        if (!isset($updateId) || $updateId <= 0) {
+            $updateId = null;
+        }
+
+        if ($updateId) {
         // Store photos against the freshly-created update row (DB blobs)
         $imageIds = [];
         if (!empty($_FILES['images'])) {
@@ -61,7 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             DailyUpdate::setImages($updateId, $imageIds);
         }
 
-        // Sync project status/progress
+        // Sync project status/progress (preserve existing completion date;
+        // set it on completion if it was never recorded).
         Project::update($projectId, [
             'client_id'           => $project['client_id'],
             'name'                => $project['name'],
@@ -69,7 +87,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'location'            => $project['location'],
             'start_date'          => $project['start_date'],
             'estimated_end_date'  => $project['estimated_end_date'],
-            'actual_end_date'     => null,
+            'actual_end_date'     => $body['status'] === 'completed'
+                ? ($project['actual_end_date'] ?: $body['update_date'])
+                : $project['actual_end_date'],
             'status'              => $body['status'],
             'progress_percentage' => (int)$body['progress_percentage'],
             'budget'              => $project['budget'],
@@ -98,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         redirect('/admin/projects/view?id=' . $projectId, 'Daily update posted successfully.');
+        }
     }
 }
 

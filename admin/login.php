@@ -19,9 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim((string)($body['email'] ?? ''));
     $pass  = (string)($body['password'] ?? '');
 
-    // Rate limiting (shared + per identifier)
-    $lockSeconds = RateLimiter::lockedOut($email);
-    if ($lockSeconds > 0) {
+    // Login CSRF protection + rate limiting (shared + per identifier)
+    if (!CSRF::verify(is_string($body['_csrf'] ?? null) ? $body['_csrf'] : '')) {
+        $errors[] = 'Your session has expired. Please refresh the page and try again.';
+    } elseif (($lockSeconds = RateLimiter::lockedOut($email)) > 0) {
         $errors[] = 'Too many failed attempts. Please try again in ' . ceil($lockSeconds / 60) . ' minutes.';
     } elseif ($email === '' || $pass === '') {
         $errors[] = 'Email and password are required.';

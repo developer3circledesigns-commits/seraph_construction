@@ -89,15 +89,20 @@ function now(): string
     return date('Y-m-d H:i:s');
 }
 
-/** Client IP address. */
+/**
+ * Client IP address.
+ *
+ * Uses only REMOTE_ADDR (the address of the peer that made the request).
+ * HTTP_X_FORWARDED_FOR / HTTP_X_REAL_IP are attacker-controllable and must
+ * NOT be trusted for rate limiting or auditing unless a trusted proxy
+ * strips/rewrites them first. Shared-hosting PHP sits directly behind the
+ * web server, so REMOTE_ADDR is the correct value.
+ */
 function client_ip(): string
 {
-    $keys = ['HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'REMOTE_ADDR'];
-    foreach ($keys as $k) {
-        if (!empty($_SERVER[$k])) {
-            $ip = explode(',', (string)$_SERVER[$k])[0];
-            return trim($ip);
-        }
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    if ($ip !== '' && filter_var($ip, FILTER_VALIDATE_IP)) {
+        return $ip;
     }
     return '0.0.0.0';
 }

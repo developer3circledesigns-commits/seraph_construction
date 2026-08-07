@@ -108,7 +108,10 @@ $unread = Notification::unreadCount('admin', (int)$user['id']);
             </div>
             <a href="/admin/"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
             <a href="/" target="_blank"><i class="fa-solid fa-globe"></i> View Website</a>
-            <a href="/admin/logout" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+            <form method="post" action="/admin/logout" class="logout-form">
+              <?php echo CSRF::field(); ?>
+              <button type="submit" class="logout"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+            </form>
           </div>
         </div>
       </div>

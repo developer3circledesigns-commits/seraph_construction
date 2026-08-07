@@ -54,13 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $imageIds = $existingImageIds;
-
-    if (!empty($_FILES['images'])) {
-        $newIds = Image::storeMany($_FILES['images'], (int)$update['id']);
-        $imageIds = array_merge($imageIds, $newIds);
-    }
-
     // Remove images flagged for deletion (the JS keeps them in a
     // comma-separated hidden field).
     $remove = [];
@@ -72,16 +65,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
-    if (!empty($remove)) {
-        $imageIds = array_values(array_diff($imageIds, $remove));
-        Image::deleteMany($remove);
-    }
 
     if (!$errors) {
+        $imageIds = $existingImageIds;
+
+        // Process new uploads / deletions ONLY after validation passes so a
+        // failed edit cannot orphan newly-written image blobs.
+        if (!empty($_FILES['images'])) {
+            $newIds = Image::storeMany($_FILES['images'], (int)$update['id']);
+            $imageIds = array_merge($imageIds, $newIds);
+        }
+
+        if (!empty($remove)) {
+            $imageIds = array_values(array_diff($imageIds, $remove));
+            Image::deleteMany($remove);
+        }
+
         $body['images'] = $imageIds;
         DailyUpdate::update((int)$update['id'], $body);
 
-        // Sync project status/progress
+        // Sync project status/progress (preserve existing completion date;
+        // set it on completion if it was never recorded).
         Project::update((int)$project['id'], [
             'client_id'           => $project['client_id'],
             'name'                => $project['name'],
@@ -89,7 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'location'            => $project['location'],
             'start_date'          => $project['start_date'],
             'estimated_end_date'  => $project['estimated_end_date'],
-            'actual_end_date'     => null,
+            'actual_end_date'     => $body['status'] === 'completed'
+                ? ($project['actual_end_date'] ?: $body['update_date'])
+                : $project['actual_end_date'],
             'status'              => $body['status'],
             'progress_percentage' => (int)$body['progress_percentage'],
             'budget'              => $project['budget'],
