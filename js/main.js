@@ -159,6 +159,88 @@
       });
     }
 
+    /* ---------- Sign In modal (Client / Admin tabs) ---------- */
+    var loginModal = document.getElementById('loginModal');
+    var loginToggle = document.getElementById('loginToggle');
+
+    if (loginModal && loginToggle) {
+      var loginOpeners = document.querySelectorAll('[data-login-open]');
+      var loginClosers = document.querySelectorAll('[data-login-close]');
+      var loginTabs = document.querySelectorAll('[data-login-tab]');
+      var lastFocused = null;
+
+      var setLoginOpen = function (open) {
+        loginModal.classList.toggle('is-open', open);
+        loginModal.setAttribute('aria-hidden', String(!open));
+        document.body.style.overflow = open ? 'hidden' : '';
+        if (window.lenis) {
+          if (open) { window.lenis.stop(); } else { window.lenis.start(); }
+        }
+        if (open) {
+          lastFocused = document.activeElement;
+          var firstInput = loginModal.querySelector('.login-modal__pane.is-active input[type="email"]');
+          if (firstInput) { firstInput.focus(); }
+        } else if (lastFocused && lastFocused.focus) {
+          lastFocused.focus();
+        }
+      };
+
+      var setLoginTab = function (name) {
+        loginTabs.forEach(function (tab) {
+          var active = tab.getAttribute('data-login-tab') === name;
+          tab.classList.toggle('is-active', active);
+          tab.setAttribute('aria-selected', String(active));
+        });
+        loginModal.querySelectorAll('[data-login-pane]').forEach(function (pane) {
+          pane.classList.toggle('is-active', pane.getAttribute('data-login-pane') === name);
+        });
+      };
+
+      loginOpeners.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (mobileMenu && mobileMenu.classList.contains('is-open') && menuToggle) {
+            setMenu(false);
+          }
+          setLoginOpen(true);
+        });
+      });
+
+      loginClosers.forEach(function (el) {
+        el.addEventListener('click', function () {
+          setLoginOpen(false);
+        });
+      });
+
+      loginTabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          setLoginTab(tab.getAttribute('data-login-tab'));
+        });
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && loginModal.classList.contains('is-open')) {
+          setLoginOpen(false);
+          if (loginToggle) { loginToggle.focus(); }
+        }
+      });
+
+      /* Simple focus trap so Tab stays inside the dialog. */
+      loginModal.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab' || !loginModal.classList.contains('is-open')) { return; }
+        var focusables = loginModal.querySelectorAll('button, input, a[href]');
+        if (!focusables.length) { return; }
+        var first = focusables[0];
+        var last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
+    }
+
     /* ---------- Materials filter (horizontal scroll) ---------- */
     var filterButtons = document.querySelectorAll('.materials-filter__btn');
     var materialCards = document.querySelectorAll('.material-card');

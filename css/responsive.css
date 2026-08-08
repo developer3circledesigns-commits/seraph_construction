@@ -324,6 +324,10 @@
     display: none;
   }
 
+  .topbar__login {
+    display: none;
+  }
+
   .blur-panel {
     height: 100vh;
   }
