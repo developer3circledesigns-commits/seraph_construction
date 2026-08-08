@@ -32,10 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($body['name'])) $errors[] = 'Project name is required.';
     if (empty($body['client_id'])) $errors[] = 'Please select a client.';
-    $prog = (int)($body['progress_percentage'] ?? 0);
-    if ($prog < 0 || $prog > 100) $errors[] = 'Progress must be between 0 and 100.';
 
     if (!$errors) {
+        $body['progress_percentage'] = (int)$project['progress_percentage'];
         Project::update($id, $body);
         // Only super admins may change who manages the project (prevents
         // non-super admins from granting themselves access to any project).
@@ -111,19 +110,13 @@ include dirname(__DIR__) . '/partials/header.php';
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" for="status">Status</label>
-        <select class="form-control" id="status" name="status">
-          <?php foreach (['planning','in_progress','on_hold','completed','cancelled'] as $s): ?>
-            <option value="<?php echo $s; ?>" <?php echo $old['status'] === $s ? 'selected' : ''; ?>><?php echo e(ucfirst(str_replace('_', ' ', $s))); ?></option>
-          <?php endforeach; ?>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="progress_percentage">Progress (%)</label>
-        <input class="form-control" type="number" min="0" max="100" id="progress_percentage" name="progress_percentage" value="<?php echo (int)$old['progress_percentage']; ?>">
-      </div>
+    <div class="form-group">
+      <label class="form-label" for="status">Status</label>
+      <select class="form-control" id="status" name="status">
+        <?php foreach (['planning','in_progress','on_hold','completed','cancelled'] as $s): ?>
+          <option value="<?php echo $s; ?>" <?php echo $old['status'] === $s ? 'selected' : ''; ?>><?php echo e(ucfirst(str_replace('_', ' ', $s))); ?></option>
+        <?php endforeach; ?>
+      </select>
     </div>
 
     <div class="form-group">

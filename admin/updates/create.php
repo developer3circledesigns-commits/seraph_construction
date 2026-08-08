@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$errors) {
+        $body['progress_percentage'] = $old['progress_percentage'];
         $body['project_id'] = $projectId;
         $body['admin_id'] = (int)$user['id'];
         $body['images'] = [];
@@ -162,15 +163,9 @@ include __DIR__ . '/../partials/header.php';
       <textarea class="form-control" id="description" name="description" placeholder="What was done today?"><?php echo e($old['description']); ?></textarea>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" for="progress_percentage">Progress (%)</label>
-        <input class="form-control" type="number" min="0" max="100" id="progress_percentage" name="progress_percentage" value="<?php echo (int)$old['progress_percentage']; ?>">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="labor_count">Workers on site</label>
-        <input class="form-control" type="number" min="0" id="labor_count" name="labor_count" value="<?php echo e($old['labor_count']); ?>" placeholder="e.g. 24">
-      </div>
+    <div class="form-group">
+      <label class="form-label" for="labor_count">Workers on site</label>
+      <input class="form-control" type="number" min="0" id="labor_count" name="labor_count" value="<?php echo e($old['labor_count']); ?>" placeholder="e.g. 24">
     </div>
 
     <div class="form-group">
