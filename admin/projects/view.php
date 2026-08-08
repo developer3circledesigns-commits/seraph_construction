@@ -93,7 +93,6 @@ include dirname(__DIR__) . '/partials/header.php';
               <span class="timeline__date"><i class="fa-solid fa-calendar-day"></i> <?php echo e(date('d M Y', strtotime($u['update_date']))); ?></span>
               <span class="badge badge--<?php echo e($u['status']); ?>"><?php echo e(str_replace('_', ' ', $u['status'])); ?></span>
               <?php if ($u['is_milestone']): ?><span class="badge badge--milestone"><i class="fa-solid fa-star"></i> Milestone</span><?php endif; ?>
-              <span class="badge" style="background:var(--color-surface-2);color:var(--color-text-muted)"><?php echo (int)$u['progress_percentage']; ?>%</span>
               <span class="small muted">by <?php echo e($u['admin_name']); ?> &middot; <?php echo e(time_ago($u['created_at'])); ?></span>
             </div>
             <div class="timeline__title"><?php echo e($u['title']); ?></div>
