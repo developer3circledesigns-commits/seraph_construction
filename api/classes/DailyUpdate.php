@@ -53,11 +53,11 @@ class DailyUpdate
             "INSERT INTO daily_updates
                 (project_id, admin_id, update_date, status, progress_percentage,
                  title, description, images, materials_used, labor_count,
-                 weather_condition, next_day_plan, is_milestone)
+                 next_day_plan, is_milestone)
              VALUES
                 (:project_id, :admin_id, :update_date, :status, :progress_percentage,
                  :title, :description, :images, :materials_used, :labor_count,
-                 :weather_condition, :next_day_plan, :is_milestone)",
+                 :next_day_plan, :is_milestone)",
             [
                 ':project_id'          => $data['project_id'],
                 ':admin_id'            => $data['admin_id'],
@@ -69,7 +69,6 @@ class DailyUpdate
                 ':images'              => json_encode($data['images'] ?? []),
                 ':materials_used'      => $data['materials_used'] ?? null,
                 ':labor_count'         => $data['labor_count'] !== '' ? $data['labor_count'] : null,
-                ':weather_condition'   => $data['weather_condition'] ?? null,
                 ':next_day_plan'       => $data['next_day_plan'] ?? null,
                 ':is_milestone'        => $data['is_milestone'] ? 1 : 0,
             ]
@@ -88,7 +87,6 @@ class DailyUpdate
                 images              = :images,
                 materials_used      = :materials_used,
                 labor_count         = :labor_count,
-                weather_condition   = :weather_condition,
                 next_day_plan       = :next_day_plan,
                 is_milestone        = :is_milestone
               WHERE id = :id",
@@ -101,7 +99,6 @@ class DailyUpdate
                 ':images'              => json_encode($data['images'] ?? []),
                 ':materials_used'      => $data['materials_used'] ?? null,
                 ':labor_count'         => $data['labor_count'] !== '' ? $data['labor_count'] : null,
-                ':weather_condition'   => $data['weather_condition'] ?? null,
                 ':next_day_plan'       => $data['next_day_plan'] ?? null,
                 ':is_milestone'        => $data['is_milestone'] ? 1 : 0,
                 ':id'                  => $id,
@@ -135,10 +132,6 @@ class DailyUpdate
         }
         if (!in_list($data['status'] ?? null, self::STATUSES)) {
             $errors[] = 'Invalid status.';
-        }
-        $progress = (int)($data['progress_percentage'] ?? 0);
-        if ($progress < 0 || $progress > 100) {
-            $errors[] = 'Progress must be between 0 and 100.';
         }
         if (($data['labor_count'] ?? '') !== '' && (!is_numeric($data['labor_count']) || (int)$data['labor_count'] < 0)) {
             $errors[] = 'Labor count must be a valid number.';

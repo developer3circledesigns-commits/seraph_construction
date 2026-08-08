@@ -32,7 +32,6 @@ $old = [
     'description'         => $update['description'],
     'materials_used'      => $update['materials_used'],
     'labor_count'         => $update['labor_count'],
-    'weather_condition'   => $update['weather_condition'],
     'next_day_plan'       => $update['next_day_plan'],
     'is_milestone'        => $update['is_milestone'],
 ];
@@ -45,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $body = request_body();
     $old = array_merge($old, $body);
 
+    $body['progress_percentage'] = $old['progress_percentage'];
     $errors = DailyUpdate::validate($body);
 
     // Date conflict check (excluding self)
@@ -157,19 +157,9 @@ include __DIR__ . '/../partials/header.php';
       <textarea class="form-control" id="description" name="description"><?php echo e($old['description']); ?></textarea>
     </div>
 
-    <div class="form-row form-row--3">
-      <div class="form-group">
-        <label class="form-label" for="progress_percentage">Progress (%)</label>
-        <input class="form-control" type="number" min="0" max="100" id="progress_percentage" name="progress_percentage" value="<?php echo (int)$old['progress_percentage']; ?>">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="labor_count">Workers on site</label>
-        <input class="form-control" type="number" min="0" id="labor_count" name="labor_count" value="<?php echo e($old['labor_count']); ?>">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="weather_condition">Weather</label>
-        <input class="form-control" type="text" id="weather_condition" name="weather_condition" value="<?php echo e($old['weather_condition']); ?>">
-      </div>
+    <div class="form-group">
+      <label class="form-label" for="labor_count">Workers on site</label>
+      <input class="form-control" type="number" min="0" id="labor_count" name="labor_count" value="<?php echo e($old['labor_count']); ?>">
     </div>
 
     <div class="form-group">
