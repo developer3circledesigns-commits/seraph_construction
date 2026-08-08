@@ -2117,32 +2117,31 @@ html.lenis,html.lenis body{height:auto}
   align-items: center;
   gap: 9px;
   padding: 10px 22px;
-  border: 1px solid rgba(0, 20, 49, 0.22);
+  border: 1px solid rgba(0, 20, 49, 0.18);
   border-radius: 50px;
   background: transparent;
   color: var(--bg);
   font-family: var(--display);
   font-size: 11px;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   line-height: 1;
   cursor: pointer;
-  transition: border-color 0.3s, color 0.3s, background 0.3s;
+  transition: border-color 0.3s, color 0.3s;
 }
 
 .topbar__login i {
   font-size: 12px;
-  color: var(--gold-dark);
   transition: color 0.3s;
 }
 
 .topbar__login:hover {
   border-color: var(--gold);
-  color: var(--gold-dark);
+  color: var(--gold);
 }
 
 .topbar__login:hover i {
-  color: var(--gold-dark);
+  color: var(--gold);
 }
 
 /* =====================================================
@@ -2237,23 +2236,19 @@ html.lenis,html.lenis body{height:auto}
   margin-bottom: 24px;
 }
 
-.login-modal__emblem {
-  width: 54px;
-  height: 54px;
-  margin: 0 auto 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  border: 1px solid rgba(231, 201, 89, 0.4);
-  background: linear-gradient(135deg, rgba(231, 201, 89, 0.22), rgba(231, 201, 89, 0.05));
+.login-modal__eyebrow {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--display);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
   color: var(--gold);
-  font-size: 20px;
 }
 
 .login-modal__head h2 {
   font-family: var(--display);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
   letter-spacing: 0.5px;
   color: var(--white);
@@ -2326,14 +2321,12 @@ html.lenis,html.lenis body{height:auto}
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  margin-bottom: 18px;
-  padding: 10px 12px;
-  border: 1px dashed rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 12px;
   line-height: 1.5;
-  color: var(--gray);
+  color: var(--muted);
 }
 
 .login-modal__hint i {

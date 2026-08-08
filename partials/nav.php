@@ -57,9 +57,9 @@
       </button>
 
       <div class="login-modal__head">
-        <div class="login-modal__emblem" aria-hidden="true"><i class="fa-solid fa-lock"></i></div>
+        <span class="login-modal__eyebrow">Seraph Build Construction</span>
         <h2 id="loginModalTitle">Welcome back</h2>
-        <p>Choose your account type and sign in to continue.</p>
+        <p>Choose your account type to continue.</p>
       </div>
 
       <div class="login-modal__tabs" role="tablist" aria-label="Account type">
@@ -84,7 +84,7 @@
               <label for="loginClientPassword">Password</label>
               <input type="password" id="loginClientPassword" name="password" required autocomplete="current-password" placeholder="Enter your password">
             </div>
-            <button type="submit" class="login-form__submit">Sign In to Client Portal</button>
+            <button type="submit" class="login-form__submit">Sign In</button>
           </form>
         </section>
 
@@ -100,7 +100,7 @@
               <label for="loginAdminPassword">Password</label>
               <input type="password" id="loginAdminPassword" name="password" required autocomplete="current-password" placeholder="Enter your password">
             </div>
-            <button type="submit" class="login-form__submit">Sign In to Admin Panel</button>
+            <button type="submit" class="login-form__submit">Sign In</button>
           </form>
         </section>
       </div>
