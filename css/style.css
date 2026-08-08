@@ -227,9 +227,11 @@ h1, h2, h3, h4 {
   gap: 1.25rem;
 }
 
-.topbar__quote {
+.topbar__actions .topbar__quote {
   padding: 10px 22px;
   font-size: 11px;
+  letter-spacing: 2px;
+  line-height: 1;
 }
 
 .topbar__menu {
@@ -2131,7 +2133,8 @@ html.lenis,html.lenis body{height:auto}
 }
 
 .topbar__login i {
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1;
   transition: color 0.3s;
 }
 
