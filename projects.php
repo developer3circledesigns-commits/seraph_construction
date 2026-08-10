@@ -73,11 +73,12 @@ require __DIR__ . '/partials/header.php';
     .projects-page__category-label::after { content: ''; flex: 1; height: 1px; background: #2a261f; }
 
     .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.1rem; }
-    .project-card { position: relative; display: block; overflow: hidden; border-radius: 4px; background: #16140f; text-decoration: none; color: inherit; }
+    .project-card { position: relative; display: flex; flex-direction: column; overflow: hidden; border-radius: 4px; background: #16140f; text-decoration: none; color: inherit; height: 100%; }
+    .project-card__link { display: block; text-decoration: none; color: inherit; }
     .project-card__media { aspect-ratio: 16 / 11; overflow: hidden; }
     .project-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.6, 0.2, 1); }
-    .project-card:hover .project-card__media img { transform: scale(1.05); }
-    .project-card__body { padding: 0.9rem 0.9rem 1rem; }
+    .project-card__link:hover .project-card__media img { transform: scale(1.05); }
+    .project-card__body { padding: 0.9rem 0.9rem 0.9rem; flex: 1; }
     .project-card__no { font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: #C79A56; }
     .project-card__title { font-family: 'Fraunces', Georgia, serif; font-size: 1.1rem; font-weight: 400; margin: 0.3rem 0 0.25rem; color: #f4efe8; }
     .project-card__text { font-size: 0.82rem; color: #a29a8c; margin-bottom: 0.7rem; }
@@ -88,6 +89,9 @@ require __DIR__ . '/partials/header.php';
     .project-card__spec { display: flex; justify-content: space-between; align-items: baseline; gap: 0.4rem; font-size: 0.72rem; line-height: 1.4; }
     .project-card__spec-label { color: #8a8377; letter-spacing: 0.04em; }
     .project-card__spec-value { color: #e9e5de; text-align: right; }
+
+    .project-card__download { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.65rem 1rem; margin: 0 0.9rem 0.9rem; border: 1px solid #3a352c; border-radius: 3px; background: transparent; color: #c9c2b5; font-family: inherit; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: all 0.3s ease; }
+    .project-card__download:hover { border-color: #C79A56; color: #C79A56; background: rgba(199,154,86,0.08); }
 
     .projects-page__cta { max-width: 1320px; margin: 5rem auto 0; padding: 0 2rem; text-align: center; }
     .btn--gold { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; background: #C79A56; color: #141210; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.85rem; border-radius: 2px; text-decoration: none; transition: background 0.3s ease; }
@@ -112,24 +116,27 @@ require __DIR__ . '/partials/header.php';
     </div>
     <div class="projects-grid">
       <?php foreach ($ongoing as $p): ?>
-        <a class="project-card" href="#contact" title="<?php echo htmlspecialchars($p['title']); ?>">
-          <div class="project-card__media"><img src="<?php echo $p['img']; ?>" alt="<?php echo htmlspecialchars($p['title']); ?>" loading="lazy"></div>
-          <div class="project-card__arrow">&#8599;</div>
-          <div class="project-card__body">
-            <div class="project-card__no"><?php echo $p['no']; ?> &middot; <?php echo htmlspecialchars($p['category']); ?></div>
-            <div class="project-card__title"><?php echo htmlspecialchars($p['title']); ?></div>
-            <div class="project-card__text"><?php echo $p['text']; ?></div>
-            <div class="project-card__specs">
-              <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo $p['location']; ?></span></div>
-              <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo $p['plot']; ?></span></div>
-              <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo $p['builtup']; ?></span></div>
-              <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo $p['floors']; ?></span></div>
-              <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo $p['bedrooms']; ?></span></div>
-              <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo $p['bathrooms']; ?></span></div>
-              <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo $p['style']; ?></span></div>
+        <div class="project-card" title="<?php echo htmlspecialchars($p['title']); ?>">
+          <a class="project-card__link" href="#contact">
+            <div class="project-card__media"><img src="<?php echo $p['img']; ?>" alt="<?php echo htmlspecialchars($p['title']); ?>" loading="lazy"></div>
+            <div class="project-card__arrow">&#8599;</div>
+            <div class="project-card__body">
+              <div class="project-card__no"><?php echo $p['no']; ?> &middot; <?php echo htmlspecialchars($p['category']); ?></div>
+              <div class="project-card__title"><?php echo htmlspecialchars($p['title']); ?></div>
+              <div class="project-card__text"><?php echo $p['text']; ?></div>
+              <div class="project-card__specs">
+                <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo $p['location']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo $p['plot']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo $p['builtup']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo $p['floors']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo $p['bedrooms']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo $p['bathrooms']; ?></span></div>
+                <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo $p['style']; ?></span></div>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+          <a class="project-card__download" href="download-layout.php?p=<?php echo $p['no']; ?>" download><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
+        </div>
       <?php endforeach; ?>
     </div>
   </section>
@@ -141,24 +148,27 @@ require __DIR__ . '/partials/header.php';
     </div>
     <div class="projects-grid">
       <?php foreach ($completed as $p): ?>
-        <a class="project-card" href="#contact" title="<?php echo htmlspecialchars($p['title']); ?>">
-          <div class="project-card__media"><img src="<?php echo $p['img']; ?>" alt="<?php echo htmlspecialchars($p['title']); ?>" loading="lazy"></div>
-          <div class="project-card__arrow">&#8599;</div>
-          <div class="project-card__body">
-            <div class="project-card__no"><?php echo $p['no']; ?> &middot; <?php echo htmlspecialchars($p['category']); ?></div>
-            <div class="project-card__title"><?php echo htmlspecialchars($p['title']); ?></div>
-            <div class="project-card__text"><?php echo $p['text']; ?></div>
-            <div class="project-card__specs">
-              <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo $p['location']; ?></span></div>
-              <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo $p['plot']; ?></span></div>
-              <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo $p['builtup']; ?></span></div>
-              <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo $p['floors']; ?></span></div>
-              <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo $p['bedrooms']; ?></span></div>
-              <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo $p['bathrooms']; ?></span></div>
-              <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo $p['style']; ?></span></div>
+        <div class="project-card" title="<?php echo htmlspecialchars($p['title']); ?>">
+          <a class="project-card__link" href="#contact">
+            <div class="project-card__media"><img src="<?php echo $p['img']; ?>" alt="<?php echo htmlspecialchars($p['title']); ?>" loading="lazy"></div>
+            <div class="project-card__arrow">&#8599;</div>
+            <div class="project-card__body">
+              <div class="project-card__no"><?php echo $p['no']; ?> &middot; <?php echo htmlspecialchars($p['category']); ?></div>
+              <div class="project-card__title"><?php echo htmlspecialchars($p['title']); ?></div>
+              <div class="project-card__text"><?php echo $p['text']; ?></div>
+              <div class="project-card__specs">
+                <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo $p['location']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo $p['plot']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo $p['builtup']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo $p['floors']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo $p['bedrooms']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo $p['bathrooms']; ?></span></div>
+                <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo $p['style']; ?></span></div>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+          <a class="project-card__download" href="download-layout.php?p=<?php echo $p['no']; ?>" download><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
+        </div>
       <?php endforeach; ?>
     </div>
   </section>
