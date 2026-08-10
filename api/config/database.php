@@ -66,12 +66,17 @@ function db_config(): array
         $password = $password ?? 'seraph_password';
     }
 
+    // For local dev with empty password (explicitly set in .env), use null so PDO doesn't send empty password
+    if (!$prod && isset($_ENV['DB_PASSWORD']) && $_ENV['DB_PASSWORD'] === '') {
+        $password = null;
+    }
+
     return [
         'host'     => (string)$host,
         'port'     => (string)($port ?: '3306'),
         'database' => (string)$database,
         'username' => (string)$username,
-        'password' => (string)$password,
+        'password' => $password,
     ];
 }
 
