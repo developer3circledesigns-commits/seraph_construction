@@ -3,13 +3,22 @@
  * Navigation partial — topbar, mobile menu and side nav.
  * Expects $site array to be available.
  */
+// Current page basename so section anchors can fall back to the homepage.
+$currentPage = basename((string)($_SERVER['SCRIPT_NAME'] ?? 'index.php'), '.php');
+$homePrefix  = ($currentPage === 'index' || $currentPage === '') ? '' : 'index.php';
+
+// Build nav links: Projects points to its own page; anchors target the homepage.
+$navLinks = [];
+foreach ($site['nav'] as $href => $label) {
+    $navLinks[$href] = $href === 'projects' ? 'projects.php' : $homePrefix . '#' . $href;
+}
 ?>
   <!-- Topbar (Layout 13 style) -->
   <header class="topbar">
-    <a href="#hero" class="brand"><img src="images/seraph-logo@204w.webp" srcset="images/seraph-logo@204w.webp 204w, images/seraph-logo@102w.webp 102w" sizes="204px" alt="SERAPH BUILD CONSTRUCTION" width="400" height="94"></a>
+    <a href="<?php echo $homePrefix; ?>#hero" class="brand"><img src="images/seraph-logo@204w.webp" srcset="images/seraph-logo@204w.webp 204w, images/seraph-logo@102w.webp 102w" sizes="204px" alt="SERAPH BUILD CONSTRUCTION" width="400" height="94"></a>
     <nav class="topbar__nav" aria-label="Primary navigation">
       <?php foreach ($site['nav'] as $href => $label): ?>
-        <a href="#<?php echo htmlspecialchars($href); ?>"><?php echo htmlspecialchars($label); ?></a>
+        <a href="<?php echo htmlspecialchars($navLinks[$href]); ?>"><?php echo htmlspecialchars($label); ?></a>
       <?php endforeach; ?>
     </nav>
     <div class="topbar__actions">
@@ -27,7 +36,7 @@
   <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
     <nav aria-label="Mobile navigation">
       <?php foreach ($site['nav'] as $href => $label): ?>
-        <a href="#<?php echo htmlspecialchars($href); ?>" class="mobile-menu__link"><?php echo htmlspecialchars($label); ?></a>
+        <a href="<?php echo htmlspecialchars($navLinks[$href]); ?>" class="mobile-menu__link"><?php echo htmlspecialchars($label); ?></a>
       <?php endforeach; ?>
       <button class="btn mobile-menu__login" data-login-open aria-haspopup="dialog" aria-controls="loginModal">
         <i class="fa-solid fa-user" aria-hidden="true"></i> Sign In
@@ -41,9 +50,9 @@
     <span class="side-nav__label">Scroll</span>
     <ul class="side-nav__list">
       <?php foreach ($site['nav'] as $href => $label): ?>
-        <li><a href="#<?php echo htmlspecialchars($href); ?>" class="side-nav__link" data-side-nav><span class="side-nav__dot"></span><span class="side-nav__name"><?php echo htmlspecialchars($label); ?></span></a></li>
+        <li><a href="<?php echo htmlspecialchars($navLinks[$href]); ?>" class="side-nav__link" data-side-nav><span class="side-nav__dot"></span><span class="side-nav__name"><?php echo htmlspecialchars($label); ?></span></a></li>
       <?php endforeach; ?>
-      <li><a href="#contact" class="side-nav__link" data-side-nav><span class="side-nav__dot"></span><span class="side-nav__name">Contact</span></a></li>
+      <li><a href="<?php echo $homePrefix; ?>#contact" class="side-nav__link" data-side-nav><span class="side-nav__dot"></span><span class="side-nav__name">Contact</span></a></li>
     </ul>
     <span class="side-nav__progress" id="sideNavProgress"></span>
   </nav>

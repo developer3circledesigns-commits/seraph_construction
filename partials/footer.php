@@ -29,7 +29,7 @@
         <h3 class="footer-heading">Quick Links</h3>
         <ul class="footer-links">
           <?php foreach ($site['nav'] as $href => $label): ?>
-            <li><a href="#<?php echo htmlspecialchars($href); ?>"><?php echo htmlspecialchars($label); ?></a></li>
+            <li><a href="<?php echo $href === 'projects' ? 'projects.php' : '#' . htmlspecialchars($href); ?>"><?php echo htmlspecialchars($label); ?></a></li>
           <?php endforeach; ?>
           <li><a href="#materials">Materials</a></li>
         </ul>
