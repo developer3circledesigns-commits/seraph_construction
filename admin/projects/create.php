@@ -180,15 +180,15 @@ include dirname(__DIR__) . '/partials/header.php';
     <div class="form-row form-row--3">
       <div class="form-group">
         <label class="form-label" for="floors">Floors</label>
-        <input class="form-control" type="number" min="0" max="200" id="floors" name="floors" value="<?php echo e($old['floors']); ?>">
+        <input class="form-control" type="number" min="0" id="floors" name="floors" value="<?php echo e($old['floors']); ?>">
       </div>
       <div class="form-group">
         <label class="form-label" for="bedrooms">Bedrooms</label>
-        <input class="form-control" type="number" min="0" max="50" id="bedrooms" name="bedrooms" value="<?php echo e($old['bedrooms']); ?>">
+        <input class="form-control" type="number" min="0" id="bedrooms" name="bedrooms" value="<?php echo e($old['bedrooms']); ?>">
       </div>
       <div class="form-group">
         <label class="form-label" for="bathrooms">Bathrooms</label>
-        <input class="form-control" type="number" min="0" max="50" id="bathrooms" name="bathrooms" value="<?php echo e($old['bathrooms']); ?>">
+        <input class="form-control" type="number" min="0" id="bathrooms" name="bathrooms" value="<?php echo e($old['bathrooms']); ?>">
       </div>
     </div>
 
