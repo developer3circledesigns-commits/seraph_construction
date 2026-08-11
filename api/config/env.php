@@ -105,7 +105,14 @@ function env_parse_file(string $path): void
         }
 
         // Never override a value that is already set (env wins over file).
-        if (getenv($key) === false) {
+        // An EMPTY value counts as "not set": in the threaded Apache/PHP
+        // worker on Windows, a variable that THIS loader previously set to
+        // "" (via putenv) comes back from getenv() as "" — not false — so
+        // without this the file value would be skipped on the next request
+        // handled by the same worker, and db_config() would fall back to
+        // the wrong local default.
+        $existing = getenv($key);
+        if ($existing === false || $existing === '') {
             putenv("{$key}={$value}");
             $_ENV[$key] = $value;
         }
