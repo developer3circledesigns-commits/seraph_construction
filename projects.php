@@ -147,7 +147,7 @@ function truncateDesc(string $text, int $length = 80): array
              </div>
            </a>
            <?php if ((int)$p['has_layout'] > 0): ?>
-           <a class="project-card__download" href="/api/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
+           <a class="project-card__download" href="/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
           <?php endif; ?>
         </div>
       <?php endforeach; ?>
@@ -188,8 +188,8 @@ function truncateDesc(string $text, int $length = 80): array
               </div>
             </div>
           </a>
-          <?php if ((int)$p['has_layout'] > 0): ?>
-          <a class="project-card__download" href="/api/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
+           <?php if ((int)$p['has_layout'] > 0): ?>
+           <a class="project-card__download" href="/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
           <?php endif; ?>
         </div>
       <?php endforeach; ?>

@@ -157,7 +157,7 @@ include dirname(__DIR__) . '/partials/header.php';
           <div class="flex flex--between mb-1"><span class="muted">File</span><strong><?php echo e($layout['original_name']); ?></strong></div>
           <div class="flex flex--between mb-1"><span class="muted">Type</span><strong><?php echo e($layout['file_type']); ?></strong></div>
           <div class="flex flex--between mb-1"><span class="muted">Size</span><strong><?php echo number_format((int)$layout['file_size'] / 1024, 1); ?> KB</strong></div>
-          <a href="/api/download-layout.php?id=<?php echo (int)$id; ?>" class="btn btn--secondary btn--sm mt-1"><i class="fa-solid fa-download"></i> Download</a>
+          <a href="/download-layout.php?id=<?php echo (int)$id; ?>" class="btn btn--secondary btn--sm mt-1"><i class="fa-solid fa-download"></i> Download</a>
         </div>
       <?php else: ?>
         <p class="muted small">No layout file uploaded.</p>
