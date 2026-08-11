@@ -16,10 +16,10 @@ require __DIR__ . '/partials/header.php';
 
 function projectThumbnail(array $p): string
 {
-    if (!empty($p['thumbnail'])) {
+    if (!empty($p['thumbnail']) && file_exists(__DIR__ . '/' . $p['thumbnail'])) {
         return $p['thumbnail'];
     }
-    return 'images/projects/placeholder.webp';
+    return 'images/projects/theme-home-daylight-warm.webp';
 }
 
 function fmtSpec(?string $value): string

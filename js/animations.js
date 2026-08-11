@@ -6,27 +6,28 @@
 (function () {
   'use strict';
 
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function initAnimations() {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (reduceMotion) {
-    document.querySelectorAll('.blur-panel__media img, .blur-card img, .testimonials-section__bg img').forEach(function (img) {
-      img.style.filter = 'none';
-      img.style.transform = 'none';
-    });
-    document.querySelectorAll('.projects-story__step').forEach(function (s, i) {
-      s.style.opacity = i === 0 ? 1 : 0;
-    });
-    document.querySelectorAll('.projects-story__visual img').forEach(function (img, i) {
-      img.classList.toggle('active', i === 0);
-    });
-    return;
-  }
+    if (reduceMotion) {
+      document.querySelectorAll('.blur-panel__media img, .blur-card img, .testimonials-section__bg img').forEach(function (img) {
+        img.style.filter = 'none';
+        img.style.transform = 'none';
+      });
+      document.querySelectorAll('.projects-story__step').forEach(function (s, i) {
+        s.style.opacity = i === 0 ? 1 : 0;
+      });
+      document.querySelectorAll('.projects-story__visual img').forEach(function (img, i) {
+        img.classList.toggle('active', i === 0);
+      });
+      return;
+    }
 
-  if (typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') {
-    return;
-  }
+    if (typeof window.gsap === 'undefined' || typeof window.ScrollTrigger === 'undefined') {
+      return;
+    }
 
-  gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger);
 
   /* Full-bleed blur panels: sharpness arrives on approach */
   gsap.utils.toArray('[data-blur]').forEach(function (panel) {
@@ -70,14 +71,17 @@
      Note: the initial offset is applied here via gsap.set (never via CSS),
      otherwise GSAP caches the CSS percentage transform as stale px and the
      headline stays pushed out of the mask. */
-  gsap.set('.hero__title .line-inner', { yPercent: 120 });
-  gsap.to('.hero__title .line-inner', {
-    yPercent: 0,
-    duration: 1,
-    ease: 'power4.out',
-    stagger: 0.12,
-    delay: 0.15,
-  });
+  var heroLines = gsap.utils.toArray('.hero__title .line-inner');
+  if (heroLines.length) {
+    gsap.set(heroLines, { yPercent: 120 });
+    gsap.to(heroLines, {
+      yPercent: 0,
+      duration: 1,
+      ease: 'power4.out',
+      stagger: 0.12,
+      delay: 0.15,
+    });
+  }
 
   /* Split blur cards: image + copy */
   var cards = gsap.utils.toArray('.blur-card');
@@ -325,18 +329,22 @@
   });
 
   /* Projects — section heading reveal */
-  gsap.from('.projects-section__head .eyebrow, .projects-section__heading, .projects-section__intro', {
-    opacity: 0,
-    y: 40,
-    duration: 0.9,
-    ease: 'power3.out',
-    stagger: 0.1,
-    scrollTrigger: {
-      trigger: '.projects-section__head',
-      start: 'top 85%',
-      toggleActions: 'play none none none',
-    },
-  });
+  var projectsHeadEls = gsap.utils.toArray('.projects-section__head .eyebrow, .projects-section__heading, .projects-section__intro');
+  var projectsHeadTrigger = document.querySelector('.projects-section__head');
+  if (projectsHeadEls.length && projectsHeadTrigger) {
+    gsap.from(projectsHeadEls, {
+      opacity: 0,
+      y: 40,
+      duration: 0.9,
+      ease: 'power3.out',
+      stagger: 0.1,
+      scrollTrigger: {
+        trigger: projectsHeadTrigger,
+        start: 'top 85%',
+        toggleActions: 'play none none none',
+      },
+    });
+  }
 
   /* Projects — Layout 06 split scrollytelling.
      Pinned split view: text steps crossfade on the left while a
@@ -381,12 +389,13 @@
       gsap.set(pImgs[0], { opacity: 1 });
       setProjectsBg(0);
 
+      var projectsInner = projectsStory.querySelector('.projects-story__inner');
       var pTl = gsap.timeline({
         scrollTrigger: {
           trigger: projectsStory,
           start: 'top top',
           end: 'bottom bottom',
-          pin: '.projects-story__inner',
+          pin: projectsInner || true,
           scrub: 1,
           anticipatePin: 1,
         },
@@ -432,14 +441,17 @@
   }
 
   /* About 01 — heading line reveal */
-  gsap.set('.about-head .line-inner', { yPercent: 120 });
-  gsap.to('.about-head .line-inner', {
-    yPercent: 0,
-    duration: 1,
-    ease: 'power4.out',
-    stagger: 0.12,
-    delay: 0.1,
-  });
+  var aboutLines = gsap.utils.toArray('.about-head .line-inner');
+  if (aboutLines.length) {
+    gsap.set(aboutLines, { yPercent: 120 });
+    gsap.to(aboutLines, {
+      yPercent: 0,
+      duration: 1,
+      ease: 'power4.out',
+      stagger: 0.12,
+      delay: 0.1,
+    });
+  }
 
   /* Generic fade-up reveal for About / Testimonials / Footer */
   gsap.utils.toArray('[data-reveal]').forEach(function (el) {
@@ -467,23 +479,28 @@
   });
 
   /* About 01 — stats stagger */
-  gsap.from('.stats-grid .stat', {
-    opacity: 0,
-    y: 50,
-    duration: 0.8,
-    stagger: 0.15,
-    ease: 'power2.out',
-    scrollTrigger: { trigger: '.stats-grid', start: 'top 85%', toggleActions: 'play none none none' },
-  });
+  var statsGrid = document.querySelector('.stats-grid');
+  var statEls = gsap.utils.toArray('.stats-grid .stat');
+  if (statEls.length && statsGrid) {
+    gsap.from(statEls, {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      stagger: 0.15,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: statsGrid, start: 'top 85%', toggleActions: 'play none none none' },
+    });
+  }
 
   /* Footer 02 — scroll-driven marquee */
   var marqueeTrack = document.getElementById('marqueeTrack');
-  if (marqueeTrack) {
+  var footerEl = document.querySelector('.footer-02');
+  if (marqueeTrack && footerEl) {
     gsap.to(marqueeTrack, {
       xPercent: -50,
       ease: 'none',
       scrollTrigger: {
-        trigger: '.footer-02',
+        trigger: footerEl,
         start: 'top bottom',
         end: 'bottom bottom',
         scrub: 1,
@@ -513,4 +530,12 @@
       },
     });
   });
+
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAnimations);
+  } else {
+    initAnimations();
+  }
 })();
