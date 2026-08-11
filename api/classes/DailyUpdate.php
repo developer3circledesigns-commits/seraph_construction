@@ -133,6 +133,9 @@ class DailyUpdate
         if (!in_list($data['status'] ?? null, self::STATUSES)) {
             $errors[] = 'Invalid status.';
         }
+        if (($data['progress_percentage'] ?? '') !== '' && (!is_numeric($data['progress_percentage']) || (int)$data['progress_percentage'] < 0 || (int)$data['progress_percentage'] > 100)) {
+            $errors[] = 'Progress must be between 0 and 100.';
+        }
         if (($data['labor_count'] ?? '') !== '' && (!is_numeric($data['labor_count']) || (int)$data['labor_count'] < 0)) {
             $errors[] = 'Labor count must be a valid number.';
         }
