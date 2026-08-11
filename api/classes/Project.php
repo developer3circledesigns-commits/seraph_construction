@@ -9,6 +9,10 @@ class Project
 {
     public const STATUSES = ['planning', 'in_progress', 'on_hold', 'completed', 'cancelled'];
 
+    public const CATEGORIES = ['Residential', 'Commercial', 'Villa', 'Apartment', 'Office', 'Industrial'];
+
+    private const LAYOUT_MAX_BYTES = 10 * 1024 * 1024; // 10MB
+
     public static function find(int $id): ?array
     {
         return Database::one(
@@ -100,20 +104,46 @@ class Project
         );
     }
 
+    /** Public-facing project list with layout info. */
+    public static function publicList(): array
+    {
+        return Database::all(
+            "SELECT p.id, p.name, p.category, p.description, p.location,
+                    p.plot_size, p.built_up_area, p.floors, p.bedrooms, p.bathrooms,
+                    p.style, p.status, p.progress_percentage, p.thumbnail,
+                    (SELECT COUNT(*) FROM project_layouts pl WHERE pl.project_id = p.id) AS has_layout
+               FROM projects p
+              WHERE p.status IN ('in_progress', 'completed')
+              ORDER BY p.status ASC, p.updated_at DESC"
+        );
+    }
+
     public static function create(array $data): int
     {
         return Database::insert(
             "INSERT INTO projects
-                (client_id, name, description, location, start_date, estimated_end_date,
+                (client_id, name, category, description, location,
+                 plot_size, built_up_area, floors, bedrooms, bathrooms, style, thumbnail,
+                 start_date, estimated_end_date,
                  status, progress_percentage, budget)
              VALUES
-                (:client_id, :name, :description, :location, :start_date, :estimated_end_date,
+                (:client_id, :name, :category, :description, :location,
+                 :plot_size, :built_up_area, :floors, :bedrooms, :bathrooms, :style, :thumbnail,
+                 :start_date, :estimated_end_date,
                  :status, :progress_percentage, :budget)",
             [
                 ':client_id'           => $data['client_id'],
                 ':name'                => $data['name'],
+                ':category'            => $data['category'] ?? null,
                 ':description'         => $data['description'] ?? null,
                 ':location'            => $data['location'] ?? null,
+                ':plot_size'           => $data['plot_size'] ?? null,
+                ':built_up_area'       => $data['built_up_area'] ?? null,
+                ':floors'              => ($data['floors'] ?? '') !== '' ? (int)$data['floors'] : null,
+                ':bedrooms'            => ($data['bedrooms'] ?? '') !== '' ? (int)$data['bedrooms'] : null,
+                ':bathrooms'           => ($data['bathrooms'] ?? '') !== '' ? (int)$data['bathrooms'] : null,
+                ':style'               => $data['style'] ?? null,
+                ':thumbnail'           => $data['thumbnail'] ?? null,
                 ':start_date'          => $data['start_date'] ?? null,
                 ':estimated_end_date'  => $data['estimated_end_date'] ?? null,
                 ':status'              => $data['status'] ?? 'planning',
@@ -129,8 +159,16 @@ class Project
             "UPDATE projects SET
                 client_id           = :client_id,
                 name                = :name,
+                category            = :category,
                 description         = :description,
                 location            = :location,
+                plot_size           = :plot_size,
+                built_up_area       = :built_up_area,
+                floors              = :floors,
+                bedrooms            = :bedrooms,
+                bathrooms           = :bathrooms,
+                style               = :style,
+                thumbnail           = :thumbnail,
                 start_date          = :start_date,
                 estimated_end_date  = :estimated_end_date,
                 actual_end_date     = :actual_end_date,
@@ -141,8 +179,16 @@ class Project
             [
                 ':client_id'           => $data['client_id'],
                 ':name'                => $data['name'],
+                ':category'            => $data['category'] ?? null,
                 ':description'         => $data['description'] ?? null,
                 ':location'            => $data['location'] ?? null,
+                ':plot_size'           => $data['plot_size'] ?? null,
+                ':built_up_area'       => $data['built_up_area'] ?? null,
+                ':floors'              => ($data['floors'] ?? '') !== '' ? (int)$data['floors'] : null,
+                ':bedrooms'            => ($data['bedrooms'] ?? '') !== '' ? (int)$data['bedrooms'] : null,
+                ':bathrooms'           => ($data['bathrooms'] ?? '') !== '' ? (int)$data['bathrooms'] : null,
+                ':style'               => $data['style'] ?? null,
+                ':thumbnail'           => $data['thumbnail'] ?? null,
                 ':start_date'          => $data['start_date'] ?? null,
                 ':estimated_end_date'  => $data['estimated_end_date'] ?? null,
                 ':actual_end_date'     => ($data['actual_end_date'] ?? null) !== '' ? ($data['actual_end_date'] ?? null) : null,
@@ -196,5 +242,76 @@ class Project
             'admins'     => (int)Database::scalar('SELECT COUNT(*) FROM admins'),
             'updates30'  => (int)Database::scalar('SELECT COUNT(*) FROM daily_updates WHERE update_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)'),
         ];
+    }
+
+    /** Get layout metadata for a project (without blob data). */
+    public static function getLayout(int $projectId): ?array
+    {
+        return Database::one(
+            'SELECT id, original_name, file_type, file_size, created_at
+               FROM project_layouts WHERE project_id = :pid',
+            [':pid' => $projectId]
+        );
+    }
+
+    /** Upload a layout file for a project. Replaces existing layout. */
+    public static function uploadLayout(int $projectId, array $file): void
+    {
+        if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+            return;
+        }
+
+        if (($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+            throw new RuntimeException('Upload failed with error code ' . $file['error']);
+        }
+
+        if (($file['size'] ?? 0) > self::LAYOUT_MAX_BYTES) {
+            throw new RuntimeException('File exceeds the 10MB size limit.');
+        }
+
+        $data = file_get_contents((string)$file['tmp_name']);
+        if ($data === false || $data === '') {
+            throw new RuntimeException('Could not read the uploaded file.');
+        }
+
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime  = $finfo->file((string)$file['tmp_name']);
+
+        $originalName = (string)($file['name'] ?? 'layout');
+        $safeName     = self::safeLayoutName($originalName);
+
+        self::deleteLayout($projectId);
+
+        Database::insert(
+            'INSERT INTO project_layouts (project_id, filename, original_name, file_type, file_size, file_data)
+             VALUES (:pid, :fn, :on, :ft, :fs, :fd)',
+            [
+                ':pid' => $projectId,
+                ':fn'  => $safeName,
+                ':on'  => $originalName,
+                ':ft'  => $mime,
+                ':fs'  => strlen($data),
+                ':fd'  => $data,
+            ]
+        );
+    }
+
+    /** Delete a project's layout file. */
+    public static function deleteLayout(int $projectId): void
+    {
+        Database::execute(
+            'DELETE FROM project_layouts WHERE project_id = :pid',
+            [':pid' => $projectId]
+        );
+    }
+
+    private static function safeLayoutName(string $original): string
+    {
+        $base = strtolower(pathinfo($original, PATHINFO_FILENAME));
+        $ext  = strtolower(pathinfo($original, PATHINFO_EXTENSION));
+        $base = preg_replace('/[^a-z0-9 _-]/', '', $base);
+        $base = trim($base ?: 'layout');
+        $base = substr($base, 0, 60);
+        return $base . ($ext ? '.' . preg_replace('/[^a-z0-9]/', '', $ext) : '');
     }
 }

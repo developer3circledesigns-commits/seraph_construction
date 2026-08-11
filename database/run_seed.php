@@ -45,10 +45,10 @@ $pdo->exec("INSERT INTO clients (email, password_hash, company_name, contact_per
 ('client1@example.com', " . $pdo->quote($hash) . ", 'Azure Enterprises', 'Rajesh Kumar', '+91 90000 00002', '12, Anna Nagar, Chennai'),
 ('client2@example.com', " . $pdo->quote($hash) . ", 'Camel Living', 'Priya Sharma', '+91 90000 00003', '45, T. Nagar, Chennai')");
 
-$pdo->exec("INSERT INTO projects (client_id, name, description, location, start_date, estimated_end_date, status, progress_percentage, budget) VALUES
-(1, 'Villa Azure', 'Luxury villa with basement, 4 bedrooms and a garden.', 'Chennai', '2026-01-10', '2026-12-20', 'in_progress', 80, 8500000.00),
-(1, 'Office Skyline', 'Commercial office fit-out, 3 floors.', 'OMR, Chennai', '2026-03-01', '2026-09-15', 'in_progress', 40, 4200000.00),
-(2, 'Penthouse Camel', 'Premium penthouse interior + modular kitchen.', 'Egmore, Chennai', '2026-02-01', '2026-10-30', 'in_progress', 60, 5600000.00)");
+$pdo->exec("INSERT INTO projects (client_id, name, category, description, location, plot_size, built_up_area, floors, bedrooms, bathrooms, style, start_date, estimated_end_date, status, progress_percentage, budget) VALUES
+(1, 'Villa Azure', 'Villa', 'Luxury villa with basement, 4 bedrooms and a garden.', 'Chennai', '60x80', '4200 sqft', 3, 4, 5, 'Contemporary Luxury', '2026-01-10', '2026-12-20', 'in_progress', 80, 8500000.00),
+(1, 'Office Skyline', 'Office', 'Commercial office fit-out, 3 floors.', 'OMR, Chennai', '100x120', '15000 sqft', 3, 0, 8, 'Corporate Modern', '2026-03-01', '2026-09-15', 'in_progress', 40, 4200000.00),
+(2, 'Penthouse Camel', 'Apartment', 'Premium penthouse interior + modular kitchen.', 'Egmore, Chennai', NULL, '3200 sqft', 2, 3, 4, 'Warm Contemporary', '2026-02-01', '2026-10-30', 'in_progress', 60, 5600000.00)");
 
 $pdo->exec("INSERT INTO admin_projects (admin_id, project_id) VALUES
 (1,1),(1,2),(2,1),(2,3)");

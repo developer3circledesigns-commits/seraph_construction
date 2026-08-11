@@ -11,8 +11,16 @@ $errors = [];
 $old = [
     'client_id'           => '',
     'name'                => '',
+    'category'            => '',
+    'custom_category'     => '',
     'description'         => '',
     'location'            => '',
+    'plot_size'           => '',
+    'built_up_area'       => '',
+    'floors'              => '',
+    'bedrooms'            => '',
+    'bathrooms'           => '',
+    'style'               => '',
     'start_date'          => '',
     'estimated_end_date'  => '',
     'status'              => 'planning',
@@ -34,13 +42,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($prog < 0 || $prog > 100) $errors[] = 'Progress must be between 0 and 100.';
 
     if (!$errors) {
-        $id = Project::create($body);
-        if (!empty($body['admin_ids'])) {
-            Project::assignAdmins($id, (array)$body['admin_ids']);
+        $category = ($body['category'] ?? '') === 'custom'
+            ? trim($body['custom_category'] ?? '')
+            : ($body['category'] ?? '');
+
+        $thumbnailPath = null;
+        if (!empty($_FILES['thumbnail']['tmp_name'])) {
+            $uploadDir = dirname(__DIR__, 2) . '/images/projects/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $thumbName = basename($_FILES['thumbnail']['name']);
+            $thumbExt  = pathinfo($thumbName, PATHINFO_EXTENSION);
+            $thumbBase = preg_replace('/[^a-z0-9_-]/', '', strtolower(pathinfo($thumbName, PATHINFO_FILENAME)));
+            $thumbBase = substr($thumbBase ?: 'project', 0, 40);
+            $targetName = $thumbBase . '_' . time() . '.' . $thumbExt;
+            $targetPath = $uploadDir . $targetName;
+
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $mime  = $finfo->file($_FILES['thumbnail']['tmp_name']);
+            if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp', 'image/gif'])) {
+                $errors[] = 'Thumbnail must be a JPG, PNG, WEBP, or GIF image.';
+            } elseif ($_FILES['thumbnail']['size'] > 5 * 1024 * 1024) {
+                $errors[] = 'Thumbnail must be under 5MB.';
+            } elseif (!move_uploaded_file($_FILES['thumbnail']['tmp_name'], $targetPath)) {
+                $errors[] = 'Failed to upload thumbnail.';
+            } else {
+                $thumbnailPath = 'images/projects/' . $targetName;
+            }
         }
-        Audit::admin((int)$user['id'], 'project_create', 'project', $id, ['name' => $body['name']]);
-        SSE::broadcast(SSE::projectChannel($id), 'project', ['action' => 'created', 'project_id' => $id]);
-        redirect('/admin/projects/view?id=' . $id, 'Project created successfully.');
+
+        if (!$errors) {
+            $body['category']  = $category;
+            $body['thumbnail'] = $thumbnailPath;
+            $id = Project::create($body);
+
+            if (!empty($body['admin_ids'])) {
+                Project::assignAdmins($id, (array)$body['admin_ids']);
+            }
+
+            if (!empty($_FILES['layout_file']['tmp_name'])) {
+                try {
+                    Project::uploadLayout($id, $_FILES['layout_file']);
+                } catch (RuntimeException $e) {
+                    $errors[] = 'Layout upload: ' . $e->getMessage();
+                }
+            }
+
+            if (!$errors) {
+                Audit::admin((int)$user['id'], 'project_create', 'project', $id, ['name' => $body['name']]);
+                SSE::broadcast(SSE::projectChannel($id), 'project', ['action' => 'created', 'project_id' => $id]);
+                redirect('/admin/projects/view?id=' . $id, 'Project created successfully.');
+            }
+        }
     }
 }
 
@@ -58,13 +112,36 @@ include dirname(__DIR__) . '/partials/header.php';
   </div>
 </div>
 
-<form method="POST" action="/admin/projects/create">
+<form method="POST" action="/admin/projects/create" enctype="multipart/form-data">
   <?php echo CSRF::field(); ?>
   <div class="card">
     <h2 class="card__title mb-2">Project Details</h2>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="name">Project Name *</label>
+        <input class="form-control" type="text" id="name" name="name" required value="<?php echo e($old['name']); ?>" placeholder="e.g. Villa Azure">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="category">Project Category</label>
+        <select class="form-control" id="category" name="category" onchange="document.getElementById('customCatRow').style.display = this.value === 'custom' ? '' : 'none';">
+          <option value="">Select category...</option>
+          <?php foreach (Project::CATEGORIES as $cat): ?>
+            <option value="<?php echo e($cat); ?>" <?php echo $old['category'] === $cat ? 'selected' : ''; ?>><?php echo e($cat); ?></option>
+          <?php endforeach; ?>
+          <option value="custom" <?php echo $old['category'] === 'custom' ? 'selected' : ''; ?>>Other (custom)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" id="customCatRow" style="<?php echo ($old['category'] === 'custom' || !in_array($old['category'], array_merge(Project::CATEGORIES, ['']))) ? '' : 'display:none;'; ?>">
+      <label class="form-label" for="custom_category">Custom Category</label>
+      <input class="form-control" type="text" id="custom_category" name="custom_category" value="<?php echo e($old['custom_category'] ?: (!in_array($old['category'], array_merge(Project::CATEGORIES, [''])) ? $old['category'] : '')); ?>" placeholder="Enter custom category">
+    </div>
+
     <div class="form-group">
-      <label class="form-label" for="name">Project Name *</label>
-      <input class="form-control" type="text" id="name" name="name" required value="<?php echo e($old['name']); ?>" placeholder="e.g. Villa Azure">
+      <label class="form-label" for="description">Description</label>
+      <textarea class="form-control" id="description" name="description" placeholder="Brief description of the project..."><?php echo e($old['description']); ?></textarea>
     </div>
 
     <div class="form-row">
@@ -85,9 +162,34 @@ include dirname(__DIR__) . '/partials/header.php';
       </div>
     </div>
 
-    <div class="form-group">
-      <label class="form-label" for="description">Description</label>
-      <textarea class="form-control" id="description" name="description" placeholder="Brief description of the project..."><?php echo e($old['description']); ?></textarea>
+    <div class="form-row form-row--3">
+      <div class="form-group">
+        <label class="form-label" for="plot_size">Plot Size</label>
+        <input class="form-control" type="text" id="plot_size" name="plot_size" value="<?php echo e($old['plot_size']); ?>" placeholder="e.g. 30x40 or 2400 sqft">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="built_up_area">Built-up Area</label>
+        <input class="form-control" type="text" id="built_up_area" name="built_up_area" value="<?php echo e($old['built_up_area']); ?>" placeholder="e.g. 2400 sqft">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="style">Style</label>
+        <input class="form-control" type="text" id="style" name="style" value="<?php echo e($old['style']); ?>" placeholder="e.g. Modern Contemporary">
+      </div>
+    </div>
+
+    <div class="form-row form-row--3">
+      <div class="form-group">
+        <label class="form-label" for="floors">Floors</label>
+        <input class="form-control" type="number" min="0" max="200" id="floors" name="floors" value="<?php echo e($old['floors']); ?>">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="bedrooms">Bedrooms</label>
+        <input class="form-control" type="number" min="0" max="50" id="bedrooms" name="bedrooms" value="<?php echo e($old['bedrooms']); ?>">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="bathrooms">Bathrooms</label>
+        <input class="form-control" type="number" min="0" max="50" id="bathrooms" name="bathrooms" value="<?php echo e($old['bathrooms']); ?>">
+      </div>
     </div>
 
     <div class="form-row form-row--3">
@@ -118,6 +220,20 @@ include dirname(__DIR__) . '/partials/header.php';
         <label class="form-label" for="progress_percentage">Progress (%)</label>
         <input class="form-control" type="number" min="0" max="100" id="progress_percentage" name="progress_percentage" value="<?php echo (int)$old['progress_percentage']; ?>">
       </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="card__title mb-2">Media &amp; Files</h2>
+    <div class="form-group">
+      <label class="form-label" for="thumbnail">Project Thumbnail (card image)</label>
+      <input class="form-control" type="file" id="thumbnail" name="thumbnail" accept="image/jpeg,image/png,image/webp,image/gif">
+      <span class="small muted">JPG, PNG, WEBP or GIF. Max 5MB. Shown on the project card.</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="layout_file">Download Layout File</label>
+      <input class="form-control" type="file" id="layout_file" name="layout_file" accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.dwg,.dxf,.svg,.zip">
+      <span class="small muted">PDF, image, CAD, or any format. Max 10MB. Users can download this from the project card.</span>
     </div>
   </div>
 

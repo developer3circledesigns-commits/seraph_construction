@@ -2,56 +2,35 @@
 /**
  * SERAPH BUILD CONSTRUCTION — Projects page.
  * Separate portfolio page: On Going Projects + Completed Projects.
+ * Now database-driven from the projects table.
  */
 $site = require __DIR__ . '/config/site.php';
+require __DIR__ . '/api/config/bootstrap.php';
 
-// Central project data — status: 'ongoing' | 'completed'
-$projects = [
-    // ---- On Going Projects ----
-    ['no' => '01', 'status' => 'ongoing', 'category' => 'Luxury Residence', 'title' => 'Villa Seraph', 'text' => '12,000 sq.ft. private residence in Mumbai — crafted around light, view and quiet luxury.',
-     'img' => 'images/projects/theme-home-daylight-warm.webp',
-     'location' => 'Mumbai', 'plot' => '6,200 sq.ft.', 'builtup' => '12,000 sq.ft.', 'floors' => '4', 'bedrooms' => '5', 'bathrooms' => '6', 'style' => 'Contemporary Luxury'],
-    ['no' => '02', 'status' => 'ongoing', 'category' => 'Architecture', 'title' => 'The Glasshouse', 'text' => 'A contemporary family home in Pune where floor-to-ceiling glazing dissolves the line between inside and garden.',
-     'img' => 'images/glass_house@1000w.webp',
-     'location' => 'Pune', 'plot' => '4,800 sq.ft.', 'builtup' => '8,400 sq.ft.', 'floors' => '3', 'bedrooms' => '4', 'bathrooms' => '4', 'style' => 'Modern Minimal'],
-    ['no' => '03', 'status' => 'ongoing', 'category' => 'Hotel', 'title' => 'Hotel Aurelia', 'text' => 'A 65-key boutique hotel in Jaipur — sculpted lobby, guest suites and dining hall in heritage stone, warm wood and layered hospitality lighting.',
-     'img' => 'images/hotel_aurelia@1000w.webp',
-     'location' => 'Jaipur', 'plot' => '18,000 sq.ft.', 'builtup' => '42,000 sq.ft.', 'floors' => '6', 'bedrooms' => '65', 'bathrooms' => '72', 'style' => 'Heritage Boutique'],
-    ['no' => '04', 'status' => 'ongoing', 'category' => 'Interior Design', 'title' => 'Penthouse Noir', 'text' => 'A skyline penthouse in Bengaluru finished in stone, smoked oak and soft ambient light.',
-     'img' => 'images/projects/theme-penthouse-light-camel.webp',
-     'location' => 'Bengaluru', 'plot' => '—', 'builtup' => '4,200 sq.ft.', 'floors' => '2', 'bedrooms' => '4', 'bathrooms' => '5', 'style' => 'Dark Luxe'],
-    ['no' => '05', 'status' => 'ongoing', 'category' => 'Renovation', 'title' => 'Garden Pavilion', 'text' => 'Heritage home restoration in Delhi — original details preserved, modern systems quietly added.',
-     'img' => 'images/garden@1000w.webp',
-     'location' => 'Delhi', 'plot' => '3,600 sq.ft.', 'builtup' => '6,800 sq.ft.', 'floors' => '3', 'bedrooms' => '4', 'bathrooms' => '4', 'style' => 'Heritage Revival'],
-    ['no' => '06', 'status' => 'ongoing', 'category' => 'Commercial', 'title' => 'Skyline Offices', 'text' => 'Corporate headquarters in Noida designed for collaboration, calm and uncompromising build quality.',
-     'img' => 'images/projects/theme-offices-silver-blue.webp',
-     'location' => 'Noida', 'plot' => '9,400 sq.ft.', 'builtup' => '26,500 sq.ft.', 'floors' => '5', 'bedrooms' => '0', 'bathrooms' => '10', 'style' => 'Corporate Modern'],
+$allProjects = Project::publicList();
 
-    // ---- Completed Projects ----
-    ['no' => '07', 'status' => 'completed', 'category' => 'Luxury Residence', 'title' => 'The Aurelia Villa', 'text' => 'A waterfront home in Goa completed on schedule — bespoke interiors, resort-grade landscaping and lifetime durability.',
-     'img' => 'images/livingroom@1112w.webp',
-     'location' => 'Goa', 'plot' => '7,800 sq.ft.', 'builtup' => '11,200 sq.ft.', 'floors' => '3', 'bedrooms' => '5', 'bathrooms' => '6', 'style' => 'Coastal Luxury'],
-    ['no' => '08', 'status' => 'completed', 'category' => 'Interior Design', 'title' => 'Serene Penthouse', 'text' => 'Full-scale interior fit-out in Hyderabad — custom joinery, layered lighting and hand-finished plaster walls.',
-     'img' => 'images/bedroom@1112w.webp',
-     'location' => 'Hyderabad', 'plot' => '—', 'builtup' => '3,900 sq.ft.', 'floors' => '2', 'bedrooms' => '3', 'bathrooms' => '4', 'style' => 'Warm Contemporary'],
-    ['no' => '09', 'status' => 'completed', 'category' => 'Modular Kitchen', 'title' => 'Maison Kitchen', 'text' => 'A modular kitchen crafted with precision-engineered cabinetry, premium appliances and seamless finishes.',
-     'img' => 'images/modularkitchen@1112w.webp',
-     'location' => 'Chennai', 'plot' => '—', 'builtup' => '450 sq.ft.', 'floors' => '1', 'bedrooms' => '0', 'bathrooms' => '1', 'style' => 'Minimal Kitchen'],
-    ['no' => '10', 'status' => 'completed', 'category' => 'Architecture', 'title' => 'Sanctuary Home', 'text' => 'A private residence in Coimbatore delivered as a calm, light-filled sanctuary built to endure.',
-     'img' => 'images/interior-living-room@768w.webp',
-     'location' => 'Coimbatore', 'plot' => '5,200 sq.ft.', 'builtup' => '7,600 sq.ft.', 'floors' => '3', 'bedrooms' => '4', 'bathrooms' => '5', 'style' => 'Modern Tropical'],
-    ['no' => '11', 'status' => 'completed', 'category' => 'Interior Design', 'title' => 'Elevate Residence', 'text' => 'Contemporary duplex interiors in Chennai — stone, steel and warm woods composed in quiet harmony.',
-     'img' => 'images/elevation@1112w.webp',
-     'location' => 'Chennai', 'plot' => '—', 'builtup' => '3,100 sq.ft.', 'floors' => '2', 'bedrooms' => '3', 'bathrooms' => '3', 'style' => 'Urban Minimal'],
-    ['no' => '12', 'status' => 'completed', 'category' => 'Commercial', 'title' => 'Bath & Beyond', 'text' => 'Premium bath and spa fit-out completed flawlessly — waterproofing, tiling and vanity installation.',
-     'img' => 'images/toilet@1112w.webp',
-     'location' => 'Bengaluru', 'plot' => '—', 'builtup' => '1,100 sq.ft.', 'floors' => '1', 'bedrooms' => '0', 'bathrooms' => '6', 'style' => 'Spa Minimal'],
-];
-
-$ongoing  = array_filter($projects, fn($p) => $p['status'] === 'ongoing');
-$completed = array_filter($projects, fn($p) => $p['status'] === 'completed');
+$ongoing   = array_filter($allProjects, fn($p) => $p['status'] === 'in_progress');
+$completed = array_filter($allProjects, fn($p) => $p['status'] === 'completed');
 
 require __DIR__ . '/partials/header.php';
+
+function projectThumbnail(array $p): string
+{
+    if (!empty($p['thumbnail'])) {
+        return $p['thumbnail'];
+    }
+    return 'images/projects/placeholder.webp';
+}
+
+function fmtSpec(?string $value): string
+{
+    return $value !== null && $value !== '' ? e($value) : '—';
+}
+
+function fmtInt(?int $value): string
+{
+    return $value !== null ? (string)$value : '—';
+}
 ?>
 <main id="main-content" class="projects-page">
   <style>
@@ -96,6 +75,8 @@ require __DIR__ . '/partials/header.php';
     .projects-page__cta { max-width: 1320px; margin: 5rem auto 0; padding: 0 2rem; text-align: center; }
     .btn--gold { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; background: #C79A56; color: #141210; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.85rem; border-radius: 2px; text-decoration: none; transition: background 0.3s ease; }
     .btn--gold:hover { background: #e0b376; }
+
+    .projects-empty { text-align: center; padding: 3rem; color: #a29a8c; }
   </style>
 
   <div class="projects-page__head">
@@ -104,74 +85,88 @@ require __DIR__ . '/partials/header.php';
     <p>From private villas to corporate headquarters — explore the work shaping our built environment today, and the projects already delivered.</p>
   </div>
 
+  <?php if (empty($allProjects)): ?>
+    <div class="projects-empty">
+      <p>No projects to display at the moment. Check back soon.</p>
+    </div>
+  <?php else: ?>
   <div class="projects-filter" role="group" aria-label="Filter projects">
     <button type="button" class="projects-filter__btn" data-filter="ongoing" aria-pressed="false">On Going Projects</button>
     <button type="button" class="projects-filter__btn" data-filter="completed" aria-pressed="false">Completed Projects</button>
   </div>
 
+  <?php if (!empty($ongoing)): ?>
   <section class="projects-page__category" id="ongoing" data-category="ongoing">
     <div class="projects-page__category-label">
       <h2>On Going Projects</h2>
       <span><?php echo count($ongoing); ?> project(s)</span>
     </div>
     <div class="projects-grid">
-      <?php foreach ($ongoing as $p): ?>
-        <div class="project-card" title="<?php echo htmlspecialchars($p['title']); ?>">
+      <?php foreach ($ongoing as $i => $p): ?>
+        <div class="project-card" title="<?php echo e($p['name']); ?>">
           <a class="project-card__link" href="#contact">
-            <div class="project-card__media"><img src="<?php echo $p['img']; ?>" alt="<?php echo htmlspecialchars($p['title']); ?>" loading="lazy"></div>
+            <div class="project-card__media"><img src="<?php echo e(projectThumbnail($p)); ?>" alt="<?php echo e($p['name']); ?>" loading="lazy"></div>
             <div class="project-card__arrow">&#8599;</div>
             <div class="project-card__body">
-              <div class="project-card__no"><?php echo $p['no']; ?> &middot; <?php echo htmlspecialchars($p['category']); ?></div>
-              <div class="project-card__title"><?php echo htmlspecialchars($p['title']); ?></div>
-              <div class="project-card__text"><?php echo $p['text']; ?></div>
+              <div class="project-card__no"><?php echo str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT); ?> &middot; <?php echo fmtSpec($p['category']); ?></div>
+              <div class="project-card__title"><?php echo e($p['name']); ?></div>
+              <div class="project-card__text"><?php echo e($p['description'] ?? ''); ?></div>
               <div class="project-card__specs">
-                <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo $p['location']; ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo $p['plot']; ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo $p['builtup']; ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo $p['floors']; ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo $p['bedrooms']; ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo $p['bathrooms']; ?></span></div>
-                <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo $p['style']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo fmtSpec($p['location']); ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo fmtSpec($p['plot_size']); ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo fmtSpec($p['built_up_area']); ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo fmtInt($p['floors']); ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bedrooms']); ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bathrooms']); ?></span></div>
+                <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
               </div>
             </div>
           </a>
-          <a class="project-card__download" href="download-layout.php?p=<?php echo $p['no']; ?>" download><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
+          <?php if ((int)$p['has_layout'] > 0): ?>
+          <a class="project-card__download" href="/api/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
+          <?php endif; ?>
         </div>
       <?php endforeach; ?>
     </div>
   </section>
+  <?php endif; ?>
 
+  <?php if (!empty($completed)): ?>
   <section class="projects-page__category" id="completed" data-category="completed">
     <div class="projects-page__category-label">
       <h2>Completed Projects</h2>
       <span><?php echo count($completed); ?> project(s)</span>
     </div>
     <div class="projects-grid">
-      <?php foreach ($completed as $p): ?>
-        <div class="project-card" title="<?php echo htmlspecialchars($p['title']); ?>">
+      <?php foreach ($completed as $i => $p): ?>
+        <div class="project-card" title="<?php echo e($p['name']); ?>">
           <a class="project-card__link" href="#contact">
-            <div class="project-card__media"><img src="<?php echo $p['img']; ?>" alt="<?php echo htmlspecialchars($p['title']); ?>" loading="lazy"></div>
+            <div class="project-card__media"><img src="<?php echo e(projectThumbnail($p)); ?>" alt="<?php echo e($p['name']); ?>" loading="lazy"></div>
             <div class="project-card__arrow">&#8599;</div>
             <div class="project-card__body">
-              <div class="project-card__no"><?php echo $p['no']; ?> &middot; <?php echo htmlspecialchars($p['category']); ?></div>
-              <div class="project-card__title"><?php echo htmlspecialchars($p['title']); ?></div>
-              <div class="project-card__text"><?php echo $p['text']; ?></div>
+              <div class="project-card__no"><?php echo str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT); ?> &middot; <?php echo fmtSpec($p['category']); ?></div>
+              <div class="project-card__title"><?php echo e($p['name']); ?></div>
+              <div class="project-card__text"><?php echo e($p['description'] ?? ''); ?></div>
               <div class="project-card__specs">
-                <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo $p['location']; ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo $p['plot']; ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo $p['builtup']; ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo $p['floors']; ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo $p['bedrooms']; ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo $p['bathrooms']; ?></span></div>
-                <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo $p['style']; ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo fmtSpec($p['location']); ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo fmtSpec($p['plot_size']); ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo fmtSpec($p['built_up_area']); ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo fmtInt($p['floors']); ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bedrooms']); ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bathrooms']); ?></span></div>
+                <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
               </div>
             </div>
           </a>
-          <a class="project-card__download" href="download-layout.php?p=<?php echo $p['no']; ?>" download><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
+          <?php if ((int)$p['has_layout'] > 0): ?>
+          <a class="project-card__download" href="/api/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
+          <?php endif; ?>
         </div>
       <?php endforeach; ?>
     </div>
   </section>
+  <?php endif; ?>
+  <?php endif; ?>
 
   <div class="projects-page__cta">
     <a class="btn--gold" href="#contact">Start Your Project</a>
@@ -196,11 +191,10 @@ require __DIR__ . '/partials/header.php';
       btn.setAttribute('aria-pressed', String(active));
     });
     if (filterBar) {
-      var scrollTarget = filterBar;
       if (window.lenis) {
-        window.lenis.scrollTo(scrollTarget, { offset: 0, duration: 1.0 });
+        window.lenis.scrollTo(filterBar, { offset: 0, duration: 1.0 });
       } else {
-        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        filterBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
   }
@@ -208,7 +202,6 @@ require __DIR__ . '/partials/header.php';
   buttons.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var filter = btn.getAttribute('data-filter');
-      // Clicking the active button again resets to show everything.
       if (btn.classList.contains('is-active')) {
         setFilter('all');
       } else {

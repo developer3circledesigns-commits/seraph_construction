@@ -13,8 +13,8 @@ if (!$project) redirect('/admin/projects', 'Project not found.', 'error');
 
 $updates = DailyUpdate::forProject($id);
 $assignedAdmins = Project::assignedAdmins($id);
+$layout = Project::getLayout($id);
 
-// Non-super admins must be assigned to this project
 if (!Auth::isSuper($user)) {
     $isAssigned = false;
     foreach ($assignedAdmins as $a) {
@@ -135,10 +135,33 @@ include dirname(__DIR__) . '/partials/header.php';
         <div class="flex flex--between mb-1"><span class="muted">Client</span><strong><?php echo e($project['company_name'] ?: '—'); ?></strong></div>
         <div class="flex flex--between mb-1"><span class="muted">Contact</span><strong><?php echo e($project['contact_person'] ?: '—'); ?></strong></div>
         <div class="flex flex--between mb-1"><span class="muted">Email</span><strong><?php echo e($project['client_email'] ?: '—'); ?></strong></div>
+        <?php if ($project['category']): ?><div class="flex flex--between mb-1"><span class="muted">Category</span><strong><?php echo e($project['category']); ?></strong></div><?php endif; ?>
+        <?php if ($project['location']): ?><div class="flex flex--between mb-1"><span class="muted">Location</span><strong><?php echo e($project['location']); ?></strong></div><?php endif; ?>
+        <?php if ($project['plot_size']): ?><div class="flex flex--between mb-1"><span class="muted">Plot Size</span><strong><?php echo e($project['plot_size']); ?></strong></div><?php endif; ?>
+        <?php if ($project['built_up_area']): ?><div class="flex flex--between mb-1"><span class="muted">Built-up Area</span><strong><?php echo e($project['built_up_area']); ?></strong></div><?php endif; ?>
+        <?php if ($project['floors'] !== null): ?><div class="flex flex--between mb-1"><span class="muted">Floors</span><strong><?php echo (int)$project['floors']; ?></strong></div><?php endif; ?>
+        <?php if ($project['bedrooms'] !== null): ?><div class="flex flex--between mb-1"><span class="muted">Bedrooms</span><strong><?php echo (int)$project['bedrooms']; ?></strong></div><?php endif; ?>
+        <?php if ($project['bathrooms'] !== null): ?><div class="flex flex--between mb-1"><span class="muted">Bathrooms</span><strong><?php echo (int)$project['bathrooms']; ?></strong></div><?php endif; ?>
+        <?php if ($project['style']): ?><div class="flex flex--between mb-1"><span class="muted">Style</span><strong><?php echo e($project['style']); ?></strong></div><?php endif; ?>
+        <hr style="border-color:var(--color-surface-2);margin:0.6rem 0;">
         <div class="flex flex--between mb-1"><span class="muted">Start</span><strong><?php echo e($project['start_date'] ? date('d M Y', strtotime($project['start_date'])) : '—'); ?></strong></div>
         <div class="flex flex--between mb-1"><span class="muted">Est. End</span><strong><?php echo e($project['estimated_end_date'] ? date('d M Y', strtotime($project['estimated_end_date'])) : '—'); ?></strong></div>
         <div class="flex flex--between mb-1"><span class="muted">Created</span><strong><?php echo e(date('d M Y', strtotime($project['created_at']))); ?></strong></div>
       </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card__title mb-2">Layout File</h2>
+      <?php if ($layout): ?>
+        <div class="small">
+          <div class="flex flex--between mb-1"><span class="muted">File</span><strong><?php echo e($layout['original_name']); ?></strong></div>
+          <div class="flex flex--between mb-1"><span class="muted">Type</span><strong><?php echo e($layout['file_type']); ?></strong></div>
+          <div class="flex flex--between mb-1"><span class="muted">Size</span><strong><?php echo number_format((int)$layout['file_size'] / 1024, 1); ?> KB</strong></div>
+          <a href="/api/download-layout.php?id=<?php echo (int)$id; ?>" class="btn btn--secondary btn--sm mt-1"><i class="fa-solid fa-download"></i> Download</a>
+        </div>
+      <?php else: ?>
+        <p class="muted small">No layout file uploaded.</p>
+      <?php endif; ?>
     </div>
 
     <div class="card">
