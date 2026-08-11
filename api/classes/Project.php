@@ -144,11 +144,11 @@ class Project
                 ':bathrooms'           => ($data['bathrooms'] ?? '') !== '' ? (int)$data['bathrooms'] : null,
                 ':style'               => $data['style'] ?? null,
                 ':thumbnail'           => $data['thumbnail'] ?? null,
-                ':start_date'          => $data['start_date'] ?? null,
-                ':estimated_end_date'  => $data['estimated_end_date'] ?? null,
+                ':start_date'          => ($data['start_date'] ?? null) !== '' ? ($data['start_date'] ?? null) : null,
+                ':estimated_end_date'  => ($data['estimated_end_date'] ?? null) !== '' ? ($data['estimated_end_date'] ?? null) : null,
                 ':status'              => $data['status'] ?? 'planning',
                 ':progress_percentage' => $data['progress_percentage'] ?? 0,
-                ':budget'              => ($data['budget'] ?? null) !== '' ? $data['budget'] : null,
+                ':budget'              => ($data['budget'] ?? null) !== '' ? ($data['budget'] ?? null) : null,
             ]
         );
     }
@@ -189,8 +189,8 @@ class Project
                 ':bathrooms'           => ($data['bathrooms'] ?? '') !== '' ? (int)$data['bathrooms'] : null,
                 ':style'               => $data['style'] ?? null,
                 ':thumbnail'           => $data['thumbnail'] ?? null,
-                ':start_date'          => $data['start_date'] ?? null,
-                ':estimated_end_date'  => $data['estimated_end_date'] ?? null,
+                ':start_date'          => ($data['start_date'] ?? null) !== '' ? ($data['start_date'] ?? null) : null,
+                ':estimated_end_date'  => ($data['estimated_end_date'] ?? null) !== '' ? ($data['estimated_end_date'] ?? null) : null,
                 ':actual_end_date'     => ($data['actual_end_date'] ?? null) !== '' ? ($data['actual_end_date'] ?? null) : null,
                 ':status'              => $data['status'] ?? 'planning',
                 ':progress_percentage' => $data['progress_percentage'] ?? 0,

@@ -5,8 +5,8 @@
 
 declare(strict_types=1);
 
-/** Escape output for safe HTML rendering. */
-function e(?string $value): string
+/** Escape output for safe HTML rendering. Accepts any scalar or null. */
+function e(mixed $value): string
 {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }

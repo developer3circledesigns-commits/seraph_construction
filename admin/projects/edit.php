@@ -113,13 +113,23 @@ $clients  = Database::all("SELECT id, company_name, contact_person FROM clients 
 $admins   = Database::all("SELECT id, full_name, email FROM admins WHERE is_active = 1 ORDER BY full_name");
 $assigned = array_column(Project::assignedAdmins($id), 'id');
 
-$oldCategory = $project['category'] ?? '';
-$isCustomCategory = !in_array($oldCategory, array_merge(Project::CATEGORIES, ['']));
+/* ---- Resolve category for the form ----
+   After a failed POST $old contains the user-submitted values; on first GET
+   $old === $project.  We must derive $oldCategory / $isCustomCategory from
+   $old so that the form correctly reflects whatever the user just submitted. */
+$oldCategory = $old['category'] ?? '';
+/* If the POST submitted "custom", the actual typed value lives in custom_category */
+if ($oldCategory === 'custom') {
+    $isCustomCategory = true;
+} else {
+    $isCustomCategory = !in_array($oldCategory, array_merge(Project::CATEGORIES, ['']));
+}
 
 $title = 'Edit Project';
 $active = 'projects';
 include dirname(__DIR__) . '/partials/header.php';
 ?>
+<?php echo flash(); ?>
 <?php foreach ($errors as $err): ?><div class="alert alert--error"><?php echo e($err); ?></div><?php endforeach; ?>
 
 <div class="page-header">
@@ -137,7 +147,7 @@ include dirname(__DIR__) . '/partials/header.php';
     <div class="form-row">
       <div class="form-group">
         <label class="form-label" for="name">Project Name *</label>
-        <input class="form-control" type="text" id="name" name="name" required value="<?php echo e($old['name']); ?>">
+        <input class="form-control" type="text" id="name" name="name" required value="<?php echo e($old['name']); ?>" placeholder="e.g. Villa Azure">
       </div>
       <div class="form-group">
         <label class="form-label" for="category">Project Category</label>
@@ -153,18 +163,19 @@ include dirname(__DIR__) . '/partials/header.php';
 
     <div class="form-group" id="customCatRow" style="<?php echo $isCustomCategory ? '' : 'display:none;'; ?>">
       <label class="form-label" for="custom_category">Custom Category</label>
-      <input class="form-control" type="text" id="custom_category" name="custom_category" value="<?php echo e($isCustomCategory ? $oldCategory : ''); ?>" placeholder="Enter custom category">
+      <input class="form-control" type="text" id="custom_category" name="custom_category" value="<?php echo e($isCustomCategory ? $oldCategory : ($old['custom_category'] ?? '')); ?>" placeholder="Enter custom category">
     </div>
 
     <div class="form-group">
       <label class="form-label" for="description">Description</label>
-      <textarea class="form-control" id="description" name="description"><?php echo e($old['description']); ?></textarea>
+      <textarea class="form-control" id="description" name="description" placeholder="Brief description of the project..."><?php echo e($old['description']); ?></textarea>
     </div>
 
     <div class="form-row">
       <div class="form-group">
         <label class="form-label" for="client_id">Client *</label>
         <select class="form-control" id="client_id" name="client_id" required>
+          <option value="">Select client...</option>
           <?php foreach ($clients as $c): ?>
             <option value="<?php echo (int)$c['id']; ?>" <?php echo (string)$old['client_id'] === (string)$c['id'] ? 'selected' : ''; ?>>
               <?php echo e($c['company_name'] ?: $c['contact_person']); ?>
@@ -174,7 +185,7 @@ include dirname(__DIR__) . '/partials/header.php';
       </div>
       <div class="form-group">
         <label class="form-label" for="location">Location</label>
-        <input class="form-control" type="text" id="location" name="location" value="<?php echo e($old['location']); ?>">
+        <input class="form-control" type="text" id="location" name="location" value="<?php echo e($old['location']); ?>" placeholder="e.g. Anna Nagar, Chennai">
       </div>
     </div>
 
@@ -218,12 +229,12 @@ include dirname(__DIR__) . '/partials/header.php';
         <input class="form-control" type="date" id="estimated_end_date" name="estimated_end_date" value="<?php echo e($old['estimated_end_date']); ?>">
       </div>
       <div class="form-group">
-        <label class="form-label" for="actual_end_date">Actual End</label>
-        <input class="form-control" type="date" id="actual_end_date" name="actual_end_date" value="<?php echo e($old['actual_end_date']); ?>">
+        <label class="form-label" for="budget">Budget (₹)</label>
+        <input class="form-control" type="number" step="0.01" min="0" id="budget" name="budget" value="<?php echo e($old['budget']); ?>" placeholder="e.g. 5000000">
       </div>
     </div>
 
-    <div class="form-row">
+    <div class="form-row form-row--3">
       <div class="form-group">
         <label class="form-label" for="status">Status</label>
         <select class="form-control" id="status" name="status">
@@ -236,11 +247,10 @@ include dirname(__DIR__) . '/partials/header.php';
         <label class="form-label" for="progress_percentage">Progress (%)</label>
         <input class="form-control" type="number" min="0" max="100" id="progress_percentage" name="progress_percentage" value="<?php echo (int)$old['progress_percentage']; ?>">
       </div>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" for="budget">Budget (₹)</label>
-      <input class="form-control" type="number" step="0.01" min="0" id="budget" name="budget" value="<?php echo e($old['budget']); ?>">
+      <div class="form-group">
+        <label class="form-label" for="actual_end_date">Actual End Date</label>
+        <input class="form-control" type="date" id="actual_end_date" name="actual_end_date" value="<?php echo e($old['actual_end_date'] ?? ''); ?>">
+      </div>
     </div>
   </div>
 
@@ -248,7 +258,7 @@ include dirname(__DIR__) . '/partials/header.php';
     <h2 class="card__title mb-2">Media &amp; Files</h2>
 
     <div class="form-group">
-      <label class="form-label" for="thumbnail">Project Thumbnail</label>
+      <label class="form-label" for="thumbnail">Project Thumbnail (card image)</label>
       <?php if (!empty($project['thumbnail']) && file_exists(dirname(__DIR__, 2) . '/' . $project['thumbnail'])): ?>
         <div class="mb-1">
           <img src="/<?php echo e($project['thumbnail']); ?>" alt="Current thumbnail" style="max-width:180px;max-height:120px;border-radius:4px;">
@@ -280,6 +290,7 @@ include dirname(__DIR__) . '/partials/header.php';
   <?php if ($isSuper): ?>
   <div class="card">
     <h2 class="card__title mb-2">Assign Admins</h2>
+    <p class="small muted mb-2">Choose which admin(s) manage this project.</p>
     <div class="checklist">
       <?php foreach ($admins as $a): ?>
         <label>

@@ -120,6 +120,7 @@ $title = 'Edit Update';
 $active = 'projects';
 include __DIR__ . '/../partials/header.php';
 ?>
+<?php echo flash(); ?>
 <?php foreach ($errors as $err): ?><div class="alert alert--error"><?php echo e($err); ?></div><?php endforeach; ?>
 
 <div class="page-header">

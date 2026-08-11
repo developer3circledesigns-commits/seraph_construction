@@ -68,9 +68,9 @@ class DailyUpdate
                 ':description'         => $data['description'] ?? null,
                 ':images'              => json_encode($data['images'] ?? []),
                 ':materials_used'      => $data['materials_used'] ?? null,
-                ':labor_count'         => $data['labor_count'] !== '' ? $data['labor_count'] : null,
+                ':labor_count'         => ($data['labor_count'] ?? '') !== '' ? $data['labor_count'] : null,
                 ':next_day_plan'       => $data['next_day_plan'] ?? null,
-                ':is_milestone'        => $data['is_milestone'] ? 1 : 0,
+                ':is_milestone'        => !empty($data['is_milestone']) ? 1 : 0,
             ]
         );
     }
@@ -100,7 +100,7 @@ class DailyUpdate
                 ':materials_used'      => $data['materials_used'] ?? null,
                 ':labor_count'         => $data['labor_count'] !== '' ? $data['labor_count'] : null,
                 ':next_day_plan'       => $data['next_day_plan'] ?? null,
-                ':is_milestone'        => $data['is_milestone'] ? 1 : 0,
+                ':is_milestone'        => !empty($data['is_milestone']) ? 1 : 0,
                 ':id'                  => $id,
             ]
         );

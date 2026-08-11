@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $projectId,
             (int)$project['client_id'],
             $eventType,
-            ($body['is_milestone'] ? 'Milestone: ' : '') . $body['title'],
+            ($body['is_milestone'] ?? false ? 'Milestone: ' : '') . $body['title'],
             'Progress is now at ' . (int)$body['progress_percentage'] . '% for ' . $project['name'] . '.',
             $updateId
         );
