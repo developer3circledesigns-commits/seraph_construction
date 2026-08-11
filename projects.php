@@ -31,6 +31,19 @@ function fmtInt(?int $value): string
 {
     return $value !== null ? (string)$value : '—';
 }
+
+function truncateDesc(string $text, int $length = 80): array
+{
+    if (mb_strlen($text) <= $length) {
+        return ['text' => e($text), 'truncated' => false];
+    }
+    $cut = mb_substr($text, 0, $length);
+    $lastSpace = mb_strrpos($cut, ' ');
+    if ($lastSpace !== false && $lastSpace > $length * 0.6) {
+        $cut = mb_substr($cut, 0, $lastSpace);
+    }
+    return ['text' => e($cut), 'truncated' => true];
+}
 ?>
 <main id="main-content" class="projects-page">
   <style>
@@ -61,6 +74,11 @@ function fmtInt(?int $value): string
     .project-card__no { font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: #C79A56; }
     .project-card__title { font-family: 'Fraunces', Georgia, serif; font-size: 1.1rem; font-weight: 400; margin: 0.3rem 0 0.25rem; color: #f4efe8; }
     .project-card__text { font-size: 0.82rem; color: #a29a8c; margin-bottom: 0.7rem; }
+    .project-card__desc-toggle { color: #C79A56; cursor: pointer; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em; display: inline-block; margin-top: 0.2rem; }
+    .project-card__desc-toggle:hover { color: #e0b376; text-decoration: underline; }
+    .project-card__desc-full { display: none; }
+    .project-card__desc-full.is-open { display: inline; }
+    .project-card__desc-cut.is-hidden { display: none; }
     .project-card__arrow { position: absolute; top: 0.8rem; right: 0.8rem; width: 34px; height: 34px; border-radius: 50%; background: #C79A56; color: #141210; display: grid; place-items: center; opacity: 0; transform: translateY(-8px); transition: all 0.3s ease; font-size: 0.85rem; }
     .project-card:hover .project-card__arrow { opacity: 1; transform: translateY(0); }
 
@@ -109,21 +127,27 @@ function fmtInt(?int $value): string
             <div class="project-card__arrow">&#8599;</div>
             <div class="project-card__body">
               <div class="project-card__no"><?php echo str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT); ?> &middot; <?php echo fmtSpec($p['category']); ?></div>
-              <div class="project-card__title"><?php echo e($p['name']); ?></div>
-              <div class="project-card__text"><?php echo e($p['description'] ?? ''); ?></div>
-              <div class="project-card__specs">
-                <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo fmtSpec($p['location']); ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo fmtSpec($p['plot_size']); ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo fmtSpec($p['built_up_area']); ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo fmtInt($p['floors']); ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bedrooms']); ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bathrooms']); ?></span></div>
-                <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
-              </div>
-            </div>
-          </a>
-          <?php if ((int)$p['has_layout'] > 0): ?>
-          <a class="project-card__download" href="/api/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
+               <div class="project-card__title"><?php echo e($p['name']); ?></div>
+               <?php $desc = truncateDesc($p['description'] ?? ''); ?>
+               <div class="project-card__text">
+                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <span class="project-card__desc-toggle" onclick="toggleDesc(this)">View more</span></span><?php endif; ?></span>
+                 <?php if ($desc['truncated']): ?>
+                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <span class="project-card__desc-toggle" onclick="toggleDesc(this)">Show less</span></span>
+                 <?php endif; ?>
+               </div>
+               <div class="project-card__specs">
+                 <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo fmtSpec($p['location']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo fmtSpec($p['plot_size']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo fmtSpec($p['built_up_area']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo fmtInt($p['floors']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bedrooms']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bathrooms']); ?></span></div>
+                 <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
+               </div>
+             </div>
+           </a>
+           <?php if ((int)$p['has_layout'] > 0): ?>
+           <a class="project-card__download" href="/api/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
           <?php endif; ?>
         </div>
       <?php endforeach; ?>
@@ -146,7 +170,13 @@ function fmtInt(?int $value): string
             <div class="project-card__body">
               <div class="project-card__no"><?php echo str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT); ?> &middot; <?php echo fmtSpec($p['category']); ?></div>
               <div class="project-card__title"><?php echo e($p['name']); ?></div>
-              <div class="project-card__text"><?php echo e($p['description'] ?? ''); ?></div>
+               <?php $desc = truncateDesc($p['description'] ?? ''); ?>
+               <div class="project-card__text">
+                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <span class="project-card__desc-toggle" onclick="toggleDesc(this)">View more</span></span><?php endif; ?></span>
+                 <?php if ($desc['truncated']): ?>
+                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <span class="project-card__desc-toggle" onclick="toggleDesc(this)">Show less</span></span>
+                 <?php endif; ?>
+               </div>
               <div class="project-card__specs">
                 <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo fmtSpec($p['location']); ?></span></div>
                 <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo fmtSpec($p['plot_size']); ?></span></div>
@@ -174,6 +204,20 @@ function fmtInt(?int $value): string
 </main>
 
 <script>
+function toggleDesc(el) {
+  var textEl = el.closest('.project-card__text');
+  var cut = textEl.querySelector('.project-card__desc-cut');
+  var full = textEl.querySelector('.project-card__desc-full');
+  if (!cut || !full) return;
+  if (full.classList.contains('is-open')) {
+    full.classList.remove('is-open');
+    cut.classList.remove('is-hidden');
+  } else {
+    full.classList.add('is-open');
+    cut.classList.add('is-hidden');
+  }
+}
+
 (function () {
   'use strict';
   var buttons = document.querySelectorAll('.projects-filter__btn');
