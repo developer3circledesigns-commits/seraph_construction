@@ -142,7 +142,7 @@ function truncateDesc(string $text, int $length = 80): array
                  <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo fmtInt($p['floors']); ?></span></div>
                  <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bedrooms']); ?></span></div>
                  <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bathrooms']); ?></span></div>
-                 <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
                </div>
              </div>
            </a>
@@ -184,7 +184,7 @@ function truncateDesc(string $text, int $length = 80): array
                 <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo fmtInt($p['floors']); ?></span></div>
                 <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bedrooms']); ?></span></div>
                 <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bathrooms']); ?></span></div>
-                <div class="project-card__spec" style="grid-column:1 / -1"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
+                <div class="project-card__spec"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
               </div>
             </div>
           </a>
