@@ -139,20 +139,14 @@ include __DIR__ . '/../partials/header.php';
       </div>
       <div class="form-group">
         <label class="form-label" for="status">Status</label>
-        <select class="form-control" id="status" name="status" onchange="syncProgressFromStatus()">
+        <select class="form-control" id="status" name="status">
           <?php foreach (['planning','in_progress','on_hold','completed','cancelled'] as $s): ?>
             <option value="<?php echo $s; ?>" <?php echo $old['status'] === $s ? 'selected' : ''; ?>><?php echo e(ucfirst(str_replace('_', ' ', $s))); ?></option>
           <?php endforeach; ?>
         </select>
       </div>
     </div>
-
-    <div class="form-group">
-      <label class="form-label" for="progress_percentage">Progress (%) — <span id="progressVal"><?php echo (int)$old['progress_percentage']; ?></span>%</label>
-      <input class="form-control" type="range" min="0" max="100" step="5" id="progress_percentage" name="progress_percentage" value="<?php echo (int)$old['progress_percentage']; ?>" oninput="updateProgressUI(this.value)">
-      <div class="progress mt-1"><div class="progress__bar" id="progressBar" style="width:<?php echo (int)$old['progress_percentage']; ?>%"></div></div>
-      <span class="small muted" id="progressHint">Adjust to reflect today's completion. Syncs to the project overall progress.</span>
-    </div>
+    <input type="hidden" name="progress_percentage" value="<?php echo (int)$old['progress_percentage']; ?>">
 
     <div class="form-group">
       <label class="form-label" for="title">Update Title *</label>
@@ -222,24 +216,4 @@ include __DIR__ . '/../partials/header.php';
     <a href="/admin/projects/view?id=<?php echo (int)$project['id']; ?>" class="btn btn--ghost">Cancel</a>
   </div>
 </form>
-<script>
-function updateProgressUI(val) {
-  document.getElementById('progressVal').textContent = val;
-  document.getElementById('progressBar').style.width = val + '%';
-  document.getElementById('progressHint').textContent = 'Adjust to reflect today\'s completion. Syncs to the project overall progress.';
-}
-function syncProgressFromStatus() {
-  var status = document.getElementById('status').value;
-  var progress = document.getElementById('progress_percentage');
-  if (status === 'completed' && progress.value < 100) {
-    progress.value = 100;
-    updateProgressUI(100);
-    document.getElementById('progressHint').textContent = 'Auto-set to 100% (status: completed).';
-  } else if (status === 'planning' && progress.value > 0) {
-    progress.value = 0;
-    updateProgressUI(0);
-    document.getElementById('progressHint').textContent = 'Auto-set to 0% (status: planning).';
-  }
-}
-</script>
 <?php include __DIR__ . '/../partials/footer.php'; ?>
