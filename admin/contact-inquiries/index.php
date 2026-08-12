@@ -1,9 +1,8 @@
 <?php
 /**
- * Legacy folder URL shim — redirects to the flat admin list page.
- * Keeps /admin/contact-inquiries/ working if this folder still exists on the server.
+ * Folder entry point — includes the flat list page (no redirect).
+ * Prevents ERR_TOO_MANY_REDIRECTS when /admin/contact-inquiries/ is requested.
  */
 declare(strict_types=1);
 
-header('Location: /admin/contact-inquiries', true, 301);
-exit;
+require dirname(__DIR__) . '/contact-inquiries.php';

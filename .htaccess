@@ -113,6 +113,11 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # --- Admin contact enquiries: always use flat PHP files (avoids folder redirect loops) ---
+  RewriteRule ^admin/contact-inquiries/?$ admin/contact-inquiries.php [L]
+  RewriteRule ^admin/contact-inquiry-view/?$ admin/contact-inquiry-view.php [L,QSA]
+  RewriteRule ^admin/contact-inquiries/view/?$ admin/contact-inquiry-view.php [L,QSA]
+
   # --- Never run PHP inside uploads (defense in depth) ---
   RewriteRule ^uploads/.*\.php$ - [F,L]
 
