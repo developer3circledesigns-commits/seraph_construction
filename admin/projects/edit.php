@@ -82,8 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $body['thumbnail'] = $thumbnailPath;
             Project::update($id, $body);
 
-            if ($isSuper && !empty($body['admin_ids'])) {
-                Project::assignAdmins($id, (array)$body['admin_ids']);
+            if ($isSuper) {
+                Project::assignAdmins($id, (array)($body['admin_ids'] ?? []));
             }
 
             if (isset($body['delete_layout']) && $body['delete_layout']) {

@@ -43,8 +43,12 @@ class ContactInquiry
         $sql = 'SELECT *, DATE(created_at) AS query_date FROM contact_inquiries';
 
         if ($search !== null && $search !== '') {
-            $sql .= ' WHERE full_name LIKE :q OR email LIKE :q OR phone LIKE :q OR service_type LIKE :q';
-            $params[':q'] = '%' . $search . '%';
+            $sql .= ' WHERE full_name LIKE :q1 OR email LIKE :q2 OR phone LIKE :q3 OR service_type LIKE :q4';
+            $like = '%' . $search . '%';
+            $params[':q1'] = $like;
+            $params[':q2'] = $like;
+            $params[':q3'] = $like;
+            $params[':q4'] = $like;
         }
 
         $sql .= ' ORDER BY created_at DESC';

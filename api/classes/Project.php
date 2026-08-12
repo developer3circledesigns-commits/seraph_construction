@@ -59,6 +59,10 @@ class Project
         }
         $sql .= ' ORDER BY p.updated_at DESC';
 
+        if (!empty($filters['limit'])) {
+            $sql .= ' LIMIT ' . (int)$filters['limit'];
+        }
+
         return Database::all($sql, $params);
     }
 
@@ -87,7 +91,25 @@ class Project
         }
         $sql .= ' ORDER BY p.updated_at DESC';
 
+        if (!empty($filters['limit'])) {
+            $sql .= ' LIMIT ' . (int)$filters['limit'];
+        }
+
         return Database::all($sql, $params);
+    }
+
+    /** Sync only status/progress/completion date after a daily update — preserves all other fields. */
+    public static function syncFromUpdate(int $id, string $status, int $progress, ?string $actualEndDate): void
+    {
+        Database::execute(
+            'UPDATE projects SET status = :status, progress_percentage = :progress, actual_end_date = :end WHERE id = :id',
+            [
+                ':status'   => $status,
+                ':progress' => max(0, min(100, $progress)),
+                ':end'      => ($actualEndDate !== null && $actualEndDate !== '') ? $actualEndDate : null,
+                ':id'       => $id,
+            ]
+        );
     }
 
     /** Projects visible to a client (only their own). */

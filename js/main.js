@@ -14,8 +14,10 @@
 
     if (sideNavLinks.length) {
       var sideNavSections = Array.prototype.map.call(sideNavLinks, function (link) {
-        var id = link.getAttribute('href');
-        return id ? document.getElementById(id.slice(1)) : null;
+        var href = link.getAttribute('href') || '';
+        var hashIndex = href.indexOf('#');
+        var id = hashIndex >= 0 ? href.slice(hashIndex + 1) : href.replace(/^#/, '');
+        return id ? document.getElementById(id) : null;
       });
       var sideNavPositions = [];
 
@@ -354,9 +356,9 @@
         }
 
         newsletterEmail.removeAttribute('aria-invalid');
-        newsletterStatus.classList.add('newsletter-status--success');
-        newsletterStatus.textContent = 'Thank you! You are now subscribed.';
-        newsletterForm.reset();
+        newsletterStatus.classList.add('newsletter-status--error');
+        newsletterStatus.textContent = 'Newsletter signup is not available yet. Please use the contact form instead.';
+        return;
       });
 
       newsletterEmail.addEventListener('input', function () {

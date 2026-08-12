@@ -43,7 +43,13 @@ class CSRF
         $body = request_body();
         $token = $body['_csrf'] ?? '';
         if (!self::verify(is_string($token) ? $token : '')) {
-            json_error('Invalid CSRF token. Please refresh the page and try again.', 419);
+            $message = 'Your session has expired. Please refresh the page and try again.';
+            $isApi = str_contains((string)($_SERVER['REQUEST_URI'] ?? ''), '/api/');
+            if ($isApi) {
+                json_error('Invalid CSRF token. Please refresh the page and try again.', 419);
+            }
+            $referer = (string)($_SERVER['HTTP_REFERER'] ?? '');
+            redirect($referer !== '' ? $referer : '/', $message, 'error');
         }
     }
 }

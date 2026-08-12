@@ -35,7 +35,7 @@ function fmtInt(?int $value): string
 function truncateDesc(string $text, int $length = 80): array
 {
     if (mb_strlen($text) <= $length) {
-        return ['text' => e($text), 'truncated' => true];
+        return ['text' => e($text), 'truncated' => false];
     }
     $cut = mb_substr($text, 0, $length);
     $lastSpace = mb_strrpos($cut, ' ');
@@ -74,7 +74,7 @@ function truncateDesc(string $text, int $length = 80): array
     .project-card__no { font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: #C79A56; }
     .project-card__title { font-family: 'Fraunces', Georgia, serif; font-size: 1.1rem; font-weight: 400; margin: 0.3rem 0 0.25rem; color: #f4efe8; }
     .project-card__text { font-size: 0.82rem; color: #a29a8c; margin-bottom: 0.7rem; }
-    .project-card__desc-toggle { color: #C79A56; cursor: pointer; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em; display: inline-block; margin-top: 0.2rem; }
+    .project-card__desc-toggle { color: #C79A56; cursor: pointer; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em; display: inline-block; margin-top: 0.2rem; background: none; border: none; padding: 0; font-family: inherit; }
     .project-card__desc-toggle:hover { color: #e0b376; text-decoration: underline; }
     .project-card__desc-full { display: none; }
     .project-card__desc-full.is-open { display: inline; }
@@ -125,13 +125,14 @@ function truncateDesc(string $text, int $length = 80): array
           <a class="project-card__link" href="contact.php">
             <div class="project-card__media"><img src="<?php echo e(projectThumbnail($p)); ?>" alt="<?php echo e($p['name']); ?>" loading="lazy"></div>
             <div class="project-card__arrow">&#8599;</div>
-            <div class="project-card__body">
-               <div class="project-card__title"><?php echo e($p['name']); ?></div>
+            <div class="project-card__title"><?php echo e($p['name']); ?></div>
+          </a>
+          <div class="project-card__body">
                <?php $desc = truncateDesc($p['description'] ?? ''); ?>
                <div class="project-card__text">
-                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">View more</span></span><?php endif; ?></span>
+                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <button type="button" class="project-card__desc-toggle" onclick="toggleDesc(event, this)">View more</button></span><?php endif; ?></span>
                  <?php if ($desc['truncated']): ?>
-                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">Show less</span></span>
+                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <button type="button" class="project-card__desc-toggle" onclick="toggleDesc(event, this)">Show less</button></span>
                  <?php endif; ?>
                </div>
                <div class="project-card__specs">
@@ -144,7 +145,6 @@ function truncateDesc(string $text, int $length = 80): array
                  <div class="project-card__spec"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
                </div>
              </div>
-           </a>
            <?php if ((int)$p['has_layout'] > 0): ?>
            <a class="project-card__download" href="/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
           <?php endif; ?>
@@ -166,13 +166,14 @@ function truncateDesc(string $text, int $length = 80): array
           <a class="project-card__link" href="contact.php">
             <div class="project-card__media"><img src="<?php echo e(projectThumbnail($p)); ?>" alt="<?php echo e($p['name']); ?>" loading="lazy"></div>
             <div class="project-card__arrow">&#8599;</div>
-            <div class="project-card__body">
-              <div class="project-card__title"><?php echo e($p['name']); ?></div>
+            <div class="project-card__title"><?php echo e($p['name']); ?></div>
+          </a>
+          <div class="project-card__body">
                <?php $desc = truncateDesc($p['description'] ?? ''); ?>
                <div class="project-card__text">
-                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">View more</span></span><?php endif; ?></span>
+                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <button type="button" class="project-card__desc-toggle" onclick="toggleDesc(event, this)">View more</button></span><?php endif; ?></span>
                  <?php if ($desc['truncated']): ?>
-                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">Show less</span></span>
+                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <button type="button" class="project-card__desc-toggle" onclick="toggleDesc(event, this)">Show less</button></span>
                  <?php endif; ?>
                </div>
               <div class="project-card__specs">
@@ -185,7 +186,6 @@ function truncateDesc(string $text, int $length = 80): array
                 <div class="project-card__spec"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
               </div>
             </div>
-          </a>
            <?php if ((int)$p['has_layout'] > 0): ?>
            <a class="project-card__download" href="/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
           <?php endif; ?>

@@ -9,7 +9,7 @@
 - [Featured Projects](/#projects)
 - [About Us](/#about)
 - [Client Testimonials](/#testimonials)
-- [Contact](/#contact)
+- [Contact](/contact)
 
 ## Services
 

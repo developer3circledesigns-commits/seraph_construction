@@ -3,6 +3,9 @@
  * Footer + closing scripts.
  * Expects $site array to be available.
  */
+$currentPage = basename((string)($_SERVER['SCRIPT_NAME'] ?? 'index.php'), '.php');
+$homePrefix  = ($currentPage === 'index' || $currentPage === '') ? '' : 'index.php';
+$contactUrl  = $site['contact_url'] ?? 'contact.php';
 ?>
   <!-- 7. FOOTER — Footer 02 marquee band + original footer content -->
   <footer class="site-footer footer-02">
@@ -16,7 +19,7 @@
 
     <div class="container footer-grid">
       <div class="footer-brand">
-        <a href="#hero" class="brand"><img src="images/Footer_Logo.webp" alt="SERAPH BUILD CONSTRUCTION" width="400" height="94"></a>
+        <a href="<?php echo $homePrefix; ?>#hero" class="brand"><img src="images/Footer_Logo.webp" alt="SERAPH BUILD CONSTRUCTION" width="400" height="94"></a>
         <p>Crafting extraordinary spaces where architecture meets artistry. Premium construction and design for those who demand excellence.</p>
         <div class="footer-social">
           <?php foreach ($site['social'] as $s): ?>
@@ -29,21 +32,21 @@
         <h3 class="footer-heading">Quick Links</h3>
         <ul class="footer-links">
           <?php foreach ($site['nav'] as $href => $label): ?>
-            <li><a href="<?php echo $href === 'projects' ? 'projects.php' : '#' . htmlspecialchars($href); ?>"><?php echo htmlspecialchars($label); ?></a></li>
+            <li><a href="<?php echo $href === 'projects' ? 'projects.php' : $homePrefix . '#' . htmlspecialchars($href); ?>"><?php echo htmlspecialchars($label); ?></a></li>
           <?php endforeach; ?>
-          <li><a href="contact.php">Contact</a></li>
-          <li><a href="#materials">Materials</a></li>
+          <li><a href="<?php echo $contactUrl; ?>">Contact</a></li>
+          <li><a href="<?php echo $homePrefix; ?>#materials">Materials</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
         <h3 class="footer-heading">Our Services</h3>
         <ul class="footer-links">
-          <li><a href="#services">Construction</a></li>
-          <li><a href="#services">Interior Design</a></li>
-          <li><a href="#services">Modular Kitchen</a></li>
-          <li><a href="#materials">Materials</a></li>
-          <li><a href="#services">Renovation</a></li>
+          <li><a href="<?php echo $homePrefix; ?>#services">Construction</a></li>
+          <li><a href="<?php echo $homePrefix; ?>#services">Interior Design</a></li>
+          <li><a href="<?php echo $homePrefix; ?>#services">Modular Kitchen</a></li>
+          <li><a href="<?php echo $homePrefix; ?>#materials">Materials</a></li>
+          <li><a href="<?php echo $homePrefix; ?>#services">Renovation</a></li>
         </ul>
       </div>
 

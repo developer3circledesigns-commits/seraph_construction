@@ -78,22 +78,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             DailyUpdate::setImages($updateId, $imageIds);
         }
 
-        // Sync project status/progress (preserve existing completion date;
-        // set it on completion if it was never recorded).
-        Project::update($projectId, [
-            'client_id'           => $project['client_id'],
-            'name'                => $project['name'],
-            'description'         => $project['description'],
-            'location'            => $project['location'],
-            'start_date'          => $project['start_date'],
-            'estimated_end_date'  => $project['estimated_end_date'],
-            'actual_end_date'     => $body['status'] === 'completed'
+        // Sync project status/progress without overwriting other project fields.
+        Project::syncFromUpdate(
+            $projectId,
+            (string)$body['status'],
+            (int)$body['progress_percentage'],
+            $body['status'] === 'completed'
                 ? ($project['actual_end_date'] ?: $body['update_date'])
-                : $project['actual_end_date'],
-            'status'              => $body['status'],
-            'progress_percentage' => (int)$body['progress_percentage'],
-            'budget'              => $project['budget'],
-        ]);
+                : $project['actual_end_date']
+        );
 
         Audit::admin((int)$user['id'], 'update_create', 'daily_update', $updateId, ['project_id' => $projectId]);
 
