@@ -21,7 +21,7 @@
         <h3 data-reveal>From First Sketch to Final Walkthrough</h3>
         <p data-reveal>Every project begins with listening. We pair architectural thinking with hands-on construction so nothing is lost between drawing and build.</p>
         <p data-reveal>Our in-house carpenters, masons and engineers treat each site like a signature — because to us, it is.</p>
-        <a href="#contact" class="btn" data-reveal>Meet the Team</a>
+        <a href="contact.php" class="btn" data-reveal>Meet the Team</a>
       </div>
     </div>
 

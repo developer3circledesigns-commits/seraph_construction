@@ -122,7 +122,7 @@ function truncateDesc(string $text, int $length = 80): array
     <div class="projects-grid">
       <?php foreach ($ongoing as $i => $p): ?>
         <div class="project-card" title="<?php echo e($p['name']); ?>">
-          <a class="project-card__link" href="#contact">
+          <a class="project-card__link" href="contact.php">
             <div class="project-card__media"><img src="<?php echo e(projectThumbnail($p)); ?>" alt="<?php echo e($p['name']); ?>" loading="lazy"></div>
             <div class="project-card__arrow">&#8599;</div>
             <div class="project-card__body">
@@ -163,7 +163,7 @@ function truncateDesc(string $text, int $length = 80): array
     <div class="projects-grid">
       <?php foreach ($completed as $i => $p): ?>
         <div class="project-card" title="<?php echo e($p['name']); ?>">
-          <a class="project-card__link" href="#contact">
+          <a class="project-card__link" href="contact.php">
             <div class="project-card__media"><img src="<?php echo e(projectThumbnail($p)); ?>" alt="<?php echo e($p['name']); ?>" loading="lazy"></div>
             <div class="project-card__arrow">&#8599;</div>
             <div class="project-card__body">
@@ -197,7 +197,7 @@ function truncateDesc(string $text, int $length = 80): array
   <?php endif; ?>
 
   <div class="projects-page__cta">
-    <a class="btn--gold" href="#contact">Start Your Project</a>
+    <a class="btn--gold" href="contact.php">Start Your Project</a>
   </div>
 </main>
 

@@ -363,5 +363,117 @@
         newsletterEmail.removeAttribute('aria-invalid');
       });
     }
+
+    /* ---------- Contact / quote form ---------- */
+    var contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+      var contactFields = {
+        full_name: document.getElementById('contactFullName'),
+        email: document.getElementById('contactEmail'),
+        phone: document.getElementById('contactPhone'),
+        service_type: document.getElementById('contactService'),
+        message: document.getElementById('contactMessage')
+      };
+      var contactErrors = {
+        full_name: document.getElementById('contactFullNameError'),
+        email: document.getElementById('contactEmailError'),
+        phone: document.getElementById('contactPhoneError'),
+        service_type: document.getElementById('contactServiceError'),
+        message: document.getElementById('contactMessageError')
+      };
+      var messageCount = document.getElementById('contactMessageCount');
+      var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+      function setContactError(field, message) {
+        if (!field || !contactErrors[field]) return;
+        contactFields[field].setAttribute('aria-invalid', message ? 'true' : 'false');
+        contactErrors[field].textContent = message || '';
+      }
+
+      function clearContactErrors() {
+        Object.keys(contactFields).forEach(function (key) {
+          setContactError(key, '');
+        });
+      }
+
+      function validateContactForm() {
+        clearContactErrors();
+        var valid = true;
+        var name = contactFields.full_name.value.trim();
+        var email = contactFields.email.value.trim();
+        var phone = contactFields.phone.value.trim();
+        var message = contactFields.message.value.trim();
+        var digits = phone.replace(/\D/g, '');
+
+        if (!name) {
+          setContactError('full_name', 'Full name is required.');
+          valid = false;
+        } else if (name.length < 2) {
+          setContactError('full_name', 'Full name must be at least 2 characters.');
+          valid = false;
+        }
+
+        if (!email) {
+          setContactError('email', 'Email address is required.');
+          valid = false;
+        } else if (!emailPattern.test(email)) {
+          setContactError('email', 'Please enter a valid email address.');
+          valid = false;
+        }
+
+        if (!phone) {
+          setContactError('phone', 'Phone number is required.');
+          valid = false;
+        } else if (digits.length < 10 || digits.length > 15) {
+          setContactError('phone', 'Please enter a valid phone number (10–15 digits).');
+          valid = false;
+        }
+
+        if (!message) {
+          setContactError('message', 'Message is required.');
+          valid = false;
+        } else if (message.length < 20) {
+          setContactError('message', 'Message must be at least 20 characters.');
+          valid = false;
+        } else if (message.length > 5000) {
+          setContactError('message', 'Message must be 5000 characters or fewer.');
+          valid = false;
+        }
+
+        if (!valid) {
+          var firstInvalid = contactForm.querySelector('[aria-invalid="true"]');
+          if (firstInvalid) firstInvalid.focus();
+        }
+
+        return valid;
+      }
+
+      function updateMessageCount() {
+        if (!messageCount || !contactFields.message) return;
+        messageCount.textContent = contactFields.message.value.length + ' / 5000';
+      }
+
+      contactForm.addEventListener('submit', function (e) {
+        if (!validateContactForm()) {
+          e.preventDefault();
+        }
+      });
+
+      Object.keys(contactFields).forEach(function (key) {
+        var field = contactFields[key];
+        if (!field) return;
+        field.addEventListener('input', function () {
+          setContactError(key, '');
+        });
+        field.addEventListener('blur', function () {
+          validateContactForm();
+        });
+      });
+
+      if (contactFields.message) {
+        contactFields.message.addEventListener('input', updateMessageCount);
+        updateMessageCount();
+      }
+    }
   });
 })();

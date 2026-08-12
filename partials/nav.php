@@ -12,6 +12,7 @@ $navLinks = [];
 foreach ($site['nav'] as $href => $label) {
     $navLinks[$href] = $href === 'projects' ? 'projects.php' : $homePrefix . '#' . $href;
 }
+$contactUrl = $site['contact_url'] ?? 'contact.php';
 ?>
   <!-- Topbar (Layout 13 style) -->
   <header class="topbar">
@@ -25,7 +26,7 @@ foreach ($site['nav'] as $href => $label) {
       <button class="topbar__login" id="loginToggle" data-login-open aria-haspopup="dialog" aria-controls="loginModal">
         <i class="fa-solid fa-user" aria-hidden="true"></i><span>Sign In</span>
       </button>
-      <a href="#contact" class="btn btn--solid topbar__quote">Get a Quote</a>
+      <a href="<?php echo $contactUrl; ?>" class="btn btn--solid topbar__quote">Get a Quote</a>
       <button class="topbar__menu" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
         <span></span><span></span>
       </button>
@@ -41,7 +42,7 @@ foreach ($site['nav'] as $href => $label) {
       <button class="btn mobile-menu__login" data-login-open aria-haspopup="dialog" aria-controls="loginModal">
         <i class="fa-solid fa-user" aria-hidden="true"></i> Sign In
       </button>
-      <a href="#contact" class="btn btn--solid mobile-menu__quote">Get a Quote</a>
+      <a href="<?php echo $contactUrl; ?>" class="btn btn--solid mobile-menu__quote">Get a Quote</a>
     </nav>
   </div>
 
@@ -52,7 +53,7 @@ foreach ($site['nav'] as $href => $label) {
       <?php foreach ($site['nav'] as $href => $label): ?>
         <li><a href="<?php echo htmlspecialchars($navLinks[$href]); ?>" class="side-nav__link" data-side-nav><span class="side-nav__dot"></span><span class="side-nav__name"><?php echo htmlspecialchars($label); ?></span></a></li>
       <?php endforeach; ?>
-      <li><a href="<?php echo $homePrefix; ?>#contact" class="side-nav__link" data-side-nav><span class="side-nav__dot"></span><span class="side-nav__name">Contact</span></a></li>
+      <li><a href="<?php echo $contactUrl; ?>" class="side-nav__link" data-side-nav><span class="side-nav__dot"></span><span class="side-nav__name">Contact</span></a></li>
     </ul>
     <span class="side-nav__progress" id="sideNavProgress"></span>
   </nav>
@@ -124,7 +125,7 @@ foreach ($site['nav'] as $href => $label) {
         </section>
       </div>
 
-      <p class="login-modal__foot">Need an account? <a href="#contact" data-login-close>Contact our team</a></p>
+      <p class="login-modal__foot">Need an account? <a href="<?php echo $contactUrl; ?>" data-login-close>Contact our team</a></p>
     </div>
   </div>
 <script>

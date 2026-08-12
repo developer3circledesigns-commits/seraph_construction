@@ -24,6 +24,8 @@ return [
         'testimonials'=> 'Testimonials',
     ],
 
+    'contact_url' => 'contact.php',
+
     'social' => [
         ['url' => 'https://facebook.com',    'icon' => 'fa-facebook-f', 'label' => 'Facebook'],
         ['url' => 'https://instagram.com',   'icon' => 'fa-instagram',   'label' => 'Instagram'],

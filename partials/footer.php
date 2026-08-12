@@ -5,7 +5,7 @@
  */
 ?>
   <!-- 7. FOOTER — Footer 02 marquee band + original footer content -->
-  <footer id="contact" class="site-footer footer-02">
+  <footer class="site-footer footer-02">
     <div class="marquee" aria-hidden="true">
       <div class="marquee__track" id="marqueeTrack">
         <span class="marquee__item">SERAPH <em>&bull;</em> BUILD <em>&bull;</em></span>
@@ -31,6 +31,7 @@
           <?php foreach ($site['nav'] as $href => $label): ?>
             <li><a href="<?php echo $href === 'projects' ? 'projects.php' : '#' . htmlspecialchars($href); ?>"><?php echo htmlspecialchars($label); ?></a></li>
           <?php endforeach; ?>
+          <li><a href="contact.php">Contact</a></li>
           <li><a href="#materials">Materials</a></li>
         </ul>
       </div>
@@ -79,8 +80,8 @@
       <div class="container footer-bottom__inner">
         <p>&copy; <span id="year"></span> SERAPH BUILD CONSTRUCTION. All rights reserved.</p>
         <div class="footer-legal">
-          <a href="#contact" data-placeholder="true">Privacy Policy</a>
-          <a href="#contact" data-placeholder="true">Terms &amp; Conditions</a>
+          <a href="contact.php" data-placeholder="true">Privacy Policy</a>
+          <a href="contact.php" data-placeholder="true">Terms &amp; Conditions</a>
         </div>
       </div>
     </div>

@@ -34,7 +34,7 @@ $projects = [
             <h2><?php echo $project['title']; ?></h2>
             <p><?php echo $project['text']; ?></p>
             <?php if ($i === count($projects) - 1): ?>
-              <a href="#contact" class="btn">Start Your Project</a>
+              <a href="contact.php" class="btn">Start Your Project</a>
             <?php endif; ?>
           </div>
         <?php endforeach; ?>
