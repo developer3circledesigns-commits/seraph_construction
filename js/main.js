@@ -20,11 +20,8 @@
         return id ? document.getElementById(id) : null;
       });
       var sideNavPositions = [];
+      var sideNavTicking = false;
 
-      /* Resolve the real document-offset of every side-nav target.
-         Sections that GSAP pins report a bogus getBoundingClientRect
-         while pinned, so reuse ScrollTrigger's known pin start offsets;
-         otherwise read the layout offset directly. */
       var measureSideNav = function () {
         var scrollY = window.lenis ? window.lenis.scroll : window.scrollY;
         sideNavSections.forEach(function (sec, i) {
@@ -66,13 +63,21 @@
 
         if (sideNavProgress && document.documentElement.scrollHeight > window.innerHeight) {
           var max = document.documentElement.scrollHeight - window.innerHeight;
-          var p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+          var p = max > 0 ? Math.min(1, scrollY / max) : 0;
           sideNavProgress.classList.toggle('is-filled', p > 0.02);
           sideNavProgress.style.setProperty('--p', p);
         }
       };
 
-      /* Re-measure after layout/animations/pins settle, and on resize. */
+      var scheduleSideNavUpdate = function () {
+        if (sideNavTicking) { return; }
+        sideNavTicking = true;
+        requestAnimationFrame(function () {
+          updateSideNav();
+          sideNavTicking = false;
+        });
+      };
+
       measureSideNav();
       var scheduleMeasure = function () {
         measureSideNav();
@@ -85,14 +90,15 @@
         scheduleMeasure();
       }
       window.addEventListener('resize', scheduleMeasure, { passive: true });
+      window.addEventListener('seraph:scroll-ready', scheduleMeasure, { once: true });
       if (window.ScrollTrigger) {
         window.ScrollTrigger.addEventListener('refresh', scheduleMeasure);
       }
 
-      /* Update on both native scroll and Lenis' virtual scroll. */
-      window.addEventListener('scroll', updateSideNav, { passive: true });
       if (window.lenis) {
-        window.lenis.on('scroll', updateSideNav);
+        window.lenis.on('scroll', scheduleSideNavUpdate);
+      } else {
+        window.addEventListener('scroll', scheduleSideNavUpdate, { passive: true });
       }
       updateSideNav();
     }
@@ -106,14 +112,21 @@
     /* ---------- Topbar scroll state ---------- */
     var topbar = document.querySelector('.topbar');
     if (topbar) {
+      var topbarTicking = false;
       var onScroll = function () {
-        if (window.scrollY > 20) {
-          topbar.classList.add('is-scrolled');
-        } else {
-          topbar.classList.remove('is-scrolled');
-        }
+        if (topbarTicking) { return; }
+        topbarTicking = true;
+        requestAnimationFrame(function () {
+          var y = window.lenis ? window.lenis.scroll : window.scrollY;
+          topbar.classList.toggle('is-scrolled', y > 20);
+          topbarTicking = false;
+        });
       };
-      window.addEventListener('scroll', onScroll, { passive: true });
+      if (window.lenis) {
+        window.lenis.on('scroll', onScroll);
+      } else {
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
       onScroll();
     }
 
@@ -290,9 +303,6 @@
         btn.setAttribute('aria-pressed', String(active));
       });
 
-      if (window.ScrollTrigger) {
-        window.ScrollTrigger.refresh();
-      }
       window.dispatchEvent(new Event('materials-filter-updated'));
     };
 

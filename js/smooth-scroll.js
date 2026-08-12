@@ -1,15 +1,14 @@
 /* =====================================================
    SERAPH BUILD CONSTRUCTION — Smooth Scroll
-   Lenis (smooth scroll) synced 1:1 with ScrollTrigger so
-   pinned/scrubbed sections (kitchen, materials, projects)
-   stay lock-step with the eased page scroll.
+   Lenis synced with ScrollTrigger after pinned sections
+   are measured. Lenis stays paused until animations init
+   + layout refresh so pin spacers don't fight the scroller.
 
-   Also handles all in-page navigation:
+   Also handles in-page navigation:
    - glides anchor clicks with Lenis
-   - offsets for the fixed top bar so targets aren't hidden
+   - offsets for the fixed top bar
    - resolves pinned-section targets to their true start
-   - supports deep links (URL #hash) on load
-   - data-filter-target handled by main.js
+   - supports deep links (#hash) on load
    ===================================================== */
 
 (function () {
@@ -18,21 +17,28 @@
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (reduceMotion || typeof window.Lenis === 'undefined' ||
-      typeof window.ScrollTrigger === 'undefined') {
+      typeof window.ScrollTrigger === 'undefined' ||
+      typeof window.gsap === 'undefined') {
     return;
   }
 
+  ScrollTrigger.config({
+    ignoreMobileResize: true,
+    limitCallbacks: true,
+  });
+
   var lenis = new Lenis({
-    duration: 1.15,
-    easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+    /* Lerp tracks scrubbed ScrollTrigger timelines more closely than
+       a fixed duration — reduces the "stuck then catch-up" feeling. */
+    lerp: 0.09,
     smoothWheel: true,
-    wheelMultiplier: 1,
-    touchMultiplier: 1.6,
+    wheelMultiplier: 0.85,
+    touchMultiplier: 1.2,
     syncTouch: false,
   });
 
-  /* Feed every Lenis scroll into ScrollTrigger and drive Lenis
-     from GSAP's ticker so both share the same frame clock. */
+  var scrollReady = false;
+
   lenis.on('scroll', ScrollTrigger.update);
 
   gsap.ticker.add(function (time) {
@@ -42,38 +48,53 @@
 
   window.lenis = lenis;
 
-  /* Height of the fixed top bar so section tops are never hidden
-     underneath it after navigating. Measured live so it adapts. */
+  /* Hold smooth scroll until GSAP pins/spacers are calculated. */
+  lenis.stop();
+
+  var activateScroll = function () {
+    if (scrollReady) { return; }
+    scrollReady = true;
+    ScrollTrigger.refresh(true);
+    lenis.start();
+    window.dispatchEvent(new CustomEvent('seraph:scroll-ready'));
+  };
+
+  window.addEventListener('seraph:animations-ready', activateScroll, { once: true });
+
+  /* Fallback if animations bundle fails or is skipped on a page. */
+  window.addEventListener('load', function () {
+    requestAnimationFrame(function () {
+      if (!scrollReady) {
+        activateScroll();
+      }
+    });
+  }, { once: true });
+
   var topbarOffset = function () {
     var tb = document.querySelector('.topbar');
     return tb ? tb.offsetHeight : 0;
   };
 
-  /* Find the ScrollTrigger instance that pins the given element (or
-     one of its ancestors) and return its starting scroll position.
-     Pinned sections report a live rect of 0 while pinned, so we need
-     this to know where they truly begin. Returns NaN if none found. */
   var pinnedStart = function (target) {
     if (!window.ScrollTrigger) { return NaN; }
-    var triggers = window.ScrollTrigger.getAll();
+    var triggers = ScrollTrigger.getAll();
     for (var i = 0; i < triggers.length; i++) {
       var t = triggers[i];
       if (!t.vars || !t.vars.pin) { continue; }
       var triggerEl = (t.trigger && t.trigger.nodeType === 1) ? t.trigger : null;
       if (triggerEl === target || (triggerEl && triggerEl.contains(target)) ||
           (target.id && triggerEl && triggerEl.id === target.id)) {
-        return t.start; // numeric scroll offset (pins set start:'top top')
+        return t.start;
       }
     }
     return NaN;
   };
 
-  /* Compute the correct destination scroll position for an element. */
   var resolveScroll = function (target) {
     var start = pinnedStart(target);
     if (!isNaN(start)) { return start; }
     var rect = target.getBoundingClientRect();
-    return rect.top + (window.lenis ? window.lenis.scroll : window.scrollY);
+    return rect.top + lenis.scroll;
   };
 
   var goToHash = function (hash) {
@@ -82,13 +103,11 @@
     if (!target) { return; }
     lenis.scrollTo(resolveScroll(target), {
       offset: -topbarOffset(),
-      duration: 1.3,
-      onComplete: function () { window.ScrollTrigger && window.ScrollTrigger.update(); },
+      duration: 1.1,
+      onComplete: function () { ScrollTrigger.update(); },
     });
   };
 
-  /* Glide in-page anchor clicks with Lenis. data-filter-target links
-     are handled by main.js (they apply the filter first). */
   document.addEventListener('click', function (e) {
     var link = e.target.closest ? e.target.closest('a[href^="#"]') : null;
     if (!link || link.hasAttribute('data-filter-target') || link.hasAttribute('data-placeholder')) {
@@ -99,21 +118,15 @@
     var target = document.getElementById(id.slice(1));
     if (!target) { return; }
     e.preventDefault();
-    lenis.scrollTo(resolveScroll(target), { offset: -topbarOffset(), duration: 1.3 });
+    lenis.scrollTo(resolveScroll(target), { offset: -topbarOffset(), duration: 1.1 });
   });
 
-  /* Deep-link support: if the URL carries a #section hash (shared link,
-     redirect, or reload), scroll to it after pinned spacers are ready. */
   var deepHash = window.location.hash;
   if (deepHash) {
     var runDeepLink = function () {
-      if (window.ScrollTrigger) { window.ScrollTrigger.refresh(); }
+      ScrollTrigger.refresh();
       goToHash(deepHash);
     };
-    if (document.readyState === 'complete') {
-      requestAnimationFrame(runDeepLink);
-    } else {
-      window.addEventListener('load', runDeepLink);
-    }
+    window.addEventListener('seraph:scroll-ready', runDeepLink, { once: true });
   }
 })();
