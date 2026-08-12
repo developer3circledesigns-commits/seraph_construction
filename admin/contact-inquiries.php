@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin — Contact form enquiries.
+ * Admin — Contact form enquiries (list).
  */
 declare(strict_types=1);
 require dirname(__DIR__) . '/api/config/bootstrap.php';
@@ -8,19 +8,20 @@ require dirname(__DIR__) . '/api/config/bootstrap.php';
 $user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $search = trim((string)($_GET['search'] ?? ''));
-$status = trim((string)($_GET['status'] ?? ''));
+$dbError = null;
+$inquiries = [];
 
-$query = "SELECT ci.*, DATE(ci.created_at) as query_date FROM contact_inquiries ci ORDER BY ci.created_at DESC";
-
-if ($search !== '') {
-    $query = "SELECT ci.*, DATE(ci.created_at) as query_date FROM contact_inquiries ci WHERE ci.full_name LIKE :q OR ci.email LIKE :q OR ci.phone LIKE :q OR ci.service_type LIKE :q ORDER BY ci.created_at DESC";
+try {
+    $inquiries = ContactInquiry::all($search !== '' ? $search : null);
+} catch (Throwable $e) {
+    error_log('Admin contact inquiries list failed: ' . $e->getMessage());
+    $dbError = 'Could not load enquiries. Please check the database connection and try again.';
 }
 
-$inquiries = Database::all($query);
 $total = count($inquiries);
 
 $title = 'Contact Enquiries';
-$active = 'dashboard';
+$active = 'contact_inquiries';
 include __DIR__ . '/partials/header.php';
 ?>
 <?php echo flash(); ?>
@@ -36,7 +37,10 @@ include __DIR__ . '/partials/header.php';
   </div>
 </div>
 
-<!-- Filter Section Moved Above Enquiries -->
+<?php if ($dbError): ?>
+  <div class="alert alert--error" role="alert"><?php echo e($dbError); ?></div>
+<?php endif; ?>
+
 <div class="card">
   <div class="card__header">
     <h2>Search Inquiries</h2>
@@ -59,7 +63,11 @@ include __DIR__ . '/partials/header.php';
     <p class="muted small">View all contact form submissions.</p>
   </div>
 
-  <?php if ($total === 0): ?>
+  <?php if ($dbError): ?>
+    <div class="empty-state">
+      <i class="fa-solid fa-triangle-exclamation"></i> <span>Enquiries could not be loaded.</span>
+    </div>
+  <?php elseif ($total === 0): ?>
     <div class="empty-state">
       <i class="fa-solid fa-envelope-opened"></i> <span>No inquiries yet.</span>
     </div>
@@ -80,30 +88,17 @@ include __DIR__ . '/partials/header.php';
           <?php foreach ($inquiries as $i): ?>
             <tr>
               <td><strong><?php echo e($i['full_name'] ?: '—'); ?></strong></td>
-              <td><a href="mailto:<?php echo e($i['email']); ?>"><?php echo e(substr($i['email'], 0, 30) . (strlen($i['email']) > 30 ? '...' : '')); ?></a></td>
+              <td><a href="mailto:<?php echo e($i['email']); ?>"><?php echo e(strlen($i['email']) > 30 ? substr($i['email'], 0, 30) . '...' : $i['email']); ?></a></td>
               <td class="small"><?php echo e($i['phone']); ?></td>
-              <td class="small">
-                <?php echo $i['service_type'] !== '' ? ucfirst($i['service_type']) : '—'; ?>
-              </td>
-              <td class="small muted"><?php echo e($i['query_date']); ?></td>
+              <td class="small"><?php echo e(ContactInquiry::serviceLabel($i['service_type'] ?? null)); ?></td>
+              <td class="small muted"><?php echo e($i['query_date'] ?? date('Y-m-d', strtotime((string)$i['created_at']))); ?></td>
               <td style="white-space:nowrap">
-                <a class="btn btn--secondary btn--sm" href="/admin/contact-inquiries/view?id=<?php echo (int)$i['id']; ?>" aria-label="View inquiry #<?php echo (int)$i['id']; ?>"><i class="fa-solid fa-eye"></i> View</a>
+                <a class="btn btn--secondary btn--sm" href="/admin/contact-inquiry-view?id=<?php echo (int)$i['id']; ?>" aria-label="View inquiry #<?php echo (int)$i['id']; ?>"><i class="fa-solid fa-eye"></i> View</a>
               </td>
             </tr>
           <?php endforeach; ?>
         </tbody>
       </table>
-    </div>
-  <?php endif; ?>
-</div>
-
-<div class="card">
-  <div class="card__header">
-    <h2>View Inquiry #<?php echo isset($_GET['id']) ? (int)$_GET['id'] : '—'; ?></h2>
-  </div>
-  <?php if (isset($_GET['id']) && (int)$_GET['id'] > 0): ?>
-    <div class="table-wrap">
-      <p>Inquiry details for ID <strong><?php echo (int)$_GET['id']; ?></strong>. <a href="/admin/contact-inquiries">Back to list</a>.</p>
     </div>
   <?php endif; ?>
 </div>
