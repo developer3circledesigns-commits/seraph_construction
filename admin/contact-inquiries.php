@@ -8,19 +8,22 @@ require dirname(__DIR__) . '/api/config/bootstrap.php';
 $user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $search = trim((string)($_GET['search'] ?? ''));
-$status = trim((string)($_GET['status'] ?? ''));
 
-$query = "SELECT ci.*, DATE(ci.created_at) as query_date FROM contact_inquiries ci ORDER BY ci.created_at DESC";
+$params = [];
+$query = "SELECT ci.*, DATE(ci.created_at) AS query_date FROM contact_inquiries ci";
 
 if ($search !== '') {
-    $query = "SELECT ci.*, DATE(ci.created_at) as query_date FROM contact_inquiries ci WHERE ci.full_name LIKE :q OR ci.email LIKE :q OR ci.phone LIKE :q OR ci.service_type LIKE :q ORDER BY ci.created_at DESC";
+    $query .= " WHERE ci.full_name LIKE :q OR ci.email LIKE :q OR ci.phone LIKE :q OR ci.service_type LIKE :q";
+    $params[':q'] = '%' . $search . '%';
 }
 
-$inquiries = Database::all($query);
+$query .= " ORDER BY ci.created_at DESC";
+
+$inquiries = Database::all($query, $params);
 $total = count($inquiries);
 
 $title = 'Contact Enquiries';
-$active = 'dashboard';
+$active = 'contact_inquiries';
 include __DIR__ . '/partials/header.php';
 ?>
 <?php echo flash(); ?>
@@ -94,17 +97,6 @@ include __DIR__ . '/partials/header.php';
     <button class="btn btn--primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Filter</button>
     <a href="/admin/contact-inquiries" class="btn btn--secondary" style="margin-left:8px">Clear</a>
   </form>
-</div>
-
-<div class="card">
-  <div class="card__header">
-    <h2>View Inquiry #<?php echo isset($_GET['id']) ? (int)$_GET['id'] : '—'; ?></h2>
-  </div>
-  <?php if (isset($_GET['id']) && (int)$_GET['id'] > 0): ?>
-    <div class="table-wrap">
-      <p>Inquiry details for ID <strong><?php echo (int)$_GET['id']; ?></strong>. <a href="/admin/contact-inquiries">Back to list</a>.</p>
-    </div>
-  <?php endif; ?>
 </div>
 
 <?php include __DIR__ . '/partials/footer.php'; ?>

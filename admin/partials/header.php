@@ -53,6 +53,9 @@ $unread = Notification::unreadCount('admin', (int)$user['id']);
       <a class="sidebar__link <?php echo $active === 'clients' ? 'active' : ''; ?>" href="/admin/clients">
         <i class="fa-solid fa-users"></i> Clients
       </a>
+      <a class="sidebar__link <?php echo $active === 'contact_inquiries' ? 'active' : ''; ?>" href="/admin/contact-inquiries">
+        <i class="fa-solid fa-envelope"></i> Contact Enquiries
+      </a>
       <?php if (Auth::isSuper($user)): ?>
       <a class="sidebar__link <?php echo $active === 'admins' ? 'active' : ''; ?>" href="/admin/admins">
         <i class="fa-solid fa-user-shield"></i> Admins
