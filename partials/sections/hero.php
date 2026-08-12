@@ -1,6 +1,7 @@
 <!-- =====================================================
      1. HERO — Layout 13 full-bleed blur panel
      ===================================================== -->
+<?php $projectsUrl = $site['projects_url'] ?? 'projects.php'; ?>
 <section id="hero" class="blur-panel" data-blur>
   <div class="blur-panel__media">
     <img
@@ -21,7 +22,7 @@
       <span class="line"><span class="line-inner">Creating Timeless Experiences</span></span>
     </h1>
     <p>Construction &middot; Interior Design &middot; Commercial</p>
-    <a href="#interior" class="btn btn--solid">Explore Our Work</a>
+    <a href="<?php echo e($projectsUrl); ?>" class="btn btn--solid">Explore Our Work</a>
   </div>
   <div class="hero__scroll" aria-hidden="true">
     <div class="mouse"><span class="mouse__wheel"></span></div>
