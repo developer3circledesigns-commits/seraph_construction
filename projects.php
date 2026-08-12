@@ -44,6 +44,47 @@ function truncateDesc(string $text, int $length = 80): array
     }
     return ['text' => e($cut), 'truncated' => true];
 }
+
+function renderProjectCard(array $p): void
+{
+    $thumb = projectThumbnail($p);
+    $desc = truncateDesc($p['description'] ?? '');
+    ?>
+        <div class="project-card" title="<?php echo e($p['name']); ?>"
+             data-image="<?php echo e($thumb); ?>"
+             data-name="<?php echo e($p['name']); ?>"
+             data-location="<?php echo e($p['location'] ?? ''); ?>"
+             role="button" tabindex="0" aria-label="<?php echo e($p['name']); ?>" aria-pressed="false">
+          <div class="project-card__link">
+            <div class="project-card__media"><img src="<?php echo e($thumb); ?>" alt="<?php echo e($p['name']); ?>" loading="lazy"></div>
+            <div class="project-card__arrow">&#8599;</div>
+            <div class="project-card__body">
+               <div class="project-card__title"><?php echo e($p['name']); ?></div>
+               <div class="project-card__text">
+                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">View more</span></span><?php endif; ?></span>
+                 <?php if ($desc['truncated']): ?>
+                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">Show less</span></span>
+                 <?php endif; ?>
+               </div>
+               <div class="project-card__specs">
+                 <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo fmtSpec($p['location']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo fmtSpec($p['plot_size']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo fmtSpec($p['built_up_area']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo fmtInt($p['floors']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bedrooms']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bathrooms']); ?></span></div>
+                 <div class="project-card__spec"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
+               </div>
+             </div>
+           </div>
+           <?php if ((int)$p['has_layout'] > 0): ?>
+           <a class="project-card__download" href="/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
+          <?php endif; ?>
+        </div>
+    <?php
+}
+
+$featuredProject = !empty($allProjects) ? reset($allProjects) : null;
 ?>
 <main id="main-content" class="projects-page">
   <style>
@@ -65,11 +106,12 @@ function truncateDesc(string $text, int $length = 80): array
     .projects-page__category-label::after { content: ''; flex: 1; height: 1px; background: #2a261f; }
 
     .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.1rem; }
-    .project-card { position: relative; display: flex; flex-direction: column; overflow: hidden; border-radius: 4px; background: #16140f; text-decoration: none; color: inherit; height: 100%; }
+    .project-card { position: relative; display: flex; flex-direction: column; overflow: hidden; border-radius: 4px; background: #16140f; text-decoration: none; color: inherit; height: 100%; cursor: pointer; transition: box-shadow 0.3s ease, outline-color 0.3s ease; }
+    .project-card.is-selected { outline: 2px solid #C79A56; outline-offset: -2px; box-shadow: 0 0 0 1px rgba(199,154,86,0.25); }
     .project-card__link { display: block; text-decoration: none; color: inherit; }
     .project-card__media { aspect-ratio: 16 / 11; overflow: hidden; }
     .project-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.6, 0.2, 1); }
-    .project-card__link:hover .project-card__media img { transform: scale(1.05); }
+    .project-card:hover .project-card__media img { transform: scale(1.05); }
     .project-card__body { padding: 0.9rem 0.9rem 0.9rem; flex: 1; }
     .project-card__no { font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: #C79A56; }
     .project-card__title { font-family: 'Fraunces', Georgia, serif; font-size: 1.1rem; font-weight: 400; margin: 0.3rem 0 0.25rem; color: #f4efe8; }
@@ -95,6 +137,15 @@ function truncateDesc(string $text, int $length = 80): array
     .btn--gold:hover { background: #e0b376; }
 
     .projects-empty { text-align: center; padding: 3rem; color: #a29a8c; }
+
+    .projects-page__featured { max-width: 1320px; margin: 3rem auto 0; padding: 0 2rem; }
+    .projects-page__featured-media { position: relative; aspect-ratio: 21 / 9; border-radius: 4px; overflow: hidden; background: #16140f; }
+    .projects-page__featured-media img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.35s ease; }
+    .projects-page__featured-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(20,18,16,0.85) 0%, rgba(20,18,16,0.15) 55%, transparent 100%); pointer-events: none; }
+    .projects-page__featured-caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.8rem 2rem; z-index: 1; }
+    .projects-page__featured-label { display: block; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: #C79A56; margin-bottom: 0.45rem; }
+    .projects-page__featured-title { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(1.6rem, 3vw, 2.4rem); color: #f4efe8; margin: 0 0 0.35rem; }
+    .projects-page__featured-location { font-size: 0.88rem; color: #c9c2b5; margin: 0; }
   </style>
 
   <div class="projects-page__head">
@@ -108,6 +159,23 @@ function truncateDesc(string $text, int $length = 80): array
       <p>No projects to display at the moment. Check back soon.</p>
     </div>
   <?php else: ?>
+  <div class="projects-page__featured" id="projectsFeatured">
+    <div class="projects-page__featured-media">
+      <img id="projectsFeaturedImg"
+           src="<?php echo e(projectThumbnail($featuredProject)); ?>"
+           alt="<?php echo e($featuredProject['name']); ?>">
+      <div class="projects-page__featured-caption">
+        <span class="projects-page__featured-label">Selected Project</span>
+        <h2 class="projects-page__featured-title" id="projectsFeaturedTitle"><?php echo e($featuredProject['name']); ?></h2>
+        <?php if (!empty($featuredProject['location'])): ?>
+        <p class="projects-page__featured-location" id="projectsFeaturedLocation"><?php echo e($featuredProject['location']); ?></p>
+        <?php else: ?>
+        <p class="projects-page__featured-location" id="projectsFeaturedLocation"></p>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+
   <div class="projects-filter" role="group" aria-label="Filter projects">
     <button type="button" class="projects-filter__btn" data-filter="ongoing" aria-pressed="false">On Going Projects</button>
     <button type="button" class="projects-filter__btn" data-filter="completed" aria-pressed="false">Completed Projects</button>
@@ -121,34 +189,7 @@ function truncateDesc(string $text, int $length = 80): array
     </div>
     <div class="projects-grid">
       <?php foreach ($ongoing as $i => $p): ?>
-        <div class="project-card" title="<?php echo e($p['name']); ?>">
-          <a class="project-card__link" href="#contact">
-            <div class="project-card__media"><img src="<?php echo e(projectThumbnail($p)); ?>" alt="<?php echo e($p['name']); ?>" loading="lazy"></div>
-            <div class="project-card__arrow">&#8599;</div>
-            <div class="project-card__body">
-               <div class="project-card__title"><?php echo e($p['name']); ?></div>
-               <?php $desc = truncateDesc($p['description'] ?? ''); ?>
-               <div class="project-card__text">
-                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">View more</span></span><?php endif; ?></span>
-                 <?php if ($desc['truncated']): ?>
-                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">Show less</span></span>
-                 <?php endif; ?>
-               </div>
-               <div class="project-card__specs">
-                 <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo fmtSpec($p['location']); ?></span></div>
-                 <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo fmtSpec($p['plot_size']); ?></span></div>
-                 <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo fmtSpec($p['built_up_area']); ?></span></div>
-                 <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo fmtInt($p['floors']); ?></span></div>
-                 <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bedrooms']); ?></span></div>
-                 <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bathrooms']); ?></span></div>
-                 <div class="project-card__spec"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
-               </div>
-             </div>
-           </a>
-           <?php if ((int)$p['has_layout'] > 0): ?>
-           <a class="project-card__download" href="/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
-          <?php endif; ?>
-        </div>
+        <?php renderProjectCard($p); ?>
       <?php endforeach; ?>
     </div>
   </section>
@@ -162,34 +203,7 @@ function truncateDesc(string $text, int $length = 80): array
     </div>
     <div class="projects-grid">
       <?php foreach ($completed as $i => $p): ?>
-        <div class="project-card" title="<?php echo e($p['name']); ?>">
-          <a class="project-card__link" href="#contact">
-            <div class="project-card__media"><img src="<?php echo e(projectThumbnail($p)); ?>" alt="<?php echo e($p['name']); ?>" loading="lazy"></div>
-            <div class="project-card__arrow">&#8599;</div>
-            <div class="project-card__body">
-              <div class="project-card__title"><?php echo e($p['name']); ?></div>
-               <?php $desc = truncateDesc($p['description'] ?? ''); ?>
-               <div class="project-card__text">
-                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">View more</span></span><?php endif; ?></span>
-                 <?php if ($desc['truncated']): ?>
-                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">Show less</span></span>
-                 <?php endif; ?>
-               </div>
-              <div class="project-card__specs">
-                <div class="project-card__spec"><span class="project-card__spec-label">Location</span><span class="project-card__spec-value"><?php echo fmtSpec($p['location']); ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Plot Size</span><span class="project-card__spec-value"><?php echo fmtSpec($p['plot_size']); ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Built-up Area</span><span class="project-card__spec-value"><?php echo fmtSpec($p['built_up_area']); ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Floors</span><span class="project-card__spec-value"><?php echo fmtInt($p['floors']); ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Bedrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bedrooms']); ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Bathrooms</span><span class="project-card__spec-value"><?php echo fmtInt($p['bathrooms']); ?></span></div>
-                <div class="project-card__spec"><span class="project-card__spec-label">Style</span><span class="project-card__spec-value"><?php echo fmtSpec($p['style']); ?></span></div>
-              </div>
-            </div>
-          </a>
-           <?php if ((int)$p['has_layout'] > 0): ?>
-           <a class="project-card__download" href="/download-layout.php?id=<?php echo (int)$p['id']; ?>"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Layout</a>
-          <?php endif; ?>
-        </div>
+        <?php renderProjectCard($p); ?>
       <?php endforeach; ?>
     </div>
   </section>
@@ -269,6 +283,62 @@ function toggleDesc(event, el) {
       }
     });
   });
+})();
+
+(function () {
+  'use strict';
+  var featuredImg = document.getElementById('projectsFeaturedImg');
+  var featuredTitle = document.getElementById('projectsFeaturedTitle');
+  var featuredLocation = document.getElementById('projectsFeaturedLocation');
+  var featuredWrap = document.getElementById('projectsFeatured');
+  var cards = document.querySelectorAll('.project-card');
+  if (!featuredImg || !cards.length) return;
+
+  function selectCard(card, scrollToFeatured) {
+    var image = card.getAttribute('data-image');
+    var name = card.getAttribute('data-name') || '';
+    var location = card.getAttribute('data-location') || '';
+    if (!image) return;
+
+    featuredImg.style.opacity = '0';
+    window.setTimeout(function () {
+      featuredImg.src = image;
+      featuredImg.alt = name;
+      if (featuredTitle) featuredTitle.textContent = name;
+      if (featuredLocation) featuredLocation.textContent = location;
+      featuredImg.style.opacity = '1';
+    }, 180);
+
+    cards.forEach(function (c) {
+      c.classList.remove('is-selected');
+      c.setAttribute('aria-pressed', 'false');
+    });
+    card.classList.add('is-selected');
+    card.setAttribute('aria-pressed', 'true');
+
+    if (scrollToFeatured && featuredWrap) {
+      if (window.lenis) {
+        window.lenis.scrollTo(featuredWrap, { offset: -24, duration: 1.0 });
+      } else {
+        featuredWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }
+
+  cards.forEach(function (card) {
+    card.addEventListener('click', function (e) {
+      if (e.target.closest('.project-card__download') || e.target.closest('.project-card__desc-toggle')) return;
+      selectCard(card, true);
+    });
+    card.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      if (e.target.closest('.project-card__download') || e.target.closest('.project-card__desc-toggle')) return;
+      e.preventDefault();
+      selectCard(card, true);
+    });
+  });
+
+  selectCard(cards[0], false);
 })();
 </script>
 <?php
