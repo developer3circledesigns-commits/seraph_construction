@@ -5,8 +5,8 @@
   <div class="blur-panel__media">
     <img
       src="images/hero-front@1120w.webp"
-      srcset="images/hero-front@1120w.webp 1120w, images/hero-front@1680w.webp 1680w, images/hero-front@2240w.webp 2240w"
-      sizes="(min-width: 1400px) 1376px, 100vw"
+      srcset="images/hero-front@1120w.webp 1120w, images/hero-front@1680w.webp 1680w"
+      sizes="(min-width: 1400px) 1200px, 100vw"
       alt="Luxury modern villa exterior at dusk with architectural lighting"
       width="1376"
       height="768"

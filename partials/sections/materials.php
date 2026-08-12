@@ -15,19 +15,21 @@ $filters = [
     ['key' => 'switches',  'icon' => 'fa-toggle-on',  'label' => 'Switches'],
 ];
 
+/* Card srcset capped at display size; bg_src capped at 1024px for full-bleed overlay. */
 $materials = [
-    ['category' => 'tiles',  'img' => 'livingroom@1112w.webp', 'srcset' => '', 'alt' => 'Premium Italian marble tiles', 'name' => 'Kajaria', 'type' => 'Premium Tiles', 'specs' => ['Italian Finish', 'Water Resistant', 'Scratch Proof']],
-    ['category' => 'steel',  'img' => 'realistic-construction-site-no-human.webp', 'srcset' => '', 'alt' => 'Structural steel beams for construction', 'name' => 'Tata Steel', 'type' => 'Structural Steel', 'specs' => ['High Tensile', 'Corrosion Resistant', 'ISI Certified']],
-    ['category' => 'doors',  'img' => 'elevation@1112w.webp', 'srcset' => 'images/elevation@1112w.webp 1112w, images/elevation@2230w.webp 2230w', 'alt' => 'Premium wooden entrance door', 'name' => 'Greenply', 'type' => 'Premium Doors', 'specs' => ['Solid Core', 'Termite Proof', 'Acoustic Seal']],
-    ['category' => 'wood',   'img' => 'modularkitchen@1112w.webp', 'srcset' => 'images/modularkitchen@1112w.webp 1112w, images/modularkitchen@2230w.webp 2230w', 'alt' => 'Premium hardwood flooring and wood materials', 'name' => 'Century', 'type' => 'Hardwood &amp; Plywood', 'specs' => ['BWP Grade', 'Eco Certified', 'Long Lasting']],
-    ['category' => 'bath',   'img' => 'toilet@1112w.webp', 'srcset' => 'images/toilet@1112w.webp 1112w, images/toilet@2230w.webp 2230w', 'alt' => 'Luxury bathroom fittings and fixtures', 'name' => 'Jaquar', 'type' => 'Bath Fittings', 'specs' => ['Chrome Finish', 'Water Saving', '10 Year Warranty']],
-    ['category' => 'electrical', 'img' => 'hero-front@1120w.webp', 'srcset' => 'images/hero-front@1120w.webp 1120w, images/hero-front@1680w.webp 1680w, images/hero-front@2240w.webp 2240w', 'alt' => 'Premium electrical switches and wiring', 'name' => 'Legrand', 'type' => 'Electrical Systems', 'specs' => ['Smart Ready', 'Fire Retardant', 'Modular Design']],
-    ['category' => 'paints', 'img' => 'interior-living-room@768w.webp', 'srcset' => 'images/interior-living-room@384w.webp 384w, images/interior-living-room@768w.webp 768w', 'alt' => 'Premium interior paint finishes', 'name' => 'Asian Paints', 'type' => 'Premium Paints', 'specs' => ['Low VOC', 'Washable Finish', 'Fade Resistant']],
-    ['category' => 'plumbing','img' => 'elevation@1112w.webp', 'srcset' => 'images/elevation@1112w.webp 1112w, images/elevation@2230w.webp 2230w', 'alt' => 'Premium plumbing pipes and fittings', 'name' => 'Astral', 'type' => 'Plumbing Solutions', 'specs' => ['CPVC Grade', 'Leak Proof', 'Heat Resistant']],
-    ['category' => 'switches','img' => 'glass_house@1000w.webp', 'srcset' => 'images/glass_house@1000w.webp 1000w, images/glass_house@2000w.webp 2000w', 'alt' => 'Modern smart home switches and controls', 'name' => 'Havells', 'type' => 'Smart Switches', 'specs' => ['Touch Control', 'App Compatible', 'Elegant Finish']],
-    ['category' => 'doors',  'img' => 'modularkitchen@1112w.webp', 'srcset' => 'images/modularkitchen@1112w.webp 1112w, images/modularkitchen@2230w.webp 2230w', 'alt' => 'Luxury drawer systems and hardware', 'name' => 'Hettich', 'type' => 'Drawer Systems', 'specs' => ['Soft Close', 'German Engineering', 'Silent Motion']],
+    ['category' => 'tiles',  'img' => 'livingroom@1112w.webp', 'srcset' => 'images/livingroom@1112w.webp 1112w', 'bg_src' => 'images/livingroom@1112w.webp', 'alt' => 'Premium Italian marble tiles', 'name' => 'Kajaria', 'type' => 'Premium Tiles', 'specs' => ['Italian Finish', 'Water Resistant', 'Scratch Proof']],
+    ['category' => 'steel',  'img' => 'elevation@1112w.webp', 'srcset' => 'images/elevation@1112w.webp 1112w', 'bg_src' => 'images/elevation@1112w.webp', 'alt' => 'Structural steel beams for construction', 'name' => 'Tata Steel', 'type' => 'Structural Steel', 'specs' => ['High Tensile', 'Corrosion Resistant', 'ISI Certified']],
+    ['category' => 'doors',  'img' => 'elevation@1112w.webp', 'srcset' => 'images/elevation@1112w.webp 1112w', 'bg_src' => 'images/elevation@1112w.webp', 'alt' => 'Premium wooden entrance door', 'name' => 'Greenply', 'type' => 'Premium Doors', 'specs' => ['Solid Core', 'Termite Proof', 'Acoustic Seal']],
+    ['category' => 'wood',   'img' => 'modularkitchen@1112w.webp', 'srcset' => 'images/modularkitchen@1112w.webp 1112w', 'bg_src' => 'images/modularkitchen@1112w.webp', 'alt' => 'Premium hardwood flooring and wood materials', 'name' => 'Century', 'type' => 'Hardwood &amp; Plywood', 'specs' => ['BWP Grade', 'Eco Certified', 'Long Lasting']],
+    ['category' => 'bath',   'img' => 'toilet@1112w.webp', 'srcset' => 'images/toilet@1112w.webp 1112w', 'bg_src' => 'images/toilet@1112w.webp', 'alt' => 'Luxury bathroom fittings and fixtures', 'name' => 'Jaquar', 'type' => 'Bath Fittings', 'specs' => ['Chrome Finish', 'Water Saving', '10 Year Warranty']],
+    ['category' => 'electrical', 'img' => 'hero-front@1120w.webp', 'srcset' => 'images/hero-front@1120w.webp 1120w', 'bg_src' => 'images/hero-front@1120w.webp', 'alt' => 'Premium electrical switches and wiring', 'name' => 'Legrand', 'type' => 'Electrical Systems', 'specs' => ['Smart Ready', 'Fire Retardant', 'Modular Design']],
+    ['category' => 'paints', 'img' => 'interior-living-room@768w.webp', 'srcset' => 'images/interior-living-room@384w.webp 384w, images/interior-living-room@768w.webp 768w', 'bg_src' => 'images/interior-living-room@768w.webp', 'alt' => 'Premium interior paint finishes', 'name' => 'Asian Paints', 'type' => 'Premium Paints', 'specs' => ['Low VOC', 'Washable Finish', 'Fade Resistant']],
+    ['category' => 'plumbing','img' => 'elevation@1112w.webp', 'srcset' => 'images/elevation@1112w.webp 1112w', 'bg_src' => 'images/elevation@1112w.webp', 'alt' => 'Premium plumbing pipes and fittings', 'name' => 'Astral', 'type' => 'Plumbing Solutions', 'specs' => ['CPVC Grade', 'Leak Proof', 'Heat Resistant']],
+    ['category' => 'switches','img' => 'glass_house@1000w.webp', 'srcset' => 'images/glass_house@1000w.webp 1000w', 'bg_src' => 'images/glass_house@1000w.webp', 'alt' => 'Modern smart home switches and controls', 'name' => 'Havells', 'type' => 'Smart Switches', 'specs' => ['Touch Control', 'App Compatible', 'Elegant Finish']],
+    ['category' => 'doors',  'img' => 'modularkitchen@1112w.webp', 'srcset' => 'images/modularkitchen@1112w.webp 1112w', 'bg_src' => 'images/modularkitchen@1112w.webp', 'alt' => 'Luxury drawer systems and hardware', 'name' => 'Hettich', 'type' => 'Drawer Systems', 'specs' => ['Soft Close', 'German Engineering', 'Silent Motion']],
 ];
 $contactUrl = $site['contact_url'] ?? 'contact.php';
+$materialCardSizes = '(max-width: 640px) 88vw, (max-width: 1200px) 42vw, 360px';
 ?>
 <section id="materials" class="materials-section h-section">
   <div class="h-pin">
@@ -51,7 +53,15 @@ $contactUrl = $site['contact_url'] ?? 'contact.php';
       <?php foreach ($materials as $material): ?>
         <article class="material-card" data-category="<?php echo htmlspecialchars($material['category']); ?>">
           <div class="material-card__img-wrap">
-            <img src="images/<?php echo $material['img']; ?>"<?php if ($material['srcset']): ?> srcset="<?php echo $material['srcset']; ?>" sizes="60vw"<?php endif; ?> alt="<?php echo htmlspecialchars($material['alt']); ?>" loading="lazy" width="1280" height="854">
+            <img src="images/<?php echo $material['img']; ?>"
+                 srcset="<?php echo $material['srcset']; ?>"
+                 sizes="<?php echo $materialCardSizes; ?>"
+                 data-bg-src="<?php echo e($material['bg_src']); ?>"
+                 alt="<?php echo htmlspecialchars($material['alt']); ?>"
+                 loading="lazy"
+                 decoding="async"
+                 width="640"
+                 height="427">
           </div>
           <div class="material-card__body">
             <h3><?php echo $material['name']; ?></h3>

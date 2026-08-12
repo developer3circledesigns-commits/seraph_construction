@@ -15,7 +15,7 @@
 
     <div class="split">
       <div class="split__media" data-img>
-        <img src="images/realistic-construction-site-no-human.webp" alt="Luxury interior design" width="1000" height="667" loading="lazy" decoding="async">
+        <img src="images/elevation@1112w.webp" srcset="images/elevation@1112w.webp 1112w" sizes="(min-width: 900px) 50vw, 100vw" alt="Seraph construction team at work on a luxury build" width="1000" height="667" loading="lazy" decoding="async">
       </div>
       <div class="split__body">
         <span class="eyebrow" data-reveal>Our Story</span>

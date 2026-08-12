@@ -33,6 +33,13 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
+    var pickBgUrl = function (img) {
+      if (window.SeraphImages && window.SeraphImages.bgUrlFromImg) {
+        return window.SeraphImages.bgUrlFromImg(img);
+      }
+      return img.getAttribute('data-bg-src') || img.getAttribute('src') || '';
+    };
+
     /* Full-bleed panels: scrub scale/opacity only (not filter — causes scroll jank). */
     gsap.utils.toArray('[data-blur]').forEach(function (panel) {
       var img = panel.querySelector('img');
@@ -212,7 +219,7 @@
           var cardImg = card.querySelector('.material-card__img-wrap img');
           if (cardImg) {
             var bgImg = document.createElement('img');
-            bgImg.src = cardImg.getAttribute('src');
+            bgImg.src = pickBgUrl(cardImg);
             bgImg.alt = '';
             bgImg.loading = 'lazy';
             bgImg.decoding = 'async';
@@ -266,9 +273,18 @@
         });
       };
 
+      var materialsTrackDist = null;
       var getTrackDist = function () {
-        return Math.max(0, materialsTrack.scrollWidth - window.innerWidth);
+        if (materialsTrackDist === null) {
+          materialsTrackDist = Math.max(0, materialsTrack.scrollWidth - window.innerWidth);
+        }
+        return materialsTrackDist;
       };
+      var resetMaterialsTrackDist = function () {
+        materialsTrackDist = null;
+      };
+
+      ScrollTrigger.addEventListener('refresh', resetMaterialsTrackDist);
 
       gsap.to(materialsTrack, {
         x: function () {
@@ -307,6 +323,7 @@
 
       window.addEventListener('materials-filter-updated', function () {
         materialsBgIndex = -1;
+        resetMaterialsTrackDist();
         if (window.ScrollTrigger) {
           ScrollTrigger.refresh(true);
         }
@@ -376,7 +393,7 @@
       if (projectsBg) {
         pImgs.forEach(function (img) {
           var bgImg = document.createElement('img');
-          bgImg.src = img.getAttribute('src');
+          bgImg.src = pickBgUrl(img);
           bgImg.alt = '';
           bgImg.loading = 'lazy';
           bgImg.decoding = 'async';

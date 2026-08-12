@@ -16,7 +16,7 @@
     <div class="kitchen-sequence__img">
       <img
         src="images/<?php echo $step['img']; ?>@1112w.webp"
-        srcset="images/<?php echo $step['img']; ?>@1112w.webp 1112w, images/<?php echo $step['img']; ?>@2230w.webp 2230w"
+        srcset="images/<?php echo $step['img']; ?>@1112w.webp 1112w"
         sizes="(min-width: 1400px) 1112px, 100vw"
         alt="<?php echo htmlspecialchars($step['alt']); ?>"
         width="1400"

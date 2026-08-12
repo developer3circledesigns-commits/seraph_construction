@@ -64,7 +64,11 @@ if (!defined('ROOT_PATH')) {
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="preload" as="image" type="image/webp" href="images/hero-front@1120w.webp"
+        imagesrcset="images/hero-front@1120w.webp 1120w, images/hero-front@1680w.webp 1680w"
+        imagesizes="(min-width: 1400px) 1200px, 100vw">
+  <link rel="stylesheet" href="css/responsive.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="css/responsive.css"></noscript>
 
   <!-- Schema Markup -->
   <script type="application/ld+json">
