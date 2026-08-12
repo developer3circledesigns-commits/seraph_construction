@@ -58,7 +58,7 @@ include __DIR__ . '/partials/header.php';
   <div class="card__header">
     <h2>Message</h2>
   </div>
-  <p class="small" style="white-space:pre-wrap;line-height:1.7"><?php echo e($inquiry['message']); ?></p>
+  <p class="small" style="white-space:pre-wrap;line-height:1.7"><?php echo e(trim((string)($inquiry['message'] ?? '')) !== '' ? $inquiry['message'] : '(Not provided)'); ?></p>
 </div>
 
 <?php include __DIR__ . '/partials/footer.php'; ?>

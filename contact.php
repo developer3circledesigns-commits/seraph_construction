@@ -69,13 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Please select a valid service type.';
     }
 
-    if ($message === '') {
-        $errors[] = 'Message is required.';
-    } elseif (strlen($message) < 20) {
-        $errors[] = 'Message must be at least 20 characters.';
-    } elseif (strlen($message) > 5000) {
-        $errors[] = 'Message must be 5000 characters or fewer.';
-    }
+    /* Project details are optional — any length including empty. */
 
     if (!$errors) {
         try {
@@ -117,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     . "Email: {$email}\n"
                     . "Phone: {$phone}\n"
                     . "Service: {$serviceLabel}\n\n"
-                    . "Message:\n{$message}\n\n"
+                    . "Message:\n" . ($message !== '' ? $message : '(Not provided)') . "\n\n"
                     . "View in admin: {$adminLink}\n";
 
                 if (!Mail::send('New contact enquiry from ' . $fullName, $mailBody, $email)) {
@@ -249,13 +243,13 @@ require __DIR__ . '/partials/header.php';
         </div>
 
         <div class="contact-form__field">
-          <label for="contactMessage">Project Details <span aria-hidden="true">*</span></label>
-          <textarea id="contactMessage" name="message" required rows="5" minlength="20" maxlength="5000"
+          <label for="contactMessage">Project Details <span class="contact-form__optional">(optional)</span></label>
+          <textarea id="contactMessage" name="message" rows="5"
                     placeholder="Tell us about your project — location, timeline, budget range, and any specific requirements."
                     aria-describedby="contactMessageError contactMessageCount"><?php echo e($old['message']); ?></textarea>
           <div class="contact-form__meta">
             <p class="contact-form__error" id="contactMessageError" role="alert"></p>
-            <span class="contact-form__count" id="contactMessageCount" aria-live="polite">0 / 5000</span>
+            <span class="contact-form__count" id="contactMessageCount" aria-live="polite">0 characters</span>
           </div>
         </div>
 

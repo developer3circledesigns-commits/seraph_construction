@@ -2698,6 +2698,14 @@ html.lenis,html.lenis body{height:auto}
   color: var(--gold);
 }
 
+.contact-form__optional {
+  color: var(--muted);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.85em;
+}
+
 .contact-form__row {
   display: grid;
   grid-template-columns: 1fr 1fr;

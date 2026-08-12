@@ -456,7 +456,6 @@
         var name = contactFields.full_name.value.trim();
         var email = contactFields.email.value.trim();
         var phone = contactFields.phone.value.trim();
-        var message = contactFields.message.value.trim();
         var digits = phone.replace(/\D/g, '');
 
         if (!name) {
@@ -483,17 +482,6 @@
           valid = false;
         }
 
-        if (!message) {
-          setContactError('message', 'Message is required.');
-          valid = false;
-        } else if (message.length < 20) {
-          setContactError('message', 'Message must be at least 20 characters.');
-          valid = false;
-        } else if (message.length > 5000) {
-          setContactError('message', 'Message must be 5000 characters or fewer.');
-          valid = false;
-        }
-
         if (!valid) {
           var firstInvalid = contactForm.querySelector('[aria-invalid="true"]');
           if (firstInvalid) firstInvalid.focus();
@@ -504,7 +492,8 @@
 
       function updateMessageCount() {
         if (!messageCount || !contactFields.message) return;
-        messageCount.textContent = contactFields.message.value.length + ' / 5000';
+        var len = contactFields.message.value.length;
+        messageCount.textContent = len + (len === 1 ? ' character' : ' characters');
       }
 
       contactForm.addEventListener('submit', function (e) {
