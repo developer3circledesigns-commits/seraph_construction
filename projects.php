@@ -59,6 +59,7 @@ function truncateDesc(string $text, int $length = 80): array
     .projects-filter__btn { padding: 0.65rem 1.6rem; border: 1px solid #3a352c; border-radius: 999px; background: transparent; color: #c9c2b5; font-family: inherit; font-size: 0.85rem; letter-spacing: 0.05em; cursor: pointer; transition: all 0.3s ease; }
     .projects-filter__btn:hover { border-color: #C79A56; color: #f4efe8; }
     .projects-filter__btn.is-active { background: #C79A56; border-color: #C79A56; color: #141210; font-weight: 600; }
+    .projects-filter__btn:focus-visible { outline: 2px solid #C79A56; outline-offset: 2px; }
     .projects-page__category-label { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 2.2rem; }
     .projects-page__category-label h2 { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(1.6rem, 3vw, 2.2rem); color: #f4efe8; }
     .projects-page__category-label span { font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; color: #C79A56; }
@@ -67,6 +68,7 @@ function truncateDesc(string $text, int $length = 80): array
     .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.1rem; }
     .project-card { position: relative; display: flex; flex-direction: column; overflow: hidden; border-radius: 4px; background: #16140f; text-decoration: none; color: inherit; height: 100%; }
     .project-card__link { display: block; text-decoration: none; color: inherit; }
+    .project-card__link .project-card__title { padding: 0.75rem 0.9rem 0; }
     .project-card__media { aspect-ratio: 16 / 11; overflow: hidden; }
     .project-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.6, 0.2, 1); }
     .project-card__link:hover .project-card__media img { transform: scale(1.05); }
@@ -76,6 +78,7 @@ function truncateDesc(string $text, int $length = 80): array
     .project-card__text { font-size: 0.82rem; color: #a29a8c; margin-bottom: 0.7rem; }
     .project-card__desc-toggle { color: #C79A56; cursor: pointer; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em; display: inline-block; margin-top: 0.2rem; background: none; border: none; padding: 0; font-family: inherit; }
     .project-card__desc-toggle:hover { color: #e0b376; text-decoration: underline; }
+    .project-card__desc-toggle:focus-visible { outline: 2px solid #C79A56; outline-offset: 2px; border-radius: 2px; }
     .project-card__desc-full { display: none; }
     .project-card__desc-full.is-open { display: inline; }
     .project-card__desc-cut.is-hidden { display: none; }

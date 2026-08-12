@@ -13,13 +13,24 @@
   const hamburger = $('#hamburger');
 
   if (sidebar && hamburger) {
+    const closeSidebar = () => {
+      sidebar.classList.remove('open');
+      backdrop.classList.remove('show');
+      document.body.style.overflow = '';
+    };
+
     hamburger.addEventListener('click', () => {
       sidebar.classList.add('open');
       backdrop.classList.add('show');
+      document.body.style.overflow = 'hidden';
     });
-    backdrop.addEventListener('click', () => {
-      sidebar.classList.remove('open');
-      backdrop.classList.remove('show');
+    backdrop.addEventListener('click', closeSidebar);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+        closeSidebar();
+        hamburger.focus();
+      }
     });
   }
 

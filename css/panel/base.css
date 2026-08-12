@@ -64,6 +64,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   min-height: 100vh;
+  min-height: 100dvh;
   font-size: 0.93rem;
 }
 
@@ -170,7 +171,7 @@ img { max-width: 100%; }
 }
 .form-control::placeholder { color: #a79c85; }
 textarea.form-control { min-height: 96px; resize: vertical; }
-select.form-control { appearance: none; background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b6150' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+select.form-control { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b6150' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
 
 .form-help { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 6px; }
 
@@ -201,10 +202,19 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
   padding: 4px;
   line-height: 1;
   user-select: none;
+  border: none;
+  background: transparent;
+  font: inherit;
 }
 
 .toggle-password:hover {
   color: var(--color-gold);
+}
+
+.toggle-password:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* ---------- Alerts ---------- */

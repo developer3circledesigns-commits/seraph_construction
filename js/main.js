@@ -159,6 +159,22 @@
           menuToggle.focus();
         }
       });
+
+      /* Keep keyboard focus inside the open mobile menu. */
+      mobileMenu.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab' || !mobileMenu.classList.contains('is-open')) { return; }
+        var focusables = mobileMenu.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+        if (!focusables.length) { return; }
+        var first = focusables[0];
+        var last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
     }
 
     /* ---------- Sign In modal (Client / Admin tabs) ---------- */
@@ -196,6 +212,11 @@
         loginModal.querySelectorAll('[data-login-pane]').forEach(function (pane) {
           pane.classList.toggle('is-active', pane.getAttribute('data-login-pane') === name);
         });
+        var activePane = loginModal.querySelector('[data-login-pane="' + name + '"]');
+        if (activePane) {
+          var firstInput = activePane.querySelector('input[type="email"]');
+          if (firstInput) { firstInput.focus(); }
+        }
       };
 
       loginOpeners.forEach(function (btn) {
@@ -216,6 +237,15 @@
       loginTabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
           setLoginTab(tab.getAttribute('data-login-tab'));
+        });
+        tab.addEventListener('keydown', function (e) {
+          if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') { return; }
+          e.preventDefault();
+          var tabs = Array.prototype.slice.call(loginTabs);
+          var idx = tabs.indexOf(tab);
+          var next = e.key === 'ArrowRight' ? tabs[(idx + 1) % tabs.length] : tabs[(idx - 1 + tabs.length) % tabs.length];
+          setLoginTab(next.getAttribute('data-login-tab'));
+          next.focus();
         });
       });
 

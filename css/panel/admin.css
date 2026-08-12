@@ -3,7 +3,7 @@
    Cream sidebar + hairline topbar + content
    ===================================================================== */
 
-.admin-shell { display: flex; min-height: 100vh; }
+.admin-shell { display: flex; min-height: 100vh; min-height: 100dvh; }
 
 /* ---------- Sidebar ---------- */
 .sidebar {
@@ -224,3 +224,4 @@
   border-radius: var(--radius-sm);
 }
 .hamburger:hover { background: var(--color-surface-2); }
+.hamburger:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }

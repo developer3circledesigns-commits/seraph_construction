@@ -28,6 +28,14 @@
 .fa-cloud-arrow-up:before { content: "\f0ee"; }
 .fa-cloud-sun:before { content: "\f6c4"; }
 .fa-envelope:before { content: "\f0e0"; }
+.fa-envelope-open:before { content: "\f2b6"; }
+.fa-envelope-opened:before { content: "\f2b6"; }
+.fa-arrow-left:before { content: "\f060"; }
+.fa-reply:before { content: "\f3e5"; }
+.fa-download:before { content: "\f019"; }
+.fa-file:before { content: "\f15b"; }
+.fa-eye-slash:before { content: "\f070"; }
+.fa-triangle-exclamation:before { content: "\f071"; }
 .fa-eye:before { content: "\f06e"; }
 .fa-filter:before { content: "\f0b0"; }
 .fa-forward:before { content: "\f04e"; }

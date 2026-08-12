@@ -330,6 +330,7 @@
 
   .blur-panel {
     height: 100vh;
+    height: 100dvh;
   }
 
   .blur-panel__content h1,
@@ -698,7 +699,7 @@
 
   .topbar__menu span {
     height: 2px;
-    background: var(--white);
+    background: var(--bg);
   }
 
   .blur-panel__content h1,
@@ -1002,6 +1003,7 @@
   .blur-panel {
     height: auto;
     min-height: 100vh;
+    min-height: 100dvh;
     padding: 96px 0 64px;
   }
 

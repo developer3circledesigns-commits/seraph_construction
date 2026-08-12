@@ -83,9 +83,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="input-wrapper">
           <input class="form-control" type="password" id="password" name="password"
                  required autocomplete="current-password" placeholder="••••••••">
-          <span class="toggle-password" onclick="togglePassword(this, 'password')">
+          <button type="button" class="toggle-password" onclick="togglePassword(this, 'password')" aria-label="Show password">
             <i class="fa-solid fa-eye" aria-hidden="true"></i>
-          </span>
+          </button>
         </div>
       </div>
       <?php echo CSRF::field(); ?>

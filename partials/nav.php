@@ -94,9 +94,9 @@ $contactUrl = $site['contact_url'] ?? 'contact.php';
               <label for="loginClientPassword">Password</label>
               <div class="input-wrapper">
                 <input type="password" id="loginClientPassword" name="password" required autocomplete="current-password" placeholder="Enter your password">
-                <span class="toggle-password" onclick="togglePassword(this, 'loginClientPassword')">
+                <button type="button" class="toggle-password" onclick="togglePassword(this, 'loginClientPassword')" aria-label="Show password">
                   <i class="fa-solid fa-eye" aria-hidden="true"></i>
-                </span>
+                </button>
               </div>
             </div>
             <button type="submit" class="login-form__submit">Sign In</button>
@@ -115,9 +115,9 @@ $contactUrl = $site['contact_url'] ?? 'contact.php';
               <label for="loginAdminPassword">Password</label>
               <div class="input-wrapper">
                 <input type="password" id="loginAdminPassword" name="password" required autocomplete="current-password" placeholder="Enter your password">
-                <span class="toggle-password" onclick="togglePassword(this, 'loginAdminPassword')">
+                <button type="button" class="toggle-password" onclick="togglePassword(this, 'loginAdminPassword')" aria-label="Show password">
                   <i class="fa-solid fa-eye" aria-hidden="true"></i>
-                </span>
+                </button>
               </div>
             </div>
             <button type="submit" class="login-form__submit">Sign In</button>
