@@ -2847,3 +2847,59 @@ html.lenis,html.lenis body{height:auto}
   }
 }
 
+/* =====================================================
+   Animations (was css/animations.css — merged to cut a
+   render-blocking stylesheet request)
+   ===================================================== */
+
+/* Hero mouse scroll wheel */
+@keyframes mouseScroll {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(-50%, 6px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 14px);
+  }
+}
+
+.mouse__wheel {
+  animation: mouseScroll 1.8s ease-in-out infinite;
+}
+
+/* Reduced motion: clear all blur / scale so content is always in focus */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .blur-panel__media img,
+  .blur-card img,
+  .testimonials-section__bg img {
+    filter: none !important;
+    transform: none !important;
+  }
+
+  .hero__title .line-inner {
+    transform: none !important;
+  }
+
+  .mouse__wheel,
+  .ticker {
+    animation: none;
+  }
+}
+

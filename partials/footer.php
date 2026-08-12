@@ -19,7 +19,7 @@ $contactUrl  = $site['contact_url'] ?? 'contact.php';
 
     <div class="container footer-grid">
       <div class="footer-brand">
-        <a href="<?php echo $homePrefix; ?>#hero" class="brand"><img src="images/Footer_Logo.webp" alt="SERAPH BUILD CONSTRUCTION" width="400" height="94"></a>
+        <a href="<?php echo $homePrefix; ?>#hero" class="brand"><img src="images/footer-logo@200w.webp" srcset="images/footer-logo@200w.webp 200w, images/Footer_Logo.webp 400w" sizes="200px" alt="SERAPH BUILD CONSTRUCTION" width="200" height="114"></a>
         <p>Crafting extraordinary spaces where architecture meets artistry. Premium construction and design for those who demand excellence.</p>
         <div class="footer-social">
           <?php foreach ($site['social'] as $s): ?>

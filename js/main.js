@@ -21,9 +21,11 @@
       });
       var sideNavPositions = [];
       var sideNavTicking = false;
+      var pageHeight = 0;
 
       var measureSideNav = function () {
         var scrollY = window.lenis ? window.lenis.scroll : window.scrollY;
+        pageHeight = document.documentElement.scrollHeight;
         sideNavSections.forEach(function (sec, i) {
           if (!sec) { sideNavPositions[i] = Infinity; return; }
           var start = NaN;
@@ -61,8 +63,8 @@
           link.classList.toggle('is-active', i === active);
         });
 
-        if (sideNavProgress && document.documentElement.scrollHeight > window.innerHeight) {
-          var max = document.documentElement.scrollHeight - window.innerHeight;
+        if (sideNavProgress && pageHeight > window.innerHeight) {
+          var max = pageHeight - window.innerHeight;
           var p = max > 0 ? Math.min(1, scrollY / max) : 0;
           sideNavProgress.classList.toggle('is-filled', p > 0.02);
           sideNavProgress.style.setProperty('--p', p);
