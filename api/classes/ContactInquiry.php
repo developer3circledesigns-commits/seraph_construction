@@ -127,10 +127,13 @@ class ContactInquiry
             'construction'    => 'Construction',
             'interior'        => 'Interior Design',
             'modular_kitchen' => 'Modular Kitchen',
-            'renovation'      => 'Renovation',
             'commercial'      => 'Commercial',
             'other'           => 'Other',
         ];
+
+        if ($type === 'renovation') {
+            return 'Other';
+        }
 
         return $labels[$type] ?? ucfirst(str_replace('_', ' ', $type));
     }

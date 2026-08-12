@@ -11,7 +11,6 @@ $serviceTypes = [
     'construction'    => 'Construction',
     'interior'        => 'Interior Design',
     'modular_kitchen' => 'Modular Kitchen',
-    'renovation'      => 'Renovation',
     'commercial'      => 'Commercial',
     'other'           => 'Other',
 ];

@@ -45,7 +45,7 @@ $contactUrl  = $site['contact_url'] ?? 'contact.php';
           <li><a href="<?php echo $homePrefix; ?>#services">Interior Design</a></li>
           <li><a href="<?php echo $homePrefix; ?>#services">Modular Kitchen</a></li>
           <li><a href="<?php echo $homePrefix; ?>#materials">Materials</a></li>
-          <li><a href="<?php echo $homePrefix; ?>#services">Renovation</a></li>
+          <li><a href="<?php echo $homePrefix; ?>#services">Commercial</a></li>
         </ul>
       </div>
 

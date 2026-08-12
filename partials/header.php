@@ -28,8 +28,8 @@ $ogUrl    = $ogBase . ($_SERVER['REQUEST_URI'] ?? '/');
 
   <!-- SEO -->
   <title><?php echo htmlspecialchars($site['name']); ?> | <?php echo htmlspecialchars($site['tagline']); ?></title>
-  <meta name="description" content="SERAPH BUILD CONSTRUCTION delivers premium construction, interior design, commercial and renovation projects across Chennai with timeless craftsmanship.">
-  <meta name="keywords" content="luxury construction, architecture, interior design, modular kitchen, premium materials, home renovation">
+  <meta name="description" content="SERAPH BUILD CONSTRUCTION delivers premium construction, interior design, and commercial projects across Chennai with timeless craftsmanship.">
+  <meta name="keywords" content="luxury construction, architecture, interior design, modular kitchen, premium materials, commercial construction">
   <meta name="author" content="SERAPH BUILD CONSTRUCTION">
   <meta name="robots" content="index, follow">
 
@@ -84,7 +84,7 @@ $ogUrl    = $ogBase . ($_SERVER['REQUEST_URI'] ?? '/');
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "SERAPH BUILD CONSTRUCTION",
-    "description": "Premium luxury construction, interior design, commercial and renovation company.",
+    "description": "Premium luxury construction, interior design, and commercial company.",
     "founder": {
       "@type": "Person",
       "name": "Sureshkumar .M",

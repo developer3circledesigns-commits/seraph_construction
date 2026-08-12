@@ -20,7 +20,7 @@ require __DIR__ . '/partials/header.php';
     </div>
 
     <h2 style="font-family:var(--display);color:var(--white);margin:1.5rem 0 0.75rem;font-size:1.25rem">Website use</h2>
-    <p style="color:var(--muted);line-height:1.7">This website is operated by <?php echo e($site['name']); ?>. Content is provided for general information about our construction, interior, and renovation services. We reserve the right to update site content at any time.</p>
+    <p style="color:var(--muted);line-height:1.7">This website is operated by <?php echo e($site['name']); ?>. Content is provided for general information about our construction, interior, and commercial services. We reserve the right to update site content at any time.</p>
 
     <h2 style="font-family:var(--display);color:var(--white);margin:1.5rem 0 0.75rem;font-size:1.25rem">Quotations &amp; projects</h2>
     <p style="color:var(--muted);line-height:1.7">Information submitted through our contact form does not constitute a binding contract. Formal project scope, timelines, and pricing are confirmed only in signed agreements between you and Seraph Build Construction.</p>

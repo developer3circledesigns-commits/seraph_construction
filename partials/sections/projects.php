@@ -13,8 +13,8 @@ $projects = [
      'img' => 'images/hotel_aurelia@1000w.webp', 'srcset' => 'images/hotel_aurelia@1000w.webp 1000w', 'bg_src' => 'images/hotel_aurelia@1000w.webp', 'alt' => 'Hotel Aurelia lobby interior'],
     ['no' => '04 &middot; Interior Design', 'title' => 'Penthouse Noir', 'text' => 'A skyline penthouse in Bengaluru finished in stone, smoked oak and soft ambient light.',
      'img' => 'images/projects/theme-penthouse-light-camel.webp', 'srcset' => '', 'bg_src' => 'images/projects/theme-penthouse-light-camel.webp', 'alt' => 'Penthouse Noir penthouse living space'],
-    ['no' => '05 &middot; Renovation', 'title' => 'Garden Pavilion', 'text' => 'Heritage home restoration in Delhi — original details preserved, modern systems quietly added.',
-     'img' => 'images/garden@1000w.webp', 'srcset' => 'images/garden@1000w.webp 1000w', 'bg_src' => 'images/garden@1000w.webp', 'alt' => 'Garden Pavilion renovation interior'],
+    ['no' => '05 &middot; Heritage', 'title' => 'Garden Pavilion', 'text' => 'Heritage home restoration in Delhi — original details preserved, modern systems quietly added.',
+     'img' => 'images/garden@1000w.webp', 'srcset' => 'images/garden@1000w.webp 1000w', 'bg_src' => 'images/garden@1000w.webp', 'alt' => 'Garden Pavilion heritage interior'],
     ['no' => '06 &middot; Commercial', 'title' => 'Skyline Offices', 'text' => 'Corporate headquarters in Noida designed for collaboration, calm and uncompromising build quality.',
      'img' => 'images/projects/theme-offices-silver-blue.webp', 'srcset' => '', 'bg_src' => 'images/projects/theme-offices-silver-blue.webp', 'alt' => 'Skyline Offices commercial workspace'],
 ];
@@ -23,7 +23,7 @@ $projects = [
   <div class="container projects-section__head">
     <span class="eyebrow">Portfolio</span>
     <h2 class="projects-section__heading">Featured Projects</h2>
-    <p class="projects-section__intro">A curated selection of residences, commercial spaces, and renovations crafted by our studio.</p>
+    <p class="projects-section__intro">A curated selection of residences and commercial spaces crafted by our studio.</p>
   </div>
 
   <div class="projects-story" id="projectsStory">

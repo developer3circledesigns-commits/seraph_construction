@@ -33,7 +33,7 @@
       <div class="split__body">
         <span class="eyebrow" data-reveal>Our Approach</span>
         <h3 data-reveal>One Team, One Promise</h3>
-        <p data-reveal>Architecture, interiors, modular kitchens and renovation — delivered by a single accountable team from concept to keys.</p>
+        <p data-reveal>Architecture, interiors, and modular kitchens — delivered by a single accountable team from concept to keys.</p>
         <p data-reveal>That means one budget, one timeline and one standard: flawless.</p>
         <a href="#services" class="btn" data-reveal>See How We Work</a>
       </div>

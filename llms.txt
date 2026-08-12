@@ -1,6 +1,6 @@
 # Seraph Build Construction
 
-> Seraph Build Construction is a full-service luxury design and build studio in Chennai, India. We deliver premium construction, interior design, commercial and renovation projects for discerning clients.
+> Seraph Build Construction is a full-service luxury design and build studio in Chennai, India. We deliver premium construction, interior design, and commercial projects for discerning clients.
 
 ## About
 
@@ -16,7 +16,7 @@
 - [Construction](/#services) — Turnkey residential and commercial construction with premium finishes.
 - [Interior Design](/#services) — Bespoke interiors from concept and 3D visualisation to execution.
 - [Commercial](/#services) — Commercial fit-outs and corporate spaces.
-- [Renovation](/#services) — Structural upgrades and refined finish restoration.
+- [Project Management](/#services) — End-to-end coordination of design, procurement, and site teams.
 
 ## Featured Projects
 
