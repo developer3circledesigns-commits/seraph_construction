@@ -48,6 +48,7 @@ $paths = [
     $apiDir . '/classes/Audit.php',
     $apiDir . '/classes/SSE.php',
     $apiDir . '/classes/Image.php',
+    $apiDir . '/classes/ContactInquiry.php',
 ];
 
 foreach ($paths as $file) {

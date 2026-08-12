@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($fullName === '') {
         $errors[] = 'Full name is required.';
-    } elseif (mb_strlen($fullName) < 2 || mb_strlen($fullName) > 120) {
+    } elseif (strlen($fullName) < 2 || strlen($fullName) > 120) {
         $errors[] = 'Full name must be between 2 and 120 characters.';
     }
 
@@ -66,41 +66,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($message === '') {
         $errors[] = 'Message is required.';
-    } elseif (mb_strlen($message) < 20) {
+    } elseif (strlen($message) < 20) {
         $errors[] = 'Message must be at least 20 characters.';
-    } elseif (mb_strlen($message) > 5000) {
+    } elseif (strlen($message) > 5000) {
         $errors[] = 'Message must be 5000 characters or fewer.';
     }
 
     if (!$errors) {
-        $ip = client_ip();
-        $recentCount = (int)Database::scalar(
-            "SELECT COUNT(*) FROM contact_inquiries
-              WHERE ip_address = :ip AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)",
-            [':ip' => $ip]
-        );
+        try {
+            $ip = client_ip();
+            $recentCount = ContactInquiry::recentCountByIp($ip);
 
-        if ($recentCount >= 5) {
-            $errors[] = 'Too many requests. Please wait an hour before submitting again.';
-        } else {
-            try {
-                Database::insert(
-                    "INSERT INTO contact_inquiries (full_name, email, phone, service_type, message, ip_address)
-                     VALUES (:name, :email, :phone, :service, :message, :ip)",
-                    [
-                        ':name'    => $fullName,
-                        ':email'   => $email,
-                        ':phone'   => $phone,
-                        ':service' => $serviceType !== '' ? $serviceType : null,
-                        ':message' => $message,
-                        ':ip'      => $ip,
-                    ]
-                );
+            if ($recentCount >= 5) {
+                $errors[] = 'Too many requests. Please wait an hour before submitting again.';
+            } else {
+                ContactInquiry::create([
+                    'full_name'    => $fullName,
+                    'email'        => $email,
+                    'phone'        => $phone,
+                    'service_type' => $serviceType,
+                    'message'      => $message,
+                    'ip_address'   => $ip,
+                ]);
                 redirect('/contact', 'Thank you! Your message has been sent. Our team will contact you shortly.');
-            } catch (Throwable $e) {
-                error_log('Contact form insert failed: ' . $e->getMessage());
-                $errors[] = 'Unable to send your message right now. Please call us directly or try again later.';
             }
+        } catch (Throwable $e) {
+            error_log('Contact form failed: ' . $e->getMessage());
+            $errors[] = 'Unable to send your message right now. Please call us directly or try again later.';
         }
     }
 }
@@ -175,7 +167,7 @@ require __DIR__ . '/partials/header.php';
         </div>
       <?php endif; ?>
 
-      <form class="contact-form" id="contactForm" method="POST" action="/contact" novalidate>
+      <form class="contact-form" id="contactForm" method="POST" action="" novalidate>
         <?php echo CSRF::field(); ?>
 
         <div class="contact-form__field">
