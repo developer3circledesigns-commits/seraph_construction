@@ -1,30 +1,27 @@
 <?php
 /**
- * Admin — Contact form enquiries (list).
+ * Admin — Contact form enquiries.
  */
 declare(strict_types=1);
-require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
+require dirname(__DIR__) . '/api/config/bootstrap.php';
 
 $user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $search = trim((string)($_GET['search'] ?? ''));
+$status = trim((string)($_GET['status'] ?? ''));
 
-$params = [];
-$query = "SELECT ci.*, DATE(ci.created_at) AS query_date FROM contact_inquiries ci";
+$query = "SELECT ci.*, DATE(ci.created_at) as query_date FROM contact_inquiries ci ORDER BY ci.created_at DESC";
 
 if ($search !== '') {
-    $query .= " WHERE ci.full_name LIKE :q OR ci.email LIKE :q OR ci.phone LIKE :q OR ci.service_type LIKE :q";
-    $params[':q'] = '%' . $search . '%';
+    $query = "SELECT ci.*, DATE(ci.created_at) as query_date FROM contact_inquiries ci WHERE ci.full_name LIKE :q OR ci.email LIKE :q OR ci.phone LIKE :q OR ci.service_type LIKE :q ORDER BY ci.created_at DESC";
 }
 
-$query .= " ORDER BY ci.created_at DESC";
-
-$inquiries = Database::all($query, $params);
+$inquiries = Database::all($query);
 $total = count($inquiries);
 
 $title = 'Contact Enquiries';
-$active = 'contact_inquiries';
-include dirname(__DIR__) . '/partials/header.php';
+$active = 'dashboard';
+include __DIR__ . '/partials/header.php';
 ?>
 <?php echo flash(); ?>
 
@@ -37,6 +34,23 @@ include dirname(__DIR__) . '/partials/header.php';
   <div class="flex">
     <a href="/admin" class="btn btn--ghost"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
   </div>
+</div>
+
+<!-- Filter Section Moved Above Enquiries -->
+<div class="card">
+  <div class="card__header">
+    <h2>Search Inquiries</h2>
+    <p class="muted small">Filter by name, email, phone, or service type.</p>
+  </div>
+
+  <form method="GET" action="/admin/contact-inquiries" class="filter-form" style="max-width:400px">
+    <div class="form-group">
+      <label class="form-label" for="search">Search</label>
+      <input class="form-control" type="text" id="search" name="search" placeholder="Search by name, email, phone..." value="<?php echo e($search); ?>">
+    </div>
+    <button class="btn btn--primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Filter</button>
+    <a href="/admin/contact-inquiries" class="btn btn--secondary" style="margin-left:8px">Clear</a>
+  </form>
 </div>
 
 <div class="card">
@@ -69,7 +83,7 @@ include dirname(__DIR__) . '/partials/header.php';
               <td><a href="mailto:<?php echo e($i['email']); ?>"><?php echo e(substr($i['email'], 0, 30) . (strlen($i['email']) > 30 ? '...' : '')); ?></a></td>
               <td class="small"><?php echo e($i['phone']); ?></td>
               <td class="small">
-                <?php echo $i['service_type'] !== '' ? ucfirst(str_replace('_', ' ', $i['service_type'])) : '—'; ?>
+                <?php echo $i['service_type'] !== '' ? ucfirst($i['service_type']) : '—'; ?>
               </td>
               <td class="small muted"><?php echo e($i['query_date']); ?></td>
               <td style="white-space:nowrap">
@@ -85,18 +99,13 @@ include dirname(__DIR__) . '/partials/header.php';
 
 <div class="card">
   <div class="card__header">
-    <h2>Search Inquiries</h2>
-    <p class="muted small">Filter by name, email, phone, or service type.</p>
+    <h2>View Inquiry #<?php echo isset($_GET['id']) ? (int)$_GET['id'] : '—'; ?></h2>
   </div>
-
-  <form method="GET" action="/admin/contact-inquiries" class="filter-form" style="max-width:400px">
-    <div class="form-group">
-      <label class="form-label" for="search">Search</label>
-      <input class="form-control" type="text" id="search" name="search" placeholder="Search by name, email, phone..." value="<?php echo e($search); ?>">
+  <?php if (isset($_GET['id']) && (int)$_GET['id'] > 0): ?>
+    <div class="table-wrap">
+      <p>Inquiry details for ID <strong><?php echo (int)$_GET['id']; ?></strong>. <a href="/admin/contact-inquiries">Back to list</a>.</p>
     </div>
-    <button class="btn btn--primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Filter</button>
-    <a href="/admin/contact-inquiries" class="btn btn--secondary" style="margin-left:8px">Clear</a>
-  </form>
+  <?php endif; ?>
 </div>
 
-<?php include dirname(__DIR__) . '/partials/footer.php'; ?>
+<?php include __DIR__ . '/partials/footer.php'; ?>
