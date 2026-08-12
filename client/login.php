@@ -78,10 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
       <div class="form-group">
         <label class="form-label" for="password">Password</label>
-        <div class="password-toggle">
+        <div class="input-wrapper">
           <input class="form-control" type="password" id="password" name="password"
                  required autocomplete="current-password" placeholder="••••••••">
-          <span class="password-eye" onclick="togglePassword('password')">
+          <span class="toggle-password" onclick="togglePassword(this, 'password')">
             <i class="fa-solid fa-eye" aria-hidden="true"></i>
           </span>
         </div>
@@ -97,12 +97,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <script defer src="/js/async-css.js"></script>
   <script>
-  function togglePassword(inputId) {
+  function togglePassword(element, inputId) {
     var input = document.getElementById(inputId);
     if (input.type === 'password') {
       input.type = 'text';
       // Change eye to eye-slash icon
-      var eyeIcon = input.nextElementSibling.querySelector('i');
+      var eyeIcon = element.querySelector('i');
       if (eyeIcon) {
         eyeIcon.classList.remove('fa-eye');
         eyeIcon.classList.add('fa-eye-slash');
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       input.type = 'password';
       // Change eye-slash back to eye icon
-      var eyeIcon = input.nextElementSibling.querySelector('i');
+      var eyeIcon = element.querySelector('i');
       if (eyeIcon) {
         eyeIcon.classList.remove('fa-eye-slash');
         eyeIcon.classList.add('fa-eye');
