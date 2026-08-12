@@ -392,11 +392,28 @@
   .topbar__menu {
     width: 44px;
     height: 44px;
-    padding: 6px;
   }
 
-  .topbar__menu span {
+  .topbar__menu-icon {
+    width: 20px;
+    height: 14px;
+  }
+
+  .topbar__menu-line {
     height: 2px;
+  }
+
+  .topbar__menu-line:nth-child(2) {
+    top: 6px;
+  }
+
+  .topbar__menu-line:nth-child(3) {
+    top: 12px;
+  }
+
+  .topbar__menu[aria-expanded="true"] .topbar__menu-line:nth-child(1),
+  .topbar__menu[aria-expanded="true"] .topbar__menu-line:nth-child(3) {
+    top: 6px;
   }
 
   .services-grid {
@@ -694,12 +711,11 @@
   .topbar__menu {
     width: 48px;
     height: 48px;
-    padding: 8px;
   }
 
-  .topbar__menu span {
-    height: 2px;
-    background: var(--bg);
+  .topbar__menu-icon {
+    width: 22px;
+    height: 16px;
   }
 
   .blur-panel__content h1,

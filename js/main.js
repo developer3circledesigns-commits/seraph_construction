@@ -142,8 +142,12 @@
       var setMenu = function (open) {
         mobileMenu.classList.toggle('is-open', open);
         menuToggle.setAttribute('aria-expanded', String(open));
+        menuToggle.classList.toggle('is-active', open);
         mobileMenu.setAttribute('aria-hidden', String(!open));
         menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        if (topbar) {
+          topbar.classList.toggle('is-menu-open', open);
+        }
         document.body.style.overflow = open ? 'hidden' : '';
         if (window.lenis) {
           if (open) { window.lenis.stop(); } else { window.lenis.start(); }
@@ -164,6 +168,12 @@
 
       mobileMenuLinks.forEach(function (link) {
         link.addEventListener('click', function () {
+          setMenu(false);
+        });
+      });
+
+      mobileMenu.querySelectorAll('.mobile-menu__login').forEach(function (btn) {
+        btn.addEventListener('click', function () {
           setMenu(false);
         });
       });

@@ -75,8 +75,8 @@ $unread = Notification::unreadCount('admin', (int)$user['id']);
   <div class="admin-main">
     <header class="topbar">
       <div class="flex">
-        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-          <i class="fa-solid fa-bars"></i>
+        <button class="hamburger" id="hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+          <i class="fa-solid fa-bars" aria-hidden="true"></i>
         </button>
         <div class="topbar__title"><?php echo e($title ?? 'Dashboard'); ?></div>
       </div>

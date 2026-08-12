@@ -27,8 +27,12 @@ $contactUrl = $site['contact_url'] ?? 'contact.php';
         <i class="fa-solid fa-user" aria-hidden="true"></i><span>Sign In</span>
       </button>
       <a href="<?php echo $contactUrl; ?>" class="btn btn--solid topbar__quote">Get a Quote</a>
-      <button class="topbar__menu" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-        <span></span><span></span>
+      <button class="topbar__menu" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span class="topbar__menu-icon" aria-hidden="true">
+          <span class="topbar__menu-line"></span>
+          <span class="topbar__menu-line"></span>
+          <span class="topbar__menu-line"></span>
+        </span>
       </button>
     </div>
   </header>

@@ -13,18 +13,34 @@
   const hamburger = $('#hamburger');
 
   if (sidebar && hamburger) {
-    const closeSidebar = () => {
-      sidebar.classList.remove('open');
-      backdrop.classList.remove('show');
-      document.body.style.overflow = '';
+    const menuIcon = hamburger.querySelector('i');
+
+    const setSidebarOpen = (open) => {
+      sidebar.classList.toggle('open', open);
+      backdrop.classList.toggle('show', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+      hamburger.setAttribute('aria-expanded', String(open));
+      hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      if (menuIcon) {
+        menuIcon.classList.toggle('fa-bars', !open);
+        menuIcon.classList.toggle('fa-xmark', open);
+      }
     };
 
+    const closeSidebar = () => setSidebarOpen(false);
+
     hamburger.addEventListener('click', () => {
-      sidebar.classList.add('open');
-      backdrop.classList.add('show');
-      document.body.style.overflow = 'hidden';
+      setSidebarOpen(!sidebar.classList.contains('open'));
     });
     backdrop.addEventListener('click', closeSidebar);
+
+    sidebar.querySelectorAll('.sidebar__link').forEach((link) => {
+      link.addEventListener('click', () => {
+        if (window.matchMedia('(max-width: 900px)').matches) {
+          closeSidebar();
+        }
+      });
+    });
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && sidebar.classList.contains('open')) {
