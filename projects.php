@@ -129,9 +129,9 @@ function truncateDesc(string $text, int $length = 80): array
                <div class="project-card__title"><?php echo e($p['name']); ?></div>
                <?php $desc = truncateDesc($p['description'] ?? ''); ?>
                <div class="project-card__text">
-                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <span class="project-card__desc-toggle" onclick="toggleDesc(this)">View more</span></span><?php endif; ?></span>
+                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">View more</span></span><?php endif; ?></span>
                  <?php if ($desc['truncated']): ?>
-                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <span class="project-card__desc-toggle" onclick="toggleDesc(this)">Show less</span></span>
+                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">Show less</span></span>
                  <?php endif; ?>
                </div>
                <div class="project-card__specs">
@@ -170,9 +170,9 @@ function truncateDesc(string $text, int $length = 80): array
               <div class="project-card__title"><?php echo e($p['name']); ?></div>
                <?php $desc = truncateDesc($p['description'] ?? ''); ?>
                <div class="project-card__text">
-                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <span class="project-card__desc-toggle" onclick="toggleDesc(this)">View more</span></span><?php endif; ?></span>
+                 <span class="project-card__desc-cut"><?php echo $desc['text']; ?><?php if ($desc['truncated']): ?><span class="project-card__desc-dots">... <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">View more</span></span><?php endif; ?></span>
                  <?php if ($desc['truncated']): ?>
-                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <span class="project-card__desc-toggle" onclick="toggleDesc(this)">Show less</span></span>
+                 <span class="project-card__desc-full"> <?php echo e($p['description']); ?> <span class="project-card__desc-toggle" onclick="toggleDesc(event, this)">Show less</span></span>
                  <?php endif; ?>
                </div>
               <div class="project-card__specs">
@@ -202,17 +202,25 @@ function truncateDesc(string $text, int $length = 80): array
 </main>
 
 <script>
-function toggleDesc(el) {
+function toggleDesc(event, el) {
+  event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
   var textEl = el.closest('.project-card__text');
+  if (!textEl) return;
   var cut = textEl.querySelector('.project-card__desc-cut');
   var full = textEl.querySelector('.project-card__desc-full');
   if (!cut || !full) {
-    // Fallback: show full description if spans don't exist
+    // Fallback: if spans don't exist, create simple show/hide
     var fullEl = textEl.querySelector('.project-card__desc-full');
     if (fullEl) {
-      fullEl.classList.add('is-open');
-      var cutEl = textEl.querySelector('.project-card__desc-cut');
-      if (cutEl) cutEl.classList.add('is-hidden');
+      if (fullEl.classList.contains('is-open')) {
+        fullEl.classList.remove('is-open');
+        var cutEl = textEl.querySelector('.project-card__desc-cut');
+        if (cutEl) cutEl.classList.remove('is-hidden');
+      } else {
+        fullEl.classList.add('is-open');
+        var cutEl = textEl.querySelector('.project-card__desc-cut');
+        if (cutEl) cutEl.classList.add('is-hidden');
+      }
     }
     return;
   }
