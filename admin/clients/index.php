@@ -39,8 +39,8 @@ include dirname(__DIR__) . '/partials/header.php';
 </div>
 
 <div class="filters">
-  <form method="GET" action="/admin/clients" class="flex" style="gap:12px;width:100%">
-    <input class="form-control" type="search" name="search" placeholder="Search by name, company or email..." value="<?php echo e($search); ?>" style="flex:1;min-width:220px">
+  <form method="GET" action="/admin/clients" class="filters-form">
+    <input class="form-control" type="search" name="search" placeholder="Search by name, company or email..." value="<?php echo e($search); ?>">
     <button class="btn btn--secondary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
   </form>
 </div>

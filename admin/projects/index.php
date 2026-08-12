@@ -32,8 +32,8 @@ include dirname(__DIR__) . '/partials/header.php';
 </div>
 
 <div class="filters">
-  <form method="GET" action="/admin/projects" class="flex flex--wrap" style="gap:12px;width:100%">
-    <input class="form-control" type="search" name="search" placeholder="Search by name, client..." value="<?php echo e($filters['search']); ?>" style="flex:1;min-width:220px">
+  <form method="GET" action="/admin/projects" class="filters-form">
+    <input class="form-control" type="search" name="search" placeholder="Search by name, client..." value="<?php echo e($filters['search']); ?>">
     <select class="form-control" name="status" onchange="this.form.submit()">
       <option value="">All statuses</option>
       <?php foreach (['planning','in_progress','on_hold','completed','cancelled'] as $s): ?>

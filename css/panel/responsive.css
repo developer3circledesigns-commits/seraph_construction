@@ -3,6 +3,19 @@
    Desktop (1024px+ panel layouts) unchanged — rules scoped to <=1023px
    ===================================================================== */
 
+/* ---------- Shared: tablet filter / search containment (768–1023) ---------- */
+@media (max-width: 1023px) {
+  .filters .form-control {
+    min-width: 0;
+  }
+
+  .filters-form .form-control[type="search"],
+  .filters-form select {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+}
+
 /* ---------- Admin: mobile (<=767) ---------- */
 @media (max-width: 767px) {
   .admin-content {
@@ -16,10 +29,15 @@
 
   .topbar__title {
     font-size: 0.92rem;
-    max-width: 46vw;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    max-width: min(46vw, 12rem);
+  }
+
+  .topbar__actions {
+    gap: 6px;
+  }
+
+  .topbar__search input {
+    width: 140px;
   }
 
   .page-header {
@@ -82,7 +100,7 @@
 
   .notif__dropdown {
     width: min(320px, calc(100vw - 24px));
-    right: -6px;
+    right: 0;
     max-height: min(380px, calc(100dvh - 80px));
   }
 
@@ -144,6 +162,11 @@
     padding: 8px 12px;
     font-size: 0.78rem;
     min-height: 44px;
+  }
+
+  .client-topbar__right .live-dot {
+    padding: 5px 8px;
+    font-size: 0.62rem;
   }
 
   .project-head {
