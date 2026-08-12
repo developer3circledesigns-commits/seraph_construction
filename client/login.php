@@ -78,8 +78,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
       <div class="form-group">
         <label class="form-label" for="password">Password</label>
-        <input class="form-control" type="password" id="password" name="password"
-               required autocomplete="current-password" placeholder="••••••••">
+        <div class="password-toggle">
+          <input class="form-control" type="password" id="password" name="password"
+                 required autocomplete="current-password" placeholder="••••••••">
+          <span class="password-eye" onclick="togglePassword('password')">
+            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+          </span>
+        </div>
       </div>
       <?php echo CSRF::field(); ?>
       <button type="submit" class="btn btn--primary btn--block">Sign In</button>
@@ -91,5 +96,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="auth-footer">&copy; <?php echo date('Y'); ?> Seraph Build Construction. Authorized clients only.</div>
 
   <script defer src="/js/async-css.js"></script>
+  <script>
+  function togglePassword(inputId) {
+    var input = document.getElementById(inputId);
+    if (input.type === 'password') {
+      input.type = 'text';
+      // Change eye to eye-slash icon
+      var eyeIcon = input.nextElementSibling.querySelector('i');
+      if (eyeIcon) {
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+      }
+    } else {
+      input.type = 'password';
+      // Change eye-slash back to eye icon
+      var eyeIcon = input.nextElementSibling.querySelector('i');
+      if (eyeIcon) {
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+      }
+    }
+  }
+  </script>
 </body>
 </html>
