@@ -2375,6 +2375,33 @@ html.lenis,html.lenis body{height:auto}
   color: #6b7a90;
 }
 
+.login-form__field .input-wrapper {
+  position: relative;
+}
+
+.login-form__field .input-wrapper input {
+  padding-right: 44px;
+}
+
+.login-form__field .toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6b7a90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  line-height: 1;
+  user-select: none;
+}
+
+.login-form__field .toggle-password:hover {
+  color: var(--gold);
+}
+
 .login-form__submit {
   width: 100%;
   margin-top: 4px;
