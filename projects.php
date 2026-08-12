@@ -98,6 +98,29 @@ function truncateDesc(string $text, int $length = 80): array
     .btn--gold:hover { background: #e0b376; }
 
     .projects-empty { text-align: center; padding: 3rem; color: #a29a8c; }
+
+    @media (max-width: 767px) {
+      .projects-page { padding: 5.5rem 0 3rem; }
+      .projects-page__head,
+      .projects-page__category,
+      .projects-page__cta { padding-left: 1rem; padding-right: 1rem; }
+      .projects-page__category { margin-top: 3rem; }
+      .projects-page__category-label { flex-wrap: wrap; gap: 0.6rem; }
+      .projects-page__category-label::after { display: none; }
+      .projects-filter { gap: 0.5rem; margin-top: 1.5rem; padding: 0 1rem; }
+      .projects-filter__btn { padding: 0.75rem 1.1rem; font-size: 0.8rem; min-height: 44px; }
+      .projects-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .project-card__specs { grid-template-columns: 1fr; }
+      .project-card__spec-value { text-align: left; }
+      .project-card__download { margin-left: 0.9rem; margin-right: 0.9rem; min-height: 44px; }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .projects-page__head,
+      .projects-page__category,
+      .projects-page__cta { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .projects-grid { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 
   <div class="projects-page__head">

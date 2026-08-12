@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   
   <link rel="stylesheet" href="/css/panel/base.css">
   <link rel="stylesheet" href="/css/panel/auth.css">
+  <link rel="stylesheet" href="/css/panel/responsive.css">
   <link rel="stylesheet" href="/css/panel/fa.css">
   <noscript>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..600&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:ital,wght@0,400..700;1,400..700&display=swap">
