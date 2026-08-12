@@ -24,7 +24,8 @@ return [
         'testimonials'=> 'Testimonials',
     ],
 
-    'contact_url' => 'contact.php',
+    'contact_url'  => 'contact.php',
+    'projects_url' => 'projects.php',
 
     'social' => [
         ['url' => 'https://facebook.com',    'icon' => 'fa-facebook-f', 'label' => 'Facebook'],

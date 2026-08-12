@@ -10,12 +10,14 @@ $services = [
     ['icon' => 'fa-clipboard-check','title' => 'Project Management',         'text' => 'End-to-end coordination of design, procurement, and site teams — transparent budgeting, zero surprises.'],
     ['icon' => 'fa-compass-drafting','title' => 'Architectural Planning',    'text' => 'Concept-to-completion planning and approvals with a dedicated in-house architecture team.'],
 ];
+$contactUrl = $site['contact_url'] ?? 'contact.php';
 ?>
 <section id="services" class="services-section">
   <div class="container">
     <span class="eyebrow">What We Do</span>
     <h2 class="services-section__heading">Our Services</h2>
     <p class="services-section__intro">From ground-breaking to final handover, we deliver the complete spectrum of premium construction and design services.</p>
+    <p class="services-section__cta-wrap"><a href="<?php echo e($contactUrl); ?>" class="btn btn--solid">Get a Quote</a></p>
     <div class="services-grid">
       <?php foreach ($services as $service): ?>
         <article class="service-card glass-card">

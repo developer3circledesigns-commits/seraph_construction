@@ -1,6 +1,7 @@
 <!-- =====================================================
      3. HOME PLAN — Scroll-driven 5-image sequence
      ===================================================== -->
+<?php $contactUrl = $site['contact_url'] ?? 'contact.php'; ?>
 <section id="homeplan" class="blur-panel kitchen-sequence">
   <div class="kitchen-sequence__stack" aria-hidden="true">
     <?php
@@ -54,7 +55,7 @@
         <p>A spa-like retreat finished in stone and chrome with premium fittings engineered to serve beautifully for decades.</p>
       </div>
     </div>
-    <a href="#materials" class="btn btn--solid" data-filter-target="doors">Explore Home Plan</a>
+    <a href="<?php echo e($contactUrl); ?>?service=construction" class="btn btn--solid">Explore Home Plan</a>
     <div class="kitchen-sequence__progress" aria-hidden="true">
       <span class="kitchen-sequence__counter"><span id="kitchenStepCurrent">1</span> / 5</span>
       <div class="kitchen-sequence__dots">

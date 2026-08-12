@@ -7,6 +7,7 @@ $testimonials = [
     ['quote' => 'The modular kitchen is flawless — soft-close everything, perfect lighting, and the team finished a week early.', 'who' => 'Rohit Menon', 'role' => 'Homeowner &middot; Residency Towers'],
     ['quote' => 'From concept to keys, one team handled everything. Transparent pricing and a finish that still turns heads three years on.', 'who' => 'Meera Iyer', 'role' => 'Interior Client &middot; The Crest'],
 ];
+$contactUrl = $site['contact_url'] ?? 'contact.php';
 ?>
 <section id="testimonials" class="testimonials-section">
   <div class="container">
@@ -34,5 +35,9 @@ $testimonials = [
       <button id="nextBtn" aria-label="Next testimonial">&#8594;</button>
       <div class="dots" id="dots"></div>
     </div>
+
+    <p class="testimonials-section__cta" data-reveal>
+      <a href="<?php echo e($contactUrl); ?>" class="btn btn--solid">Start Your Project</a>
+    </p>
   </div>
 </section>

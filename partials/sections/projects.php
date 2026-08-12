@@ -2,6 +2,9 @@
      6. PROJECTS — featured portfolio (DB-driven with static fallback)
      ===================================================== -->
 <?php
+$contactUrl  = $site['contact_url'] ?? 'contact.php';
+$projectsUrl = $site['projects_url'] ?? 'projects.php';
+
 $staticProjects = [
     ['no' => '01 &middot; Luxury Residence', 'title' => 'Villa Seraph', 'text' => '12,000 sq.ft. private residence in Mumbai — crafted around light, view and quiet luxury.',
      'img' => 'images/projects/theme-home-daylight-warm.webp', 'srcset' => '', 'alt' => 'Villa Seraph luxury residence exterior'],
@@ -68,7 +71,7 @@ try {
             <h2><?php echo e($project['title']); ?></h2>
             <p><?php echo e($project['text']); ?></p>
             <?php if ($i === count($projects) - 1): ?>
-              <a href="projects.php" class="btn">View All Projects</a>
+              <a href="<?php echo e($projectsUrl); ?>" class="btn">View All Projects</a>
             <?php endif; ?>
           </div>
         <?php endforeach; ?>

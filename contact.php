@@ -25,6 +25,11 @@ $old = [
     'message'      => '',
 ];
 
+$prefillService = trim((string)($_GET['service'] ?? ''));
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $prefillService !== '' && array_key_exists($prefillService, $serviceTypes)) {
+    $old['service_type'] = $prefillService;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $body = request_body();
     $old = array_merge($old, array_intersect_key($body, $old));

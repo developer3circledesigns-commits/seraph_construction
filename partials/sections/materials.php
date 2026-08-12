@@ -27,6 +27,7 @@ $materials = [
     ['category' => 'switches','img' => 'glass_house@1000w.webp', 'alt' => 'Modern smart home switches and controls', 'name' => 'Havells', 'type' => 'Smart Switches', 'specs' => ['Touch Control', 'App Compatible', 'Elegant Finish']],
     ['category' => 'doors',  'img' => 'modularkitchen@2230w.webp', 'alt' => 'Luxury drawer systems and hardware', 'name' => 'Hettich', 'type' => 'Drawer Systems', 'specs' => ['Soft Close', 'German Engineering', 'Silent Motion']],
 ];
+$contactUrl = $site['contact_url'] ?? 'contact.php';
 ?>
 <section id="materials" class="materials-section h-section">
   <div class="h-pin">
@@ -36,6 +37,7 @@ $materials = [
         <span class="eyebrow">Materials</span>
         <h2>Premium Materials We Use</h2>
         <p>Italian finishes, structural steel, engineered wood, smart systems — every material is selected to age beautifully and perform for decades.</p>
+        <a href="<?php echo e($contactUrl); ?>" class="btn btn--solid materials-section__cta">Request a Quote</a>
         <div class="materials-filter" aria-label="Material categories">
           <?php foreach ($filters as $i => $filter): ?>
             <button class="materials-filter__btn<?php echo $i === 0 ? ' active' : ''; ?>" data-filter="<?php echo htmlspecialchars($filter['key']); ?>" aria-pressed="<?php echo $i === 0 ? 'true' : 'false'; ?>">
