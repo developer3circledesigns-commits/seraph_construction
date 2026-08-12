@@ -126,7 +126,6 @@ function truncateDesc(string $text, int $length = 80): array
             <div class="project-card__media"><img src="<?php echo e(projectThumbnail($p)); ?>" alt="<?php echo e($p['name']); ?>" loading="lazy"></div>
             <div class="project-card__arrow">&#8599;</div>
             <div class="project-card__body">
-              <div class="project-card__no"><?php echo str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT); ?> &middot; <?php echo fmtSpec($p['category']); ?></div>
                <div class="project-card__title"><?php echo e($p['name']); ?></div>
                <?php $desc = truncateDesc($p['description'] ?? ''); ?>
                <div class="project-card__text">
@@ -168,7 +167,6 @@ function truncateDesc(string $text, int $length = 80): array
             <div class="project-card__media"><img src="<?php echo e(projectThumbnail($p)); ?>" alt="<?php echo e($p['name']); ?>" loading="lazy"></div>
             <div class="project-card__arrow">&#8599;</div>
             <div class="project-card__body">
-              <div class="project-card__no"><?php echo str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT); ?> &middot; <?php echo fmtSpec($p['category']); ?></div>
               <div class="project-card__title"><?php echo e($p['name']); ?></div>
                <?php $desc = truncateDesc($p['description'] ?? ''); ?>
                <div class="project-card__text">
