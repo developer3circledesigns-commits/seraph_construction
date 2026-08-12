@@ -15,6 +15,7 @@ $unread = Notification::unreadCount('admin', (int)$user['id']);
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?php echo e($title ?? 'Dashboard'); ?> — Seraph Admin</title>
   <meta name="robots" content="noindex, nofollow">
+  <meta name="csrf-token" content="<?php echo e(CSRF::token()); ?>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   

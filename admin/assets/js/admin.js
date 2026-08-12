@@ -111,9 +111,7 @@
     }
 
     function markRead(id) {
-      const form = new FormData();
-      form.append('id', id);
-      fetch('/admin/api/notifications?action=read', { method: 'POST', body: form })
+      postWithCsrf('/admin/api/notifications?action=read', { id: String(id) })
         .then((r) => r.json())
         .then(() => loadNotifs());
     }
@@ -135,7 +133,7 @@
     });
     document.addEventListener('click', (e) => {
       if (e.target.id === 'markAllRead') {
-        fetch('/admin/api/notifications?action=read_all', { method: 'POST' })
+        postWithCsrf('/admin/api/notifications?action=read_all')
           .then((r) => r.json())
           .then(() => loadNotifs());
       }
@@ -237,6 +235,20 @@
   }
 
   /* ---------- Helpers ---------- */
+  function csrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.getAttribute('content') : '';
+  }
+
+  function postWithCsrf(url, fields) {
+    const form = new FormData();
+    form.append('_csrf', csrfToken());
+    if (fields) {
+      Object.entries(fields).forEach(([key, value]) => form.append(key, value));
+    }
+    return fetch(url, { method: 'POST', body: form });
+  }
+
   function esc(str) {
     const d = document.createElement('div');
     d.textContent = str == null ? '' : String(str);
