@@ -1,9 +1,9 @@
 <?php
 /**
- * Admin — Contact form enquiries.
+ * Admin — Contact form enquiries (list).
  */
 declare(strict_types=1);
-require dirname(__DIR__) . '/api/config/bootstrap.php';
+require dirname(__DIR__, 2) . '/api/config/bootstrap.php';
 
 $user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
@@ -24,7 +24,7 @@ $total = count($inquiries);
 
 $title = 'Contact Enquiries';
 $active = 'contact_inquiries';
-include __DIR__ . '/partials/header.php';
+include dirname(__DIR__) . '/partials/header.php';
 ?>
 <?php echo flash(); ?>
 
@@ -69,7 +69,7 @@ include __DIR__ . '/partials/header.php';
               <td><a href="mailto:<?php echo e($i['email']); ?>"><?php echo e(substr($i['email'], 0, 30) . (strlen($i['email']) > 30 ? '...' : '')); ?></a></td>
               <td class="small"><?php echo e($i['phone']); ?></td>
               <td class="small">
-                <?php echo $i['service_type'] !== '' ? ucfirst($i['service_type']) : '—'; ?>
+                <?php echo $i['service_type'] !== '' ? ucfirst(str_replace('_', ' ', $i['service_type'])) : '—'; ?>
               </td>
               <td class="small muted"><?php echo e($i['query_date']); ?></td>
               <td style="white-space:nowrap">
@@ -99,4 +99,4 @@ include __DIR__ . '/partials/header.php';
   </form>
 </div>
 
-<?php include __DIR__ . '/partials/footer.php'; ?>
+<?php include dirname(__DIR__) . '/partials/footer.php'; ?>
