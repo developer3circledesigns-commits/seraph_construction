@@ -52,11 +52,29 @@ function request_body(): array
     return $_POST;
 }
 
+/** Re-open the session when it was closed to release a lock (e.g. before slow I/O). */
+function session_reopen_if_needed(): void
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+}
+
+/** Release the session write lock while keeping $_SESSION in memory. */
+function release_session_lock(): void
+{
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
+    }
+}
+
 /** Redirect with optional flash message. */
 function redirect(string $url, ?string $flash = null, string $flashType = 'success'): void
 {
     if ($flash !== null) {
+        session_reopen_if_needed();
         $_SESSION['flash'] = ['message' => $flash, 'type' => $flashType];
+        release_session_lock();
     }
     header('Location: ' . $url);
     exit;

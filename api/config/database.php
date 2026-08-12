@@ -103,6 +103,9 @@ function db(): PDO
         PDO::ATTR_EMULATE_PREPARES   => false,
         PDO::ATTR_STRINGIFY_FETCHES  => false,
     ];
+    if (defined('PDO::MYSQL_ATTR_CONNECT_TIMEOUT')) {
+        $options[PDO::MYSQL_ATTR_CONNECT_TIMEOUT] = 5;
+    }
 
     try {
         $pdo = new PDO($dsn, $c['username'], $c['password'], $options);

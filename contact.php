@@ -38,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Your session has expired. Please refresh the page and try again.';
     }
 
+    // Release the session lock before DB/mail work so other tabs can load /contact.
+    release_session_lock();
+
     $fullName = trim((string)($body['full_name'] ?? ''));
     $email = trim((string)($body['email'] ?? ''));
     $phone = trim((string)($body['phone'] ?? ''));
@@ -114,9 +117,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     . "Message:\n" . ($message !== '' ? $message : '(Not provided)') . "\n\n"
                     . "View in admin: {$adminLink}\n";
 
-                if (!Mail::send('New contact enquiry from ' . $fullName, $mailBody, $email)) {
-                    error_log('Contact enquiry #' . $inquiryId . ' saved; email notification not sent (MAIL_TO not configured or mail() failed).');
-                }
+                $mailSubject = 'New contact enquiry from ' . $fullName;
+                $mailReplyTo = $email;
+
+                register_shutdown_function(static function () use ($mailSubject, $mailBody, $mailReplyTo, $inquiryId): void {
+                    if (function_exists('fastcgi_finish_request')) {
+                        @fastcgi_finish_request();
+                    }
+                    if (!Mail::send($mailSubject, $mailBody, $mailReplyTo)) {
+                        error_log('Contact enquiry #' . $inquiryId . ' saved; email notification not sent (MAIL_TO not configured or mail() failed).');
+                    }
+                });
 
                 redirect('/contact', 'Thank you! Your message has been sent. Our team will contact you shortly.');
             }
