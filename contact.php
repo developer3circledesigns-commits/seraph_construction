@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($recentCount >= 5) {
                 $errors[] = 'Too many requests. Please wait an hour before submitting again.';
             } else {
-                ContactInquiry::create([
+                $inquiryId = ContactInquiry::create([
                     'full_name'    => $fullName,
                     'email'        => $email,
                     'phone'        => $phone,
@@ -88,6 +88,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'message'      => $message,
                     'ip_address'   => $ip,
                 ]);
+
+                try {
+                    Notification::notifyAllAdmins(
+                        'contact_inquiry',
+                        'New contact enquiry',
+                        $fullName . ' (' . $email . ')',
+                        $inquiryId
+                    );
+                } catch (Throwable $notifyErr) {
+                    error_log('Contact inquiry admin notification failed: ' . $notifyErr->getMessage());
+                }
+
+                $serviceLabel = ContactInquiry::serviceLabel($serviceType !== '' ? $serviceType : null);
+                $adminHost = (string)($_SERVER['HTTP_HOST'] ?? '');
+                $adminScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+                $adminLink = $adminHost !== ''
+                    ? $adminScheme . '://' . $adminHost . '/admin/contact-inquiry-view?id=' . $inquiryId
+                    : '/admin/contact-inquiry-view?id=' . $inquiryId;
+
+                $mailBody = "New contact enquiry #{$inquiryId}\n\n"
+                    . "Name: {$fullName}\n"
+                    . "Email: {$email}\n"
+                    . "Phone: {$phone}\n"
+                    . "Service: {$serviceLabel}\n\n"
+                    . "Message:\n{$message}\n\n"
+                    . "View in admin: {$adminLink}\n";
+
+                if (!Mail::send('New contact enquiry from ' . $fullName, $mailBody, $email)) {
+                    error_log('Contact enquiry #' . $inquiryId . ' saved; email notification not sent (MAIL_TO not configured or mail() failed).');
+                }
+
                 redirect('/contact', 'Thank you! Your message has been sent. Our team will contact you shortly.');
             }
         } catch (Throwable $e) {

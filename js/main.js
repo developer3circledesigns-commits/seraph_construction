@@ -498,6 +498,13 @@
       contactForm.addEventListener('submit', function (e) {
         if (!validateContactForm()) {
           e.preventDefault();
+          return;
+        }
+        var submitBtn = contactForm.querySelector('.contact-form__submit');
+        if (submitBtn && !submitBtn.disabled) {
+          submitBtn.disabled = true;
+          submitBtn.setAttribute('aria-busy', 'true');
+          submitBtn.textContent = 'Sending...';
         }
       });
 

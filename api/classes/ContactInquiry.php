@@ -34,16 +34,20 @@ class ContactInquiry
         self::$schemaReady = true;
     }
 
-    /** @return array<int, array<string, mixed>> */
-    public static function all(?string $search = null): array
+    /** @return array{items: array<int, array<string, mixed>>, total: int, page: int, per_page: int, pages: int} */
+    public static function paginated(?string $search = null, int $page = 1, int $perPage = 25): array
     {
         self::ensureSchema();
 
+        $page = max(1, $page);
+        $perPage = max(1, min(100, $perPage));
+        $offset = ($page - 1) * $perPage;
+
         $params = [];
-        $sql = 'SELECT *, DATE(created_at) AS query_date FROM contact_inquiries';
+        $where = '';
 
         if ($search !== null && $search !== '') {
-            $sql .= ' WHERE full_name LIKE :q1 OR email LIKE :q2 OR phone LIKE :q3 OR service_type LIKE :q4';
+            $where = ' WHERE full_name LIKE :q1 OR email LIKE :q2 OR phone LIKE :q3 OR service_type LIKE :q4';
             $like = '%' . $search . '%';
             $params[':q1'] = $like;
             $params[':q2'] = $like;
@@ -51,9 +55,30 @@ class ContactInquiry
             $params[':q4'] = $like;
         }
 
-        $sql .= ' ORDER BY created_at DESC';
+        $total = (int)Database::scalar(
+            'SELECT COUNT(*) FROM contact_inquiries' . $where,
+            $params
+        );
 
-        return Database::all($sql, $params);
+        $sql = 'SELECT *, DATE(created_at) AS query_date FROM contact_inquiries' . $where
+            . ' ORDER BY created_at DESC LIMIT ' . (int)$perPage . ' OFFSET ' . (int)$offset;
+
+        $items = Database::all($sql, $params);
+        $pages = $total > 0 ? (int)ceil($total / $perPage) : 1;
+
+        return [
+            'items'    => $items,
+            'total'    => $total,
+            'page'     => $page,
+            'per_page' => $perPage,
+            'pages'    => $pages,
+        ];
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    public static function all(?string $search = null): array
+    {
+        return self::paginated($search, 1, 1000)['items'];
     }
 
     public static function find(int $id): ?array

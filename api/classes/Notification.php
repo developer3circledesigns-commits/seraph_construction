@@ -64,4 +64,13 @@ class Notification
         }
         self::create('client', $clientId, $type, $title, $message, $referenceId);
     }
+
+    /** Notify every active admin (e.g. new public contact enquiry). */
+    public static function notifyAllAdmins(string $type, string $title, ?string $message = null, ?int $referenceId = null): void
+    {
+        $admins = Database::all('SELECT id FROM admins WHERE is_active = 1');
+        foreach ($admins as $a) {
+            self::create('admin', (int)$a['id'], $type, $title, $message, $referenceId);
+        }
+    }
 }

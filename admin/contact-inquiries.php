@@ -8,17 +8,28 @@ require dirname(__DIR__) . '/api/config/bootstrap.php';
 $user = Auth::requireUser(Auth::ADMIN, '/admin/login');
 
 $search = trim((string)($_GET['search'] ?? ''));
+$page = max(1, (int)($_GET['page'] ?? 1));
 $dbError = null;
 $inquiries = [];
+$total = 0;
+$pages = 1;
+$perPage = 25;
 
 try {
-    $inquiries = ContactInquiry::all($search !== '' ? $search : null);
+    $result = ContactInquiry::paginated($search !== '' ? $search : null, $page, $perPage);
+    $inquiries = $result['items'];
+    $total = $result['total'];
+    $pages = $result['pages'];
 } catch (Throwable $e) {
     error_log('Admin contact inquiries list failed: ' . $e->getMessage());
     $dbError = 'Could not load enquiries. Please check the database connection and try again.';
 }
 
-$total = count($inquiries);
+$queryBase = '/admin/contact-inquiries';
+$queryParams = [];
+if ($search !== '') {
+    $queryParams['search'] = $search;
+}
 
 $title = 'Contact Enquiries';
 $active = 'contact_inquiries';
@@ -29,7 +40,7 @@ include __DIR__ . '/partials/header.php';
 <div class="page-header">
   <div>
     <h1>Contact Enquiries</h1>
-    <p><?php echo $total; ?> inquiry<?php echo $total !== 1 ? 's' : ''; ?> received.</p>
+    <p><?php echo $total; ?> inquiry<?php echo $total !== 1 ? 's' : ''; ?> received<?php if ($pages > 1): ?> &middot; page <?php echo $page; ?> of <?php echo $pages; ?><?php endif; ?>.</p>
   </div>
 
   <div class="flex">
@@ -100,6 +111,24 @@ include __DIR__ . '/partials/header.php';
         </tbody>
       </table>
     </div>
+
+    <?php if ($pages > 1): ?>
+      <nav class="pagination" aria-label="Enquiries pagination" style="margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+        <?php
+        $buildPageUrl = function (int $p) use ($queryBase, $queryParams): string {
+            $params = array_merge($queryParams, ['page' => $p]);
+            return $queryBase . '?' . http_build_query($params);
+        };
+        ?>
+        <?php if ($page > 1): ?>
+          <a class="btn btn--secondary btn--sm" href="<?php echo e($buildPageUrl($page - 1)); ?>">&larr; Previous</a>
+        <?php endif; ?>
+        <span class="small muted" style="align-self:center">Page <?php echo $page; ?> of <?php echo $pages; ?></span>
+        <?php if ($page < $pages): ?>
+          <a class="btn btn--secondary btn--sm" href="<?php echo e($buildPageUrl($page + 1)); ?>">Next &rarr;</a>
+        <?php endif; ?>
+      </nav>
+    <?php endif; ?>
   <?php endif; ?>
 </div>
 

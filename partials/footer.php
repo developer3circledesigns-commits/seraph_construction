@@ -83,8 +83,8 @@ $contactUrl  = $site['contact_url'] ?? 'contact.php';
       <div class="container footer-bottom__inner">
         <p>&copy; <span id="year"></span> SERAPH BUILD CONSTRUCTION. All rights reserved.</p>
         <div class="footer-legal">
-          <a href="contact.php" data-placeholder="true">Privacy Policy</a>
-          <a href="contact.php" data-placeholder="true">Terms &amp; Conditions</a>
+          <a href="privacy.php">Privacy Policy</a>
+          <a href="terms.php">Terms &amp; Conditions</a>
         </div>
       </div>
     </div>
