@@ -204,6 +204,7 @@ function truncateDesc(string $text, int $length = 80): array
 <script>
 function toggleDesc(event, el) {
   event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+  event.preventDefault ? event.preventDefault() : event.returnValue = false;
   var textEl = el.closest('.project-card__text');
   if (!textEl) return;
   var cut = textEl.querySelector('.project-card__desc-cut');
