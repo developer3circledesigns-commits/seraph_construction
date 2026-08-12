@@ -35,7 +35,7 @@ function fmtInt(?int $value): string
 function truncateDesc(string $text, int $length = 80): array
 {
     if (mb_strlen($text) <= $length) {
-        return ['text' => e($text), 'truncated' => false];
+        return ['text' => e($text), 'truncated' => true];
     }
     $cut = mb_substr($text, 0, $length);
     $lastSpace = mb_strrpos($cut, ' ');
@@ -206,7 +206,16 @@ function toggleDesc(el) {
   var textEl = el.closest('.project-card__text');
   var cut = textEl.querySelector('.project-card__desc-cut');
   var full = textEl.querySelector('.project-card__desc-full');
-  if (!cut || !full) return;
+  if (!cut || !full) {
+    // Fallback: show full description if spans don't exist
+    var fullEl = textEl.querySelector('.project-card__desc-full');
+    if (fullEl) {
+      fullEl.classList.add('is-open');
+      var cutEl = textEl.querySelector('.project-card__desc-cut');
+      if (cutEl) cutEl.classList.add('is-hidden');
+    }
+    return;
+  }
   if (full.classList.contains('is-open')) {
     full.classList.remove('is-open');
     cut.classList.remove('is-hidden');
