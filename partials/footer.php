@@ -35,7 +35,6 @@ $contactUrl  = $site['contact_url'] ?? 'contact.php';
             <li><a href="<?php echo $href === 'projects' ? 'projects.php' : $homePrefix . '#' . htmlspecialchars($href); ?>"><?php echo htmlspecialchars($label); ?></a></li>
           <?php endforeach; ?>
           <li><a href="<?php echo $contactUrl; ?>">Contact</a></li>
-          <li><a href="<?php echo $homePrefix; ?>#materials">Materials</a></li>
         </ul>
       </div>
 

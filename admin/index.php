@@ -132,7 +132,7 @@ include __DIR__ . '/partials/header.php';
         <p class="muted small">No updates posted yet.</p>
       <?php endif; ?>
       <?php foreach ($recentUpdates as $u): ?>
-        <div style="padding:10px 0;border-bottom:1px solid var(--color-border)">
+        <a href="/admin/projects/view?id=<?php echo (int)$u['project_id']; ?>" class="dashboard-update-row" style="display:block;padding:10px 0;border-bottom:1px solid var(--color-border);text-decoration:none;color:inherit">
           <div class="flex flex--between">
             <strong class="small"><?php echo e($u['project_name']); ?></strong>
             <span class="badge badge--<?php echo e($u['status']); ?>"><?php echo e(str_replace('_', ' ', $u['status'])); ?></span>
@@ -142,7 +142,7 @@ include __DIR__ . '/partials/header.php';
             <i class="fa-solid fa-calendar-day"></i> <?php echo e(date('d M Y', strtotime($u['update_date']))); ?>
             &middot; <?php echo e(time_ago($u['created_at'])); ?>
           </div>
-        </div>
+        </a>
       <?php endforeach; ?>
     </div>
   </div>

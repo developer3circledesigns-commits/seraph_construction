@@ -10,6 +10,12 @@ $site = $site ?? require __DIR__ . '/../config/site.php';
 if (!defined('ROOT_PATH')) {
     require_once __DIR__ . '/../api/config/bootstrap.php';
 }
+
+$ogScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$ogHost   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$ogBase   = $ogScheme . '://' . $ogHost;
+$ogImage  = $ogBase . '/images/hero-front@1680w.webp';
+$ogUrl    = $ogBase . ($_SERVER['REQUEST_URI'] ?? '/');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,9 +37,11 @@ if (!defined('ROOT_PATH')) {
   <meta property="og:type" content="website">
   <meta property="og:title" content="SERAPH BUILD CONSTRUCTION | Premium Luxury Architecture">
   <meta property="og:description" content="Building premium spaces. Creating timeless experiences. Luxury construction, interiors & architecture.">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="<?php echo htmlspecialchars($ogUrl); ?>">
+  <meta property="og:image" content="<?php echo htmlspecialchars($ogImage); ?>">
+  <meta property="og:image:width" content="1680">
+  <meta property="og:image:height" content="945">
+  <meta property="og:image:alt" content="Luxury modern villa exterior — SERAPH BUILD CONSTRUCTION">
   <meta property="og:site_name" content="SERAPH BUILD CONSTRUCTION">
   <meta property="og:locale" content="en_IN">
 
@@ -41,7 +49,8 @@ if (!defined('ROOT_PATH')) {
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="SERAPH BUILD CONSTRUCTION | Premium Luxury Architecture">
   <meta name="twitter:description" content="Building premium spaces. Creating timeless experiences.">
-  <meta name="twitter:image" content="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200">
+  <meta name="twitter:image" content="<?php echo htmlspecialchars($ogImage); ?>">
+  <meta name="twitter:image:alt" content="Luxury modern villa exterior — SERAPH BUILD CONSTRUCTION">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpolygon fill='%23C79A56' points='20,2 38,38 2,38'/%3E%3Cpolygon fill='%23090909' points='20,12 30,34 10,34'/%3E%3C/svg%3E">
@@ -51,7 +60,6 @@ if (!defined('ROOT_PATH')) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-  <link rel="dns-prefetch" href="https://images.unsplash.com">
 
   <!-- Google Fonts (non-render-blocking: preloaded here, applied by js/async-css.js after parse) -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap">
