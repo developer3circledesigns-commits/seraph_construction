@@ -2577,6 +2577,7 @@ html.lenis,html.lenis body{height:auto}
   grid-template-columns: minmax(260px, 340px) 1fr;
   gap: 2.5rem;
   align-items: start;
+  overflow: visible;
 }
 
 .contact-page__info {
@@ -2584,6 +2585,8 @@ html.lenis,html.lenis body{height:auto}
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: rgba(10, 37, 64, 0.45);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .contact-page__info h2 {
@@ -2597,6 +2600,9 @@ html.lenis,html.lenis body{height:auto}
   font-size: 14px;
   color: var(--muted);
   margin-bottom: 1.5rem;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .contact-page__details {
@@ -2608,6 +2614,14 @@ html.lenis,html.lenis body{height:auto}
 .contact-page__details li {
   display: flex;
   gap: 0.9rem;
+  align-items: flex-start;
+}
+
+.contact-page__details li > div {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
   align-items: flex-start;
 }
 
@@ -2639,6 +2653,10 @@ html.lenis,html.lenis body{height:auto}
   font-size: 14px;
   color: var(--white);
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  min-width: 0;
 }
 
 .contact-page__details a:hover {
@@ -2679,10 +2697,14 @@ html.lenis,html.lenis body{height:auto}
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: rgba(0, 20, 49, 0.55);
+  overflow: visible;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .contact-form__field {
   margin-bottom: 1.1rem;
+  overflow: visible;
 }
 
 .contact-form__field label {
@@ -2693,6 +2715,9 @@ html.lenis,html.lenis body{height:auto}
   letter-spacing: 1.4px;
   text-transform: uppercase;
   color: var(--muted);
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .contact-form__field label span {
@@ -2771,6 +2796,11 @@ html.lenis,html.lenis body{height:auto}
   color: #f08080;
 }
 
+.contact-form__meta .contact-form__error {
+  margin-top: 0;
+  align-self: flex-start;
+}
+
 .contact-form__meta {
   display: flex;
   justify-content: space-between;
@@ -2780,12 +2810,17 @@ html.lenis,html.lenis body{height:auto}
 
 .contact-form__meta .contact-form__error {
   flex: 1;
+  min-width: 0;
+  margin-top: 0;
 }
 
 .contact-form__count {
   font-size: 11px;
   color: var(--muted);
   white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: auto;
+  align-self: center;
 }
 
 .contact-form__submit {
@@ -2820,6 +2855,7 @@ html.lenis,html.lenis body{height:auto}
   font-size: 12px;
   color: var(--muted);
   text-align: center;
+  line-height: 1.5;
 }
 
 .contact-form__note span {
