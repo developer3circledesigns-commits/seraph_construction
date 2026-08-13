@@ -100,18 +100,34 @@ function truncateDesc(string $text, int $length = 80): array
     .projects-empty { text-align: center; padding: 3rem; color: #a29a8c; }
 
     @media (max-width: 767px) {
-      .projects-page { padding: 5.5rem 0 3rem; }
+      .projects-page { padding: 5.5rem 0 3rem; text-align: center; }
       .projects-page__head,
       .projects-page__category,
       .projects-page__cta { padding-left: 1rem; padding-right: 1rem; }
+      .projects-page__head p { margin-left: auto; margin-right: auto; }
       .projects-page__category { margin-top: 3rem; }
-      .projects-page__category-label { flex-wrap: wrap; gap: 0.6rem; }
+      .projects-page__category-label {
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        justify-content: center;
+        text-align: center;
+      }
       .projects-page__category-label::after { display: none; }
-      .projects-filter { gap: 0.5rem; margin-top: 1.5rem; padding: 0 1rem; }
+      .projects-filter { gap: 0.5rem; margin-top: 1.5rem; padding: 0 1rem; justify-content: center; }
       .projects-filter__btn { padding: 0.75rem 1.1rem; font-size: 0.8rem; min-height: 44px; }
       .projects-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .project-card__body,
+      .project-card__title,
+      .project-card__text,
+      .project-card__no { text-align: center; }
       .project-card__specs { grid-template-columns: 1fr; }
-      .project-card__spec-value { text-align: left; }
+      .project-card__spec {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.15rem;
+      }
+      .project-card__spec-value { text-align: center; }
       .project-card__download { margin-left: 0.9rem; margin-right: 0.9rem; min-height: 44px; }
     }
 

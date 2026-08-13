@@ -567,8 +567,8 @@
 
   .projects-story__text {
     order: 1;
-    text-align: left;
-    margin: 0;
+    text-align: center;
+    margin: 0 auto;
     min-height: 42vh;
   }
 
@@ -1253,7 +1253,7 @@
 
   .slide__quote {
     padding-left: 0;
-    text-align: left;
+    text-align: center;
   }
 
   .slide__quote::before {
@@ -1323,19 +1323,96 @@
 
   .contact-page {
     padding: 5.5rem 1.25rem 3rem;
+    text-align: center;
   }
 
   .contact-page__head {
     margin-bottom: 2rem;
+    max-width: none;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .contact-page__info,
   .contact-page__form-wrap {
     padding: 1.75rem 1.5rem;
+    text-align: center;
+  }
+
+  .contact-page__info h2,
+  .contact-page__info-lead {
+    text-align: center;
   }
 
   .contact-page__details {
     gap: 1.35rem;
+    align-items: center;
+  }
+
+  .contact-page__details li {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .contact-page__detail-body {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .contact-page__detail-value {
+    text-align: center;
+  }
+
+  .contact-page__social {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .contact-page__social-links {
+    justify-content: center;
+  }
+
+  .contact-form__field {
+    text-align: center;
+  }
+
+  .contact-form__field label {
+    text-align: center;
+  }
+
+  .contact-form__field input,
+  .contact-form__field select,
+  .contact-form__field textarea {
+    text-align: center;
+  }
+
+  .contact-form__field select {
+    text-align-last: center;
+  }
+
+  .contact-form__meta {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .contact-form__count {
+    margin-left: 0;
+  }
+
+  .contact-form__note,
+  .contact-alert,
+  .contact-page .alert {
+    text-align: center;
+  }
+
+  .contact-alert ul {
+    padding-left: 0;
+    list-style: none;
   }
 
   .contact-form__row {
@@ -1345,11 +1422,6 @@
   .contact-form__submit {
     width: 100%;
     min-height: 44px;
-  }
-
-  .contact-page__social {
-    flex-wrap: wrap;
-    gap: 0.75rem;
   }
 
   .login-modal {
@@ -1442,6 +1514,170 @@
   .controls button {
     min-width: 44px;
     min-height: 44px;
+  }
+}
+
+/* =====================================================
+   GLOBAL MOBILE — centered text & flex content
+   Public marketing pages only; desktop/tablet unchanged
+   ===================================================== */
+@media (max-width: 768px) {
+  #main-content,
+  #main-content section,
+  .site-footer .footer-grid,
+  .site-footer .footer-brand,
+  .site-footer .footer-col {
+    text-align: center;
+  }
+
+  /* Override section-specific left alignments on small screens */
+  #main-content .hero__content,
+  #main-content .blur-panel__content.hero__content,
+  #main-content .kitchen-sequence__content,
+  #main-content .kitchen-sequence__copy,
+  #main-content .blur-card,
+  #main-content .split__body,
+  #main-content .about-head,
+  #main-content .projects-section__head,
+  #main-content .projects-story__text,
+  #main-content .projects-story__step,
+  #main-content .materials-section .h-head,
+  #main-content .material-card__body,
+  #main-content .service-card,
+  #main-content .testimonial-card,
+  #main-content .slide__quote,
+  #main-content .about-features li {
+    text-align: center;
+  }
+
+  #main-content .hero__content,
+  #main-content .blur-panel__content.hero__content {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #main-content .about-head,
+  #main-content .projects-section__head,
+  #main-content .projects-section__intro {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #main-content .blur-card,
+  #main-content .split {
+    justify-items: center;
+  }
+
+  #main-content .split__body .btn,
+  #main-content .blur-card .btn,
+  #main-content .kitchen-sequence__content .btn,
+  #main-content .projects-story__step .btn,
+  #main-content .materials-section__cta,
+  #main-content .service-card .btn,
+  #main-content .testimonials-section .btn,
+  .contact-page .btn,
+  .contact-page .btn--gold,
+  .projects-page .btn--gold,
+  .mobile-menu .btn,
+  .mobile-menu__login,
+  .mobile-menu__quote {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Buttons — centered label text on mobile */
+  #main-content .btn,
+  #main-content .btn--solid,
+  #main-content .btn--gold,
+  #main-content .materials-section__cta,
+  #main-content .materials-filter__btn,
+  #main-content .controls button,
+  .contact-page .btn,
+  .contact-page .btn--gold,
+  .contact-page .contact-form__submit,
+  .projects-page .btn--gold,
+  .projects-page .projects-filter__btn,
+  .projects-page .project-card__download,
+  .projects-page .project-card__desc-toggle,
+  .mobile-menu .btn,
+  .mobile-menu__login,
+  .mobile-menu__quote {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #main-content .btn,
+  #main-content .btn--solid,
+  #main-content .btn--gold,
+  #main-content .materials-section__cta,
+  .contact-page .btn,
+  .contact-page .btn--gold,
+  .projects-page .btn--gold,
+  .mobile-menu .btn,
+  .mobile-menu__login,
+  .mobile-menu__quote,
+  #main-content .materials-filter__btn,
+  #main-content .controls button,
+  .projects-page .projects-filter__btn {
+    display: inline-flex;
+  }
+
+  .contact-page .contact-form__submit,
+  .contact-form__submit {
+    display: flex;
+  }
+
+  .projects-page .project-card__download {
+    display: flex;
+  }
+
+  #main-content .materials-filter,
+  #main-content .about-features {
+    justify-content: center;
+    justify-items: center;
+  }
+
+  #main-content .about-features li {
+    justify-content: center;
+  }
+
+  #main-content .services-grid,
+  #main-content .testimonial-grid {
+    justify-items: center;
+  }
+
+  .site-footer .footer-social,
+  .site-footer .footer-legal {
+    justify-content: center;
+  }
+
+  .site-footer .footer-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .site-footer .footer-brand .brand,
+  .site-footer .footer-brand p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .site-footer .footer-contact li {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .site-footer .footer-contact li > a,
+  .site-footer .footer-contact li > span {
+    text-align: center;
+  }
+
+  .contact-page__form-wrap {
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
