@@ -195,6 +195,25 @@
     gap: 1rem;
   }
 
+  .topbar__login,
+  .topbar__actions .topbar__quote {
+    text-align: center;
+    justify-content: center;
+  }
+
+  .mobile-menu nav {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .mobile-menu__link,
+  .mobile-menu__login {
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+  }
+
   /* Decrease hero text for small laptops */
   .blur-panel__content.hero__content h1,
   .blur-panel__content.hero__content h2 {
@@ -1449,11 +1468,16 @@
     min-height: 44px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
   }
 
   .mobile-menu__login,
   .mobile-menu__quote {
     min-height: 44px;
+    justify-content: center;
+    text-align: center;
   }
 
   .h-track,
@@ -1699,6 +1723,19 @@
   .contact-page__form-wrap {
     margin-left: auto;
     margin-right: auto;
+  }
+
+  /* Top navigation — mobile menu */
+  .mobile-menu nav {
+    align-items: center;
+    width: 100%;
+  }
+
+  .mobile-menu__link,
+  .mobile-menu__login {
+    justify-content: center;
+    text-align: center;
+    width: 100%;
   }
 }
 
