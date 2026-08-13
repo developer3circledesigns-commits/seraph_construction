@@ -36,8 +36,8 @@ $contactUrl = $site['contact_url'] ?? 'contact.php';
       <div class="dots" id="dots"></div>
     </div>
 
-    <p class="testimonials-section__cta" data-reveal>
+    <!-- <p class="testimonials-section__cta" data-reveal>
       <a href="<?php echo e($contactUrl); ?>" class="btn btn--solid">Start Your Project</a>
-    </p>
+    </p> -->
   </div>
 </section>
