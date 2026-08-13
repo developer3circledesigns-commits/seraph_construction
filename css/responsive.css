@@ -1598,7 +1598,6 @@
   .projects-page .btn--gold,
   .projects-page .projects-filter__btn,
   .projects-page .project-card__download,
-  .projects-page .project-card__desc-toggle,
   .mobile-menu .btn,
   .mobile-menu__login,
   .mobile-menu__quote {
@@ -1630,6 +1629,28 @@
 
   .projects-page .project-card__download {
     display: flex;
+  }
+
+  /* Projects page — card content stays left-aligned like desktop */
+  .projects-page .project-card,
+  .projects-page .project-card__body,
+  .projects-page .project-card__title,
+  .projects-page .project-card__text,
+  .projects-page .project-card__no,
+  .projects-page .project-card__link .project-card__title,
+  .projects-page .project-card__desc-toggle {
+    text-align: left;
+  }
+
+  .projects-page .project-card__spec {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    text-align: left;
+  }
+
+  .projects-page .project-card__spec-value {
+    text-align: right;
   }
 
   #main-content .materials-filter,

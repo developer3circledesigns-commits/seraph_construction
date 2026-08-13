@@ -116,18 +116,23 @@ function truncateDesc(string $text, int $length = 80): array
       .projects-filter { gap: 0.5rem; margin-top: 1.5rem; padding: 0 1rem; justify-content: center; }
       .projects-filter__btn { padding: 0.75rem 1.1rem; font-size: 0.8rem; min-height: 44px; }
       .projects-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .project-card,
       .project-card__body,
       .project-card__title,
       .project-card__text,
-      .project-card__no { text-align: center; }
+      .project-card__no,
+      .project-card__desc-toggle {
+        text-align: left;
+      }
       .project-card__specs { grid-template-columns: 1fr; }
       .project-card__spec {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 0.15rem;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: baseline;
+        text-align: left;
+        gap: 0.4rem;
       }
-      .project-card__spec-value { text-align: center; }
+      .project-card__spec-value { text-align: right; }
       .project-card__download { margin-left: 0.9rem; margin-right: 0.9rem; min-height: 44px; }
     }
 
