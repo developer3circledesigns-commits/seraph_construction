@@ -1322,7 +1322,7 @@
   }
 
   .contact-page {
-    padding: 5.5rem 1rem 3rem;
+    padding: 5.5rem 1.25rem 3rem;
   }
 
   .contact-page__head {
@@ -1332,6 +1332,10 @@
   .contact-page__info,
   .contact-page__form-wrap {
     padding: 1.75rem 1.5rem;
+  }
+
+  .contact-page__details {
+    gap: 1.35rem;
   }
 
   .contact-form__row {

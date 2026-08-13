@@ -1659,16 +1659,16 @@ h1, h2, h3, h4 {
   margin-bottom: 0.85rem;
   font-size: 14px;
   color: var(--muted);
+  min-width: 0;
 }
 
-.footer-contact li > a {
-  white-space: nowrap;
-}
-
+.footer-contact li > a,
 .footer-contact li > span {
   min-width: 0;
-  overflow-wrap: normal;
-  word-break: normal;
+  flex: 1;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 
 .footer-contact i {
@@ -2574,20 +2574,24 @@ html.lenis,html.lenis body{height:auto}
 
 .contact-page__grid {
   display: grid;
-  grid-template-columns: minmax(260px, 340px) 1fr;
+  grid-template-columns: minmax(300px, 400px) 1fr;
   gap: 2.5rem;
   align-items: start;
-  overflow: visible;
 }
 
-.contact-page__info {
+.contact-page__info,
+.contact-page__form-wrap {
   padding: 2.25rem 2.5rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-sizing: border-box;
+}
+
+.contact-page__info {
   background: rgba(10, 37, 64, 0.45);
   word-wrap: break-word;
   overflow-wrap: break-word;
-  box-sizing: border-box;
+  min-width: 0;
 }
 
 .contact-page__info h2 {
@@ -2614,20 +2618,22 @@ html.lenis,html.lenis body{height:auto}
 
 .contact-page__details li {
   display: flex;
-  gap: 0.9rem;
+  gap: 1rem;
   align-items: flex-start;
+  min-width: 0;
 }
 
-.contact-page__details li > div {
-  flex: 1;
+.contact-page__detail-body {
+  flex: 1 1 auto;
   min-width: 0;
   max-width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .contact-page__detail-icon {
+  flex: 0 0 38px;
   width: 38px;
   height: 38px;
   border-radius: 50%;
@@ -2642,22 +2648,22 @@ html.lenis,html.lenis body{height:auto}
 .contact-page__details .contact-page__detail-label,
 .contact-page__social .contact-page__detail-label {
   display: block;
+  width: 100%;
   font-family: var(--display);
   font-size: 10px;
   letter-spacing: 1.2px;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.35rem;
 }
 
-.contact-page__details a,
-.contact-page__details span {
+.contact-page__detail-value {
   display: block;
   width: 100%;
   max-width: 100%;
   font-size: 14px;
   color: var(--white);
-  line-height: 1.5;
+  line-height: 1.55;
   word-wrap: break-word;
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -2665,7 +2671,7 @@ html.lenis,html.lenis body{height:auto}
   min-width: 0;
 }
 
-.contact-page__details a:hover {
+a.contact-page__detail-value:hover {
   color: var(--gold);
 }
 
@@ -2699,13 +2705,8 @@ html.lenis,html.lenis body{height:auto}
 }
 
 .contact-page__form-wrap {
-  padding: 1.8rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
   background: rgba(0, 20, 49, 0.55);
-  overflow: visible;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  min-width: 0;
 }
 
 .contact-form__field {
@@ -2934,6 +2935,7 @@ html.lenis,html.lenis body{height:auto}
 @media (max-width: 900px) {
   .contact-page__grid {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .contact-form__row {

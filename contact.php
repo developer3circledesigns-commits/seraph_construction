@@ -154,30 +154,30 @@ require __DIR__ . '/partials/header.php';
       <ul class="contact-page__details">
         <li>
           <span class="contact-page__detail-icon" aria-hidden="true"><i class="fa-solid fa-phone"></i></span>
-          <div>
+          <div class="contact-page__detail-body">
             <span class="contact-page__detail-label">Phone</span>
-            <a href="tel:<?php echo e($site['phone_tel']); ?>"><?php echo e($site['phone']); ?></a>
+            <a class="contact-page__detail-value" href="tel:<?php echo e($site['phone_tel']); ?>"><?php echo e($site['phone']); ?></a>
           </div>
         </li>
         <li>
           <span class="contact-page__detail-icon" aria-hidden="true"><i class="fa-solid fa-envelope"></i></span>
-          <div>
+          <div class="contact-page__detail-body">
             <span class="contact-page__detail-label">Email</span>
-            <a href="mailto:<?php echo e($site['email']); ?>"><?php echo e($site['email']); ?></a>
+            <a class="contact-page__detail-value" href="mailto:<?php echo e($site['email']); ?>"><?php echo e($site['email']); ?></a>
           </div>
         </li>
         <li>
           <span class="contact-page__detail-icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
-          <div>
+          <div class="contact-page__detail-body">
             <span class="contact-page__detail-label">Office</span>
-            <span><?php echo $site['address']; ?></span>
+            <span class="contact-page__detail-value"><?php echo $site['address']; ?></span>
           </div>
         </li>
         <li>
           <span class="contact-page__detail-icon" aria-hidden="true"><i class="fa-solid fa-clock"></i></span>
-          <div>
+          <div class="contact-page__detail-body">
             <span class="contact-page__detail-label">Business Hours</span>
-            <span>Mon – Sat, 9:00 AM – 6:00 PM IST</span>
+            <span class="contact-page__detail-value">Mon – Sat, 9:00 AM – 6:00 PM IST</span>
           </div>
         </li>
       </ul>
