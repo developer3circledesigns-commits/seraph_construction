@@ -1570,8 +1570,16 @@
   #main-content .service-card,
   #main-content .testimonial-card,
   #main-content .slide__quote,
-  #main-content .about-features li {
+  #main-content .about-features li,
+  #main-content .testimonials-section .container,
+  #main-content .testimonials-section__cta {
     text-align: center;
+  }
+
+  #main-content .testimonials-section__cta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   #main-content .hero__content,
