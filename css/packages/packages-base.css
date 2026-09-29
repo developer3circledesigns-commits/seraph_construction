@@ -1,0 +1,1015 @@
+/* =============================================================
+   SERAPH — SBC Packages page
+   -------------------------------------------------------------
+   The design system behind packages.php.
+
+   Everything here is prefixed `.sk` so it can never collide with the
+   live site stylesheet, and the page-specific stylesheet only has to
+   describe what is *different* about it.
+
+   Contents
+     1.  Tokens
+     2.  Page frame + sticky offsets
+     3.  Layout primitives
+     4.  Typography
+     5.  Buttons
+     6.  Surfaces (cards, panels, pills, stats)
+     7.  Spec table
+     8.  Accordion
+     9.  Tabs
+     10. Contents rail
+     11. Toolbar (search, chips, switches)
+     12. Callouts, empty states, CTA, back-to-top
+     13. Responsive
+     14. Print
+     15. Reduced motion
+   ============================================================= */
+
+/* ---------- 1. Tokens -------------------------------------------
+   `.sk-scope` carries the tokens and is applied to *every* element
+   the kit styles, including the chrome that sits outside <main>.
+   `.sk` is `.sk-scope` plus the page frame. If a token is needed by
+   the review bar or the back-to-top button, it has to live here.  */
+
+.sk-scope,
+.sk {
+  /* Brand. These are the live site's own values (css/style.css), so the
+     packages page and the rest of the site read as one product: navy
+     #001431 ground, gold #E7C959 accent. */
+  --sk-gold:       #E7C959;
+  --sk-gold-hi:    #F0DA8C;
+  /* Anything sitting on a gold fill is the brand navy, never black. */
+  --sk-on-gold:    #001431;
+  --sk-on-gold-2:  rgba(0, 20, 49, .65);
+
+  /* Surfaces — a real elevation ramp on the brand navy. The page ground
+     is the site's --bg, and --bg-2 is the site's --bg2, so sections
+     alternate on the same two navies used everywhere else. */
+  --sk-bg:         #001431;
+  --sk-bg-2:       #0A2540;
+  --sk-panel:      rgba(255, 255, 255, 0.045);
+  --sk-panel-2:    rgba(255, 255, 255, 0.075);
+  --sk-panel-3:    rgba(255, 255, 255, 0.11);
+
+  /* Lines */
+  --sk-line:       rgba(255, 255, 255, 0.09);
+  --sk-line-2:     rgba(255, 255, 255, 0.16);
+  --sk-line-gold:  rgba(231, 201, 89, 0.34);
+
+  /* Text — 4 steps. Every step clears 4.5:1 on the darkest ground it
+     can land on, which is --sk-bg-2 (#0A2540), not --sk-bg: the step
+     values are set for 4.58:1 there. Lifting the two muted steps is
+     what keeps the smallest labels (ref codes, item counts) legible
+     now the ground is navy rather than near-black. */
+  --sk-ink:        #F2F5FA;
+  --sk-ink-2:      #C3CDDC;
+  --sk-ink-3:      #93A0B4;
+  --sk-ink-4:      #7E8CA6;
+
+  /* Semantic */
+  --sk-same:       #6FD6AE;
+  --sk-diff:       #F0B65C;
+  --sk-info:       #7FB2F0;
+
+  /* Shape. Every radius is 0: the specification is a technical document,
+     so cards, panels, pills, buttons and inputs all render on square
+     corners. The tokens are kept rather than deleted because the rules
+     that consume them are the layout contract, and a global
+     `* { border-radius: 0 }` would also flatten the toggle knob and
+     the scrollbar thumb, which are shapes rather than containers. */
+  --sk-r-sm:       0;
+  --sk-r:          0;
+  --sk-r-lg:       0;
+  --sk-r-pill:     0;
+
+  /* Depth */
+  --sk-shadow:     0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -12px rgba(0, 0, 0, .6);
+  --sk-shadow-lg:  0 2px 4px rgba(0, 0, 0, .3), 0 28px 60px -24px rgba(0, 0, 0, .8);
+  --sk-ring:       0 0 0 3px rgba(231, 201, 89, .28);
+
+  /* Motion */
+  --sk-ease:       cubic-bezier(.22, 1, .36, 1);
+  --sk-t:          .28s var(--sk-ease);
+  --sk-t-fast:     .16s var(--sk-ease);
+
+  /* Chrome offsets.
+     --sk-head is the fixed site header's height. It is NOT hard-coded
+     per breakpoint: .topbar's height is driven by whichever child is
+     tallest (logo, 44px hamburger, quote button) and that changes at
+     four different breakpoints. partials/packages/_js.php measures it
+     and writes the real value here. 73px is the widest case, so the
+     pre-measurement layout is never too short. */
+  --sk-head:       73px;
+  /* No review bar on the live page, so there is nothing between the
+     header and a sticky element. Kept as a token so the offset maths
+     stays in one place if a bar is ever added back. */
+  --sk-bar:        0px;
+  --sk-sticky:     calc(var(--sk-head) + var(--sk-bar));
+  /* --sk-toolbar is the height of .sk-stickybar, so anchors that land
+     inside the specification clear the toolbar and not just the header.
+     Also measured by partials/packages/_js.php, because the toolbar
+     reflows when its search field wraps. 68px is the widest case. */
+  --sk-toolbar:    68px;
+
+  /* Rhythm */
+  --sk-gap:        clamp(1rem, 2.4vw, 1.5rem);
+  --sk-gap-lg:     clamp(2rem, 5vw, 4rem);
+  --sk-section:    clamp(3.25rem, 7vw, 6rem);
+  --sk-pad-x:      clamp(1.1rem, 4vw, 2rem);
+  --sk-wrap:       1200px;
+  --sk-wrap-wide:  1480px;
+
+  /* Smallest type the kit will render, used by every micro-label.
+     11px is the floor: anything under it stops being legible on a
+     laptop panel, and this page is full of them. */
+  --sk-micro:      .7rem;
+}
+
+/* ---------- 2. Page frame + sticky offsets ---------------------- */
+
+/* The live stylesheet sets `body { overflow-x: hidden }`, and `hidden`
+   makes <body> a scroll container that never scrolls — which silently
+   kills every `position: sticky` on the page. `clip` clips exactly like
+   `hidden` but does *not* create a scroll container, so sticky works
+   again. Scoped with :has() so the live pages are untouched. */
+body:has(> .sk) { overflow-x: clip; }
+
+.sk {
+  display: block;
+  min-height: 60vh;
+  padding-top: var(--sk-head);
+  padding-bottom: 0;
+  overflow-x: clip;
+  position: relative;
+  isolation: isolate;
+  background: var(--sk-bg);
+  color: var(--sk-ink-2);
+  font-size: 16px;
+}
+
+/* Light-surface layouts (Dossier) re-point the ramp rather than
+   re-declaring every component. */
+.sk--light {
+  --sk-bg:      #F7F5F0;
+  --sk-bg-2:    #EFEBE3;
+  --sk-panel:   rgba(0, 20, 49, .035);
+  --sk-panel-2: rgba(0, 20, 49, .06);
+  --sk-panel-3: rgba(0, 20, 49, .1);
+  --sk-line:    rgba(0, 20, 49, .14);
+  --sk-line-2:  rgba(0, 20, 49, .24);
+  --sk-ink:     #0B1B33;
+  --sk-ink-2:   #2E3E56;
+  --sk-ink-3:   #5A6B84;
+  --sk-ink-4:   #8494A9;
+  --sk-gold:    #A8801F;
+  --sk-gold-hi: #C79A56;
+  --sk-same:    #1E7A5A;
+  --sk-diff:    #9A6A10;
+  --sk-info:    #1F5C99;
+  --sk-shadow:  0 1px 2px rgba(0, 20, 49, .06), 0 8px 24px -14px rgba(0, 20, 49, .22);
+  color: var(--sk-ink-2);
+  background: var(--sk-bg);
+}
+
+.sk__bleed {
+  position: relative;
+  z-index: 0;
+}
+
+/* ---------- 3. Layout primitives ------------------------------- */
+
+.sk-wrap {
+  width: min(var(--sk-wrap), 100% - (var(--sk-pad-x) * 2));
+  margin-inline: auto;
+}
+.sk-wrap--wide { width: min(var(--sk-wrap-wide), 100% - (var(--sk-pad-x) * 2)); }
+.sk-wrap--narrow { width: min(820px, 100% - (var(--sk-pad-x) * 2)); }
+
+.sk-section { padding-block: var(--sk-section); }
+.sk-section--tight { padding-block: calc(var(--sk-section) * .6); }
+.sk-section--alt { background: var(--sk-bg-2); }
+
+.sk-stack > * + * { margin-top: var(--sk-gap); }
+.sk-stack-lg > * + * { margin-top: var(--sk-gap-lg); }
+
+.sk-split {
+  display: grid;
+  gap: var(--sk-gap-lg);
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr) 320px;
+}
+.sk-split--rail { grid-template-columns: 260px minmax(0, 1fr); }
+
+.sk-cols { display: grid; gap: var(--sk-gap); }
+.sk-cols--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.sk-cols--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.sk-cols--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.sk-cols--auto { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+@media (max-width: 1000px) {
+  .sk-split, .sk-split--rail { grid-template-columns: minmax(0, 1fr); }
+  .sk-cols--3, .sk-cols--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .sk-cols--2, .sk-cols--3, .sk-cols--4 { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- 4. Typography --------------------------------------- */
+
+.sk-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  font-family: var(--display);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--sk-gold);
+}
+.sk-kicker::before {
+  content: '';
+  width: 22px; height: 1px;
+  background: currentColor;
+  flex: none;
+}
+.sk-kicker--plain::before { display: none; }
+
+.sk-h1 {
+  font-family: var(--display);
+  font-size: clamp(2.1rem, 5.2vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -.025em;
+  color: var(--sk-ink);
+  margin: .55rem 0 0;
+  text-wrap: balance;
+}
+.sk-h2 {
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 3.1vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -.018em;
+  color: var(--sk-ink);
+  margin: .5rem 0 0;
+  text-wrap: balance;
+}
+.sk-h3 {
+  font-family: var(--display);
+  font-size: clamp(1.08rem, 1.7vw, 1.28rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -.01em;
+  color: var(--sk-ink);
+  margin: 0;
+}
+.sk-h4 {
+  font-family: var(--display);
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--sk-ink);
+  margin: 0;
+}
+
+.sk-lede {
+  font-size: clamp(.98rem, 1.35vw, 1.1rem);
+  line-height: 1.75;
+  color: var(--sk-ink-2);
+  max-width: 66ch;
+  margin: 1rem 0 0;
+  text-wrap: pretty;
+}
+.sk-lede--sm { font-size: .95rem; line-height: 1.7; }
+
+.sk-p { margin: 0; line-height: 1.75; color: var(--sk-ink-2); }
+.sk-muted { color: var(--sk-ink-3); }
+.sk-dim   { color: var(--sk-ink-4); }
+.sk-gold  { color: var(--sk-gold); }
+.sk-num   { font-variant-numeric: tabular-nums; }
+.sk-center { text-align: center; }
+.sk-center .sk-lede, .sk-center .sk-kicker { margin-inline: auto; }
+.sk-nowrap { white-space: nowrap; }
+
+/* Inline code inside prose */
+.sk code, .sk-lede code, .sk-p code {
+  font-family: 'SFMono-Regular', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: .88em;
+  color: var(--sk-gold);
+  background: var(--sk-bg-2);
+  border: 1px solid var(--sk-line);
+  border-radius: 0;
+  padding: .1em .4em;
+  word-break: break-word;
+}
+
+/* ---------- 5. Buttons ------------------------------------------ */
+
+.sk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: .85rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--sk-r-pill);
+  font-family: var(--display);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform var(--sk-t), background var(--sk-t), border-color var(--sk-t),
+              color var(--sk-t), box-shadow var(--sk-t);
+}
+.sk-btn:hover { transform: translateY(-2px); }
+.sk-btn:active { transform: translateY(0); }
+.sk-btn i { font-size: .85em; }
+
+.sk-btn--primary {
+  background: var(--sk-gold);
+  color: var(--sk-on-gold);
+  box-shadow: 0 10px 30px -14px rgba(231, 201, 89, .8);
+}
+.sk-btn--primary:hover { background: var(--sk-gold-hi); }
+
+.sk-btn--ghost {
+  border-color: var(--sk-line-2);
+  color: var(--sk-ink);
+  background: var(--sk-panel);
+}
+.sk-btn--ghost:hover { border-color: var(--sk-line-gold); color: var(--sk-gold); background: var(--sk-panel-2); }
+
+.sk-btn--soft {
+  background: var(--sk-panel-2);
+  color: var(--sk-ink);
+  border-color: var(--sk-line);
+}
+.sk-btn--soft:hover { background: var(--sk-panel-3); }
+
+  /* The brand navy, not white: white on this green only reaches 3.09:1,
+     and the navy puts it at 5.94:1 while staying on-palette. */
+  .sk-btn--wa { background: #1FA855; color: var(--sk-on-gold); }
+  .sk-btn--wa:hover { background: #25c062; }
+
+.sk-btn--sm { padding: .7rem 1.1rem; font-size: .76rem; }
+.sk-btn--lg { padding: 1.05rem 2rem; font-size: .9rem; }
+.sk-btn--block { width: 100%; }
+.sk-btn[disabled], .sk-btn[aria-disabled='true'] { opacity: .45; pointer-events: none; }
+
+.sk-actions { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; }
+.sk-actions--center { justify-content: center; }
+
+/* ---------- 6. Surfaces ----------------------------------------- */
+
+.sk-card {
+  position: relative;
+  background: var(--sk-panel);
+  border: 1px solid var(--sk-line);
+  border-radius: var(--sk-r-lg);
+  padding: clamp(1.25rem, 2.4vw, 1.85rem);
+  transition: border-color var(--sk-t), background var(--sk-t), transform var(--sk-t), box-shadow var(--sk-t);
+}
+.sk-card--pad-sm { padding: 1.1rem 1.2rem; }
+.sk-card--flush { padding: 0; overflow: hidden; }
+.sk-card--hover:hover { border-color: var(--sk-line-2); background: var(--sk-panel-2); transform: translateY(-3px); }
+.sk-card--raised { box-shadow: var(--sk-shadow); background: var(--sk-bg-2); }
+
+.sk-card--feature {
+  border-color: var(--sk-line-gold);
+  background:
+    linear-gradient(180deg, rgba(231, 201, 89, .09), rgba(231, 201, 89, 0) 42%),
+    var(--sk-bg-2);
+  box-shadow: var(--sk-shadow-lg);
+}
+.sk-card--feature::before {
+  content: '';
+  position: absolute;
+  inset-inline: clamp(1.25rem, 2.4vw, 1.85rem);
+  top: -1px;
+  height: 2px;
+  border-radius: 0;
+  background: linear-gradient(90deg, transparent, var(--sk-gold), transparent);
+}
+
+/* Pills / badges */
+.sk-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .38rem;
+  padding: .28rem .7rem;
+  border-radius: var(--sk-r-pill);
+  border: 1px solid var(--sk-line-2);
+  background: var(--sk-panel-2);
+  font-family: var(--display);
+  font-size: var(--sk-micro);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--sk-ink-2);
+  white-space: nowrap;
+}
+.sk-pill--gold   { color: var(--sk-gold); border-color: var(--sk-line-gold); background: rgba(231, 201, 89, .1); }
+.sk-pill--same   { color: var(--sk-same); border-color: rgba(111, 214, 174, .3); background: rgba(111, 214, 174, .1); }
+.sk-pill--diff   { color: var(--sk-diff); border-color: rgba(240, 182, 92, .32); background: rgba(240, 182, 92, .1); }
+.sk-pill--info   { color: var(--sk-info); border-color: rgba(127, 178, 240, .3); background: rgba(127, 178, 240, .1); }
+.sk-pill--solid  { background: var(--sk-gold); border-color: var(--sk-gold); color: var(--sk-on-gold); }
+.sk-pill i { font-size: .68em; }
+
+/* Stat strip */
+.sk-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 1px;
+  background: var(--sk-line);
+  border: 1px solid var(--sk-line);
+  border-radius: var(--sk-r);
+  overflow: hidden;
+}
+.sk-stat { background: var(--sk-bg); padding: 1.05rem 1.15rem; }
+.sk-stat__n {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(1.35rem, 2.3vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--sk-ink);
+  font-variant-numeric: tabular-nums;
+}
+.sk-stat__n sup { font-size: max(.5em, 11px); color: var(--sk-gold); vertical-align: super; margin-left: 2px; }
+.sk-stat__l {
+  display: block;
+  margin-top: .4rem;
+  font-size: var(--sk-micro);
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--sk-ink-3);
+}
+
+/* Key-value list */
+.sk-kv { display: grid; gap: .1rem; }
+.sk-kv__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--sk-line);
+  font-size: .88rem;
+}
+.sk-kv__row:last-child { border-bottom: 0; }
+.sk-kv__k { color: var(--sk-ink-3); }
+.sk-kv__v { color: var(--sk-ink); font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Bulleted feature list */
+.sk-ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.sk-ticks li { display: grid; grid-template-columns: 20px 1fr; gap: .7rem; font-size: .9rem; line-height: 1.6; color: var(--sk-ink-2); }
+.sk-ticks li::before {
+  content: '\f00c';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  color: var(--sk-gold);
+  font-size: var(--sk-micro);
+  line-height: 1.9;
+}
+.sk-ticks--same li::before { content: '\f068'; color: var(--sk-same); }
+
+/* ---------- 7. Spec table --------------------------------------- */
+
+.sk-tablewrap {
+  border: 1px solid var(--sk-line);
+  border-radius: var(--sk-r-lg);
+  overflow: hidden;
+  background: var(--sk-panel);
+}
+
+.sk-spec { width: 100%; border-collapse: collapse; font-size: .875rem; }
+
+.sk-spec thead th {
+  position: sticky;
+  top: var(--sk-sticky);
+  z-index: 5;
+  background: var(--sk-bg-2);
+  padding: .95rem 1.1rem;
+  text-align: left;
+  font-family: var(--display);
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--sk-ink-3);
+  border-bottom: 1px solid var(--sk-line-2);
+  white-space: nowrap;
+}
+/* Fixed at the 11px floor rather than .95em: an em sub-label under an
+   11.2px th computes to 10.64px, which is below what this kit allows. */
+.sk-spec thead th small { display: block; font-size: var(--sk-micro); letter-spacing: 0; color: var(--sk-ink-4); text-transform: none; font-weight: 500; margin-top: 2px; }
+.sk-spec--bare thead th { position: static; }
+
+.sk-spec tbody tr { border-bottom: 1px solid var(--sk-line); }
+.sk-spec tbody tr:last-child { border-bottom: 0; }
+.sk-spec tbody tr:hover { background: var(--sk-panel); }
+
+.sk-spec tbody th[scope='row'] {
+  text-align: left;
+  font-weight: 500;
+  color: var(--sk-ink-2);
+  padding: .85rem 1.1rem;
+  vertical-align: top;
+  line-height: 1.55;
+}
+.sk-spec td {
+  padding: .85rem 1.1rem;
+  vertical-align: top;
+  line-height: 1.6;
+  color: var(--sk-ink);
+  border-left: 1px solid var(--sk-line);
+}
+.sk-spec td .sk-val { display: block; }
+.sk-spec tr.is-same td { color: var(--sk-ink-3); }
+.sk-spec tr.is-same tbody th { color: var(--sk-ink-3); }
+.sk-spec tr.is-diff td:last-child { background: rgba(231, 201, 89, .05); }
+
+.sk-spec__sec th {
+  background: var(--sk-bg-2);
+  padding: .8rem 1.1rem;
+  font-family: var(--display);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--sk-gold);
+  border-bottom: 1px solid var(--sk-line-2);
+  border-left: 0;
+}
+.sk-spec__sec span { color: var(--sk-ink-4); margin-right: .6rem; }
+.sk-spec__sec i { margin-right: .5rem; }
+
+.sk-spec__ref {
+  display: inline-block;
+  min-width: 3.4rem;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--sk-ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Below 900px each row becomes its own card, labelled by data-l. */
+@media (max-width: 900px) {
+  .sk-spec, .sk-spec tbody, .sk-spec tr, .sk-spec td, .sk-spec tbody th[scope='row'] { display: block; width: auto; }
+  .sk-spec thead { display: none; }
+  .sk-spec tbody tr {
+    border: 1px solid var(--sk-line);
+    border-radius: var(--sk-r);
+    margin: .75rem;
+    padding: .25rem 0;
+    background: var(--sk-panel);
+  }
+  .sk-spec tbody tr.is-same { opacity: .72; }
+  .sk-spec__sec {
+    margin: 1.25rem .75rem .25rem;
+    border: 0;
+  }
+  .sk-spec__sec th { background: transparent; padding-inline: 0; }
+  .sk-spec tbody th[scope='row'] { padding: .85rem 1rem .35rem; font-weight: 600; color: var(--sk-ink); }
+  .sk-spec td { border-left: 0; padding: .35rem 1rem; }
+  .sk-spec td::before {
+    content: attr(data-l) ' — ';
+    font-family: var(--display);
+    font-size: var(--sk-micro);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--sk-ink-4);
+  }
+  .sk-spec tr.is-diff td:last-child { background: rgba(231, 201, 89, .06); }
+}
+
+/* ---------- 8. Accordion ---------------------------------------- */
+
+.sk-acc { border-top: 1px solid var(--sk-line); }
+.sk-acc__item { border-bottom: 1px solid var(--sk-line); }
+.sk-acc__btn {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: .9rem;
+  padding: 1.05rem .25rem;
+  text-align: left;
+  cursor: pointer;
+  color: var(--sk-ink);
+  transition: background var(--sk-t-fast);
+}
+.sk-acc__btn:hover { background: var(--sk-panel); }
+.sk-acc__num {
+  font-family: var(--display);
+  font-size: var(--sk-micro);
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--sk-gold);
+  font-variant-numeric: tabular-nums;
+}
+.sk-acc__t { font-family: var(--display); font-size: 1rem; font-weight: 600; letter-spacing: -.01em; }
+.sk-acc__c { display: block; font-size: .78rem; font-weight: 400; color: var(--sk-ink-3); margin-top: .2rem; line-height: 1.5; }
+.sk-acc__ico {
+  display: grid; place-items: center;
+  width: 30px; height: 30px;
+  border: 1px solid var(--sk-line);
+  border-radius: 0;
+  color: var(--sk-ink-3);
+  font-size: .7rem;
+  transition: transform var(--sk-t), border-color var(--sk-t-fast), color var(--sk-t-fast), background var(--sk-t-fast);
+}
+.sk-acc__btn[aria-expanded='true'] .sk-acc__ico {
+  transform: rotate(45deg);
+  border-color: var(--sk-line-gold);
+  color: var(--sk-gold);
+  background: rgba(231, 201, 89, .1);
+}
+.sk-acc__panel { padding: 0 0 1.4rem 3.15rem; }
+@media (max-width: 640px) { .sk-acc__panel { padding-left: .25rem; } }
+.sk-acc__panel[hidden] { display: none; }
+.sk-acc__blurb { font-size: .86rem; line-height: 1.7; color: var(--sk-ink-3); margin: 0 0 1rem; max-width: 72ch; }
+
+/* ---------- 9. Tabs -------------------------------------------- */
+
+.sk-tabs__list {
+  display: flex;
+  gap: .3rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding: .3rem;
+  border: 1px solid var(--sk-line);
+  border-radius: var(--sk-r);
+  background: var(--sk-panel);
+  scroll-snap-type: x proximity;
+}
+.sk-tabs__list::-webkit-scrollbar { height: 4px; }
+.sk-tabs__list::-webkit-scrollbar-thumb { background: var(--sk-line-2); border-radius: 4px; }
+
+.sk-tab {
+  flex: none;
+  scroll-snap-align: start;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .6rem .95rem;
+  border: 1px solid transparent;
+  border-radius: var(--sk-r-sm);
+  background: transparent;
+  color: var(--sk-ink-3);
+  font-family: var(--display);
+  font-size: .78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--sk-t-fast), color var(--sk-t-fast), border-color var(--sk-t-fast);
+}
+.sk-tab:hover { color: var(--sk-ink); background: var(--sk-panel-2); }
+.sk-tab[aria-selected='true'] {
+  background: var(--sk-gold);
+  border-color: var(--sk-gold);
+  color: var(--sk-on-gold);
+  box-shadow: 0 8px 20px -12px rgba(231, 201, 89, .7);
+}
+.sk-tab[aria-selected='true'] .sk-tab__n { color: var(--sk-on-gold-2); }
+.sk-tab__n { font-size: var(--sk-micro); color: var(--sk-ink-4); font-variant-numeric: tabular-nums; }
+
+.sk-tabpanel { padding-top: var(--sk-gap); }
+.sk-tabpanel:focus { outline: none; }
+.sk-tabpanel:focus-visible { outline: 2px solid var(--sk-gold); outline-offset: 4px; border-radius: var(--sk-r); }
+
+/* ---------- 10. Contents rail ----------------------------------- */
+
+.sk-rail {
+  position: sticky;
+  /* The rail lives inside the specification, so it must clear the sticky
+     toolbar above it as well as the site header. */
+  top: calc(var(--sk-sticky) + var(--sk-toolbar) + 1.25rem);
+  display: grid;
+  gap: .1rem;
+  max-height: calc(100vh - var(--sk-sticky) - var(--sk-toolbar) - 4.5rem);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-right: .35rem;
+}
+.sk-rail__h {
+  font-family: var(--display);
+  font-size: var(--sk-micro);
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--sk-ink-4);
+  padding: 0 .7rem .6rem;
+}.sk-rail__a {
+  display: grid;
+  grid-template-columns: 1.9rem 1fr;
+  align-items: baseline;
+  gap: .4rem;
+  padding: .55rem .7rem;
+  border-radius: var(--sk-r-sm);
+  border-left: 2px solid transparent;
+  font-size: .8rem;
+  line-height: 1.4;
+  color: var(--sk-ink-3);
+  transition: color var(--sk-t-fast), background var(--sk-t-fast), border-color var(--sk-t-fast);
+}
+.sk-rail__a i { font-size: var(--sk-micro); font-style: normal; color: var(--sk-ink-4); font-variant-numeric: tabular-nums; }
+.sk-rail__a:hover { color: var(--sk-ink); background: var(--sk-panel); }
+.sk-rail__a.is-active {
+  color: var(--sk-gold);
+  background: rgba(231, 201, 89, .08);
+  border-left-color: var(--sk-gold);
+}
+.sk-rail__a.is-active i { color: var(--sk-gold); }
+
+/* ---------- 11. Toolbar ----------------------------------------- */
+
+.sk-toolbar {
+  position: sticky;
+  top: var(--sk-sticky);
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
+  padding: .7rem 0;
+  background: color-mix(in srgb, var(--sk-bg) 92%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--sk-line);
+}
+.sk-toolbar__spacer { flex: 1 1 auto; }
+
+/* A sticky element can only travel inside its own containing block, so
+   a toolbar wrapped in a short `.sk-wrap` never moves. `.sk-stickybar`
+   is the sticky element and must be a child of something tall — the
+   section itself. The toolbar inside it goes back to static. */
+.sk-stickybar {
+  position: sticky;
+  top: var(--sk-sticky);
+  z-index: 30;
+  background: color-mix(in srgb, var(--sk-bg) 92%, transparent);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid var(--sk-line);
+}
+.sk-stickybar > .sk-toolbar {
+  position: static;
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 0;
+}
+
+.sk-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 260px;
+  min-width: 0;
+  max-width: 420px;
+  border: 1px solid var(--sk-line-2);
+  border-radius: var(--sk-r-pill);
+  background: var(--sk-bg-2);
+  transition: border-color var(--sk-t-fast), box-shadow var(--sk-t-fast);
+}
+.sk-search:focus-within { border-color: var(--sk-line-gold); box-shadow: var(--sk-ring); }
+.sk-search > i { position: absolute; left: 1rem; font-size: .8rem; color: var(--sk-ink-4); pointer-events: none; }
+.sk-search input {
+  width: 100%;
+  min-width: 0;
+  padding: .65rem 2.5rem;
+  border: 0;
+  background: transparent;
+  color: var(--sk-ink);
+  font-family: inherit;
+  font-size: .88rem;
+  outline: none;
+}
+.sk-search input::placeholder { color: var(--sk-ink-4); }
+.sk-search input::-webkit-search-cancel-button { display: none; }
+.sk-search__clear {
+  position: absolute;
+  right: .3rem;
+  display: grid; place-items: center;
+  width: 32px; height: 32px;
+  border-radius: 0;
+  color: var(--sk-ink-3);
+  font-size: .75rem;
+  cursor: pointer;
+  transition: background var(--sk-t-fast), color var(--sk-t-fast);
+}
+.sk-search__clear:hover { background: var(--sk-panel-3); color: var(--sk-ink); }
+.sk-search__clear[hidden] { display: none; }
+
+/* Filter chips */
+.sk-chips { display: flex; flex-wrap: wrap; gap: .35rem; }
+.sk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  min-height: 36px;
+  padding: .5rem .85rem;
+  border: 1px solid var(--sk-line);
+  border-radius: var(--sk-r-pill);
+  background: var(--sk-panel);
+  color: var(--sk-ink-3);
+  font-family: var(--display);
+  font-size: .76rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all var(--sk-t-fast);
+}
+.sk-chip:hover { color: var(--sk-ink); border-color: var(--sk-line-2); background: var(--sk-panel-2); }
+.sk-chip[aria-pressed='true'], .sk-chip.is-on {
+  background: var(--sk-gold);
+  border-color: var(--sk-gold);
+  color: var(--sk-on-gold);
+}
+.sk-chip__n { font-size: .92em; opacity: .65; font-variant-numeric: tabular-nums; }
+
+/* Toggle switch */
+.sk-switch { display: inline-flex; align-items: center; gap: .55rem; cursor: pointer; user-select: none; }
+/* The native input stays in the accessibility tree and keeps focus —
+   it is just not painted. The <label> is the pointer target, so a
+   click anywhere on the switch works, and Space toggles it from the
+   keyboard. */
+.sk-switch input {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+.sk-switch__track {
+  position: relative;
+  width: 40px; height: 22px;
+  border-radius: var(--sk-r-pill);
+  background: var(--sk-panel-3);
+  border: 1px solid var(--sk-line-2);
+  transition: background var(--sk-t-fast), border-color var(--sk-t-fast);
+  flex: none;
+}
+.sk-switch__track i {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--sk-ink-3);
+  transition: transform var(--sk-t), background var(--sk-t-fast);
+}
+.sk-switch input:checked + .sk-switch__track { background: rgba(231, 201, 89, .28); border-color: var(--sk-line-gold); }
+.sk-switch input:checked + .sk-switch__track i { transform: translateX(18px); background: var(--sk-gold); }
+.sk-switch input:focus-visible + .sk-switch__track { box-shadow: var(--sk-ring); }
+.sk-switch__lab { font-size: .8rem; font-weight: 600; color: var(--sk-ink-2); white-space: nowrap; }
+
+.sk-count { font-size: .78rem; color: var(--sk-ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---------- 12. Callouts, empty, CTA, back-to-top -------------- */
+
+.sk-note {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: .85rem;
+  align-items: start;
+  padding: 1.05rem 1.25rem;
+  border: 1px solid var(--sk-line);
+  border-left: 3px solid var(--sk-gold);
+  border-radius: var(--sk-r);
+  background: var(--sk-panel);
+  font-size: .82rem;
+  line-height: 1.7;
+  color: var(--sk-ink-3);
+}
+.sk-note > i { color: var(--sk-gold); margin-top: .25rem; font-size: .9rem; }
+.sk-note strong { color: var(--sk-ink-2); font-weight: 600; }
+.sk-note a { color: var(--sk-gold); }
+
+.sk-empty {
+  display: none;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--sk-ink-3);
+}
+.sk-empty.is-on { display: block; }
+.sk-empty i { font-size: 1.75rem; color: var(--sk-ink-4); margin-bottom: .9rem; display: block; }
+.sk-empty p { margin: 0 0 1rem; font-size: .9rem; }
+
+.sk-cta {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--sk-line-2);
+  border-radius: var(--sk-r-lg);
+  padding: clamp(1.75rem, 4vw, 3rem);
+  background:
+    radial-gradient(760px 300px at 12% 0%, rgba(231, 201, 89, .14), transparent 62%),
+    var(--sk-bg-2);
+  text-align: center;
+}
+.sk-cta__in { max-width: 640px; margin-inline: auto; position: relative; }
+
+.sk-top {
+  position: fixed;
+  right: clamp(1rem, 2.5vw, 1.75rem);
+  bottom: clamp(1rem, 2.5vw, 1.75rem);
+  z-index: 950;
+  display: grid;
+  place-items: center;
+  width: 44px; height: 44px;
+  border-radius: 0;
+  border: 1px solid var(--sk-line-2);
+  background: var(--sk-bg-2);
+  color: var(--sk-ink-2);
+  font-size: .85rem;
+  cursor: pointer;
+  box-shadow: var(--sk-shadow-lg);
+  opacity: 0;
+  transform: translateY(12px) scale(.9);
+  pointer-events: none;
+  transition: opacity var(--sk-t), transform var(--sk-t), color var(--sk-t-fast), border-color var(--sk-t-fast);
+}
+.sk-top.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.sk-top:hover { color: var(--sk-gold); border-color: var(--sk-line-gold); }
+
+/* Scroll reveal — opt in per element, and never hides content when JS is off. */
+.js-reveal [data-sk-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .7s var(--sk-ease), transform .7s var(--sk-ease);
+}
+.js-reveal [data-sk-reveal].is-in { opacity: 1; transform: none; }
+
+/* Skip link target */
+.sk [id] { scroll-margin-top: calc(var(--sk-sticky) + 1.5rem); }
+
+/* [hidden] has to win over display:table-row / grid / flex. */
+.sk [hidden], .sk [hidden] * { display: none !important; }
+
+/* ---------- 13. Responsive ------------------------------------- */
+
+@media (max-width: 768px) {
+  .sk-toolbar { gap: .55rem; padding: .6rem 0; }
+  .sk-search { flex-basis: 100%; max-width: none; }
+  .sk-btn--block-sm { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .sk-actions .sk-btn { width: 100%; }
+}
+
+/* ---------- 14. Print ------------------------------------------ */
+
+@media print {
+  /* The <body> background propagates to the print canvas, so the live
+     site's navy would print behind every sheet. Reset it here. */
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* .sk-stickybar is the outer wrapper that makes the toolbar sticky on
+     screen; with its contents hidden it would still print an empty
+     bordered band, so the wrapper goes too. */
+  .topbar, .side-nav, .mobile-menu, .site-footer,
+  .sk-stickybar, .sk-toolbar, .sk-top, .sk-actions { display: none !important; }
+
+  .sk, .sk--light {
+    --sk-bg: #fff; --sk-bg-2: #fff; --sk-panel: transparent; --sk-panel-2: transparent;
+    --sk-panel-3: transparent; --sk-line: #ccc; --sk-line-2: #999;
+    --sk-ink: #000; --sk-ink-2: #1a1a1a; --sk-ink-3: #444; --sk-ink-4: #666;
+    --sk-gold: #7a5c10; --sk-same: #14624a; --sk-diff: #7a5208;
+    padding-top: 0;
+    background: #fff; color: #000;
+    font-size: 10.5pt;
+  }
+  .sk-section { padding-block: 1.2cm; break-inside: avoid; }
+  .sk-card, .sk-tablewrap, .sk-cta { box-shadow: none; border-color: #bbb; background: #fff; }
+  .sk-card--feature { border-color: #999; }
+  .sk-spec thead th { position: static; background: #eee; color: #000; }
+  .sk-spec { font-size: 9pt; }
+  .sk-acc__panel[hidden] { display: block !important; }
+  .sk-tabpanel[hidden] { display: block !important; }
+  .sk-rail { position: static; max-height: none; }
+  .sk-h1, .sk-h2 { break-after: avoid; }
+  a[href^='http']::after { content: ' (' attr(href) ')'; font-size: .8em; color: #555; }
+  .sk-print-only { display: block !important; }
+}
+.sk-print-only { display: none; }
+
+/* ---------- 15. Reduced motion --------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .sk *, .sk *::before, .sk *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

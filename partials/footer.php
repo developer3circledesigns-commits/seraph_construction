@@ -32,7 +32,7 @@ $contactUrl  = $site['contact_url'] ?? 'contact.php';
         <h3 class="footer-heading">Quick Links</h3>
         <ul class="footer-links">
           <?php foreach ($site['nav'] as $href => $label): ?>
-            <li><a href="<?php echo $href === 'projects' ? 'projects.php' : $homePrefix . '#' . htmlspecialchars($href); ?>"><?php echo htmlspecialchars($label); ?></a></li>
+            <li><a href="<?php echo htmlspecialchars($navLinks[$href]); ?>"<?php if ($isCurrentPage($navLinks[$href])): ?> aria-current="page"<?php endif; ?>><?php echo htmlspecialchars($label); ?></a></li>
           <?php endforeach; ?>
           <li><a href="<?php echo $contactUrl; ?>">Contact</a></li>
         </ul>

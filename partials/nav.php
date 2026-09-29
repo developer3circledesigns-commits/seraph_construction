@@ -7,19 +7,35 @@
 $currentPage = basename((string)($_SERVER['SCRIPT_NAME'] ?? 'index.php'), '.php');
 $homePrefix  = ($currentPage === 'index' || $currentPage === '') ? '' : 'index.php';
 
-// Build nav links: Projects points to its own page; anchors target the homepage.
+// Nav keys that have a page of their own. Declared in config/site.php so
+// adding a sub-page is a one-line config change instead of another
+// hard-coded special case here — anything not listed below is a section
+// anchor on the homepage.
+$navPages = [
+    'projects' => $site['projects_url'] ?? 'projects.php',
+    'packages' => $site['packages_url'] ?? 'packages.php',
+];
+
+// Build nav links: listed pages link to themselves; the rest anchor home.
 $navLinks = [];
 foreach ($site['nav'] as $href => $label) {
-    $navLinks[$href] = $href === 'projects' ? 'projects.php' : $homePrefix . '#' . $href;
+    $navLinks[$href] = $navPages[$href] ?? ($homePrefix . '#' . $href);
 }
 $contactUrl = $site['contact_url'] ?? 'contact.php';
+
+/** True when a nav link points at the page currently being viewed. */
+$isCurrentPage = static function (string $url) use ($currentPage): bool {
+    if (strpos($url, '#') !== false) { return false; } // section anchor, not a page
+    return pathinfo((string) parse_url($url, PHP_URL_PATH), PATHINFO_FILENAME) === $currentPage;
+};
 ?>
   <!-- Topbar (Layout 13 style) -->
   <header class="topbar">
     <a href="<?php echo $homePrefix; ?>#hero" class="brand"><img src="images/seraph-logo@204w.webp" srcset="images/seraph-logo@204w.webp 204w, images/seraph-logo@102w.webp 102w" sizes="204px" alt="SERAPH BUILD CONSTRUCTION" width="400" height="94"></a>
     <nav class="topbar__nav" aria-label="Primary navigation">
       <?php foreach ($site['nav'] as $href => $label): ?>
-        <a href="<?php echo htmlspecialchars($navLinks[$href]); ?>"><?php echo htmlspecialchars($label); ?></a>
+        <a href="<?php echo htmlspecialchars($navLinks[$href]); ?>"
+           <?php if ($isCurrentPage($navLinks[$href])): ?>aria-current="page"<?php endif; ?>><?php echo htmlspecialchars($label); ?></a>
       <?php endforeach; ?>
     </nav>
     <div class="topbar__actions">
@@ -41,7 +57,8 @@ $contactUrl = $site['contact_url'] ?? 'contact.php';
   <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
     <nav aria-label="Mobile navigation">
       <?php foreach ($site['nav'] as $href => $label): ?>
-        <a href="<?php echo htmlspecialchars($navLinks[$href]); ?>" class="mobile-menu__link"><?php echo htmlspecialchars($label); ?></a>
+        <a href="<?php echo htmlspecialchars($navLinks[$href]); ?>" class="mobile-menu__link"
+           <?php if ($isCurrentPage($navLinks[$href])): ?>aria-current="page"<?php endif; ?>><?php echo htmlspecialchars($label); ?></a>
       <?php endforeach; ?>
       <button class="btn mobile-menu__login" data-login-open aria-haspopup="dialog" aria-controls="loginModal">
         <i class="fa-solid fa-user" aria-hidden="true"></i> Sign In
@@ -55,7 +72,7 @@ $contactUrl = $site['contact_url'] ?? 'contact.php';
     <span class="side-nav__label">Scroll</span>
     <ul class="side-nav__list">
       <?php foreach ($site['nav'] as $href => $label): ?>
-        <li><a href="<?php echo htmlspecialchars($navLinks[$href]); ?>" class="side-nav__link" data-side-nav><span class="side-nav__dot"></span><span class="side-nav__name"><?php echo htmlspecialchars($label); ?></span></a></li>
+        <li><a href="<?php echo htmlspecialchars($navLinks[$href]); ?>" class="side-nav__link" data-side-nav<?php if ($isCurrentPage($navLinks[$href])): ?> aria-current="page"<?php endif; ?>><span class="side-nav__dot"></span><span class="side-nav__name"><?php echo htmlspecialchars($label); ?></span></a></li>
       <?php endforeach; ?>
       <li><a href="<?php echo $contactUrl; ?>" class="side-nav__link" data-side-nav><span class="side-nav__dot"></span><span class="side-nav__name">Contact</span></a></li>
     </ul>

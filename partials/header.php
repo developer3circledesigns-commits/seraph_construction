@@ -14,8 +14,23 @@ if (!defined('ROOT_PATH')) {
 $ogScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $ogHost   = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $ogBase   = $ogScheme . '://' . $ogHost;
-$ogImage  = $ogBase . '/images/hero-front@1680w.webp';
 $ogUrl    = $ogBase . ($_SERVER['REQUEST_URI'] ?? '/');
+
+// Optional per-page SEO. Pages may set $pageMeta = ['title','description',
+// 'keywords','og_title','og_description','og_image','og_image_alt'] before
+// including this partial. Anything omitted falls back to the site defaults,
+// so existing pages keep rendering exactly as before.
+$pageMeta = is_array($pageMeta ?? null) ? $pageMeta : [];
+
+$metaTitle       = $pageMeta['title'] ?? ($site['name'] . ' | ' . $site['tagline']);
+$metaDescription = $pageMeta['description'] ?? 'SERAPH BUILD CONSTRUCTION delivers premium construction, interior design, and commercial projects across Chennai with timeless craftsmanship.';
+$metaKeywords    = $pageMeta['keywords'] ?? 'luxury construction, architecture, interior design, modular kitchen, premium materials, commercial construction';
+$metaRobots      = $pageMeta['robots'] ?? 'index, follow';
+$ogTitle         = $pageMeta['og_title'] ?? ($site['name'] . ' | Premium Luxury Architecture');
+$ogDescription   = $pageMeta['og_description'] ?? 'Building premium spaces. Creating timeless experiences. Luxury construction, interiors & architecture.';
+$ogImagePath     = $pageMeta['og_image'] ?? '/images/hero-front@1680w.webp';
+$ogImageAlt      = $pageMeta['og_image_alt'] ?? 'Luxury modern villa exterior — SERAPH BUILD CONSTRUCTION';
+$ogImage         = preg_match('#^https?://#i', $ogImagePath) ? $ogImagePath : $ogBase . $ogImagePath;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,30 +42,30 @@ $ogUrl    = $ogBase . ($_SERVER['REQUEST_URI'] ?? '/');
   <meta name="color-scheme" content="dark">
 
   <!-- SEO -->
-  <title><?php echo htmlspecialchars($site['name']); ?> | <?php echo htmlspecialchars($site['tagline']); ?></title>
-  <meta name="description" content="SERAPH BUILD CONSTRUCTION delivers premium construction, interior design, and commercial projects across Chennai with timeless craftsmanship.">
-  <meta name="keywords" content="luxury construction, architecture, interior design, modular kitchen, premium materials, commercial construction">
+  <title><?php echo htmlspecialchars($metaTitle); ?></title>
+  <meta name="description" content="<?php echo htmlspecialchars($metaDescription); ?>">
+  <meta name="keywords" content="<?php echo htmlspecialchars($metaKeywords); ?>">
   <meta name="author" content="SERAPH BUILD CONSTRUCTION">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="<?php echo htmlspecialchars($metaRobots); ?>">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SERAPH BUILD CONSTRUCTION | Premium Luxury Architecture">
-  <meta property="og:description" content="Building premium spaces. Creating timeless experiences. Luxury construction, interiors & architecture.">
+  <meta property="og:title" content="<?php echo htmlspecialchars($ogTitle); ?>">
+  <meta property="og:description" content="<?php echo htmlspecialchars($ogDescription); ?>">
   <meta property="og:url" content="<?php echo htmlspecialchars($ogUrl); ?>">
   <meta property="og:image" content="<?php echo htmlspecialchars($ogImage); ?>">
   <meta property="og:image:width" content="1680">
   <meta property="og:image:height" content="945">
-  <meta property="og:image:alt" content="Luxury modern villa exterior — SERAPH BUILD CONSTRUCTION">
+  <meta property="og:image:alt" content="<?php echo htmlspecialchars($ogImageAlt); ?>">
   <meta property="og:site_name" content="SERAPH BUILD CONSTRUCTION">
   <meta property="og:locale" content="en_IN">
 
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="SERAPH BUILD CONSTRUCTION | Premium Luxury Architecture">
-  <meta name="twitter:description" content="Building premium spaces. Creating timeless experiences.">
+  <meta name="twitter:title" content="<?php echo htmlspecialchars($ogTitle); ?>">
+  <meta name="twitter:description" content="<?php echo htmlspecialchars($ogDescription); ?>">
   <meta name="twitter:image" content="<?php echo htmlspecialchars($ogImage); ?>">
-  <meta name="twitter:image:alt" content="Luxury modern villa exterior — SERAPH BUILD CONSTRUCTION">
+  <meta name="twitter:image:alt" content="<?php echo htmlspecialchars($ogImageAlt); ?>">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpolygon fill='%23C79A56' points='20,2 38,38 2,38'/%3E%3Cpolygon fill='%23090909' points='20,12 30,34 10,34'/%3E%3C/svg%3E">
@@ -72,11 +87,37 @@ $ogUrl    = $ogBase . ($_SERVER['REQUEST_URI'] ?? '/');
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
+<?php if ($ogImagePath === '/images/hero-front@1680w.webp'): ?>
   <link rel="preload" as="image" type="image/webp" href="images/hero-front@1120w.webp"
         imagesrcset="images/hero-front@1120w.webp 1120w, images/hero-front@1680w.webp 1680w"
         imagesizes="(min-width: 1400px) 1200px, 100vw">
+<?php endif; ?>
   <link rel="stylesheet" href="css/responsive.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="css/responsive.css"></noscript>
+
+<?php
+// Optional extra stylesheets declared by the page itself, e.g.
+// packages.php: 'styles' => ['css/packages/packages-base.css'].
+// .htaccess serves CSS with a one-year immutable cache, so a ?v=
+// derived from the file's mtime is what keeps an edited stylesheet
+// from being served stale.
+foreach ((array) ($pageMeta['styles'] ?? []) as $skStyle) {
+    $skHref = (string) $skStyle;
+    $skPath = ROOT_PATH . '/' . ltrim($skHref, '/');
+    if (is_file($skPath)) {
+        $skHref .= '?v=' . filemtime($skPath);
+    }
+    echo '  <link rel="stylesheet" href="' . htmlspecialchars($skHref) . '">' . "\n";
+}
+
+// Optional extra webfonts for a page that needs to break from the
+// site's Montserrat/Poppins pairing — the Dossier layout sets a serif.
+// display=swap means text paints in the fallback immediately, so this
+// never blocks rendering.
+foreach ((array) ($pageMeta['fonts'] ?? []) as $skFont) {
+    echo '  <link rel="stylesheet" href="' . htmlspecialchars((string) $skFont) . '">' . "\n";
+}
+?>
 
   <!-- Schema Markup -->
   <script type="application/ld+json">

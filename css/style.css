@@ -198,6 +198,9 @@ h1, h2, h3, h4 {
   color: var(--bg);
   text-decoration: none;
   padding-bottom: 4px;
+  /* Never break a label mid-word ("Home / Plan"). The nav either fits on
+     one line or the hamburger takes over, so these stay on one line. */
+  white-space: nowrap;
 }
 
 .topbar__nav a::after {

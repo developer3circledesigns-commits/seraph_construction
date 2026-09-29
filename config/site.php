@@ -22,10 +22,12 @@ return [
         'projects'    => 'Projects',
         'about'       => 'About',
         'testimonials'=> 'Testimonials',
+        'packages'    => 'Packages',
     ],
 
     'contact_url'  => 'contact.php',
     'projects_url' => 'projects.php',
+    'packages_url' => 'packages.php',
 
     'social' => [
         ['url' => 'https://facebook.com',    'icon' => 'fa-facebook-f', 'label' => 'Facebook'],
