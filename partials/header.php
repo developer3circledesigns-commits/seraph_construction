@@ -68,7 +68,11 @@ $ogImage         = preg_match('#^https?://#i', $ogImagePath) ? $ogImagePath : $o
   <meta name="twitter:image:alt" content="<?php echo htmlspecialchars($ogImageAlt); ?>">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpolygon fill='%23C79A56' points='20,2 38,38 2,38'/%3E%3Cpolygon fill='%23090909' points='20,12 30,34 10,34'/%3E%3C/svg%3E">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 
   <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
