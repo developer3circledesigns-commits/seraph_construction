@@ -169,13 +169,22 @@ h1, h2, h3, h4 {
   display: inline-flex;
   align-items: center;
   line-height: 1;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
+/* Lockup is 5.28:1 — height drives the size, max-width keeps it from ever
+   pushing the nav off a narrow screen. 42px is sized for the 1360-1499px
+   band, which is the tightest (nine labels + sign-in + CTA at the same
+   time); responsive.css scales it up on wide screens and on hamburger
+   widths, where there is far more free space. */
 .topbar .brand img {
   display: block;
-  height: 36px;
+  height: 42px;
   width: auto;
+  max-width: min(222px, 30vw);
   object-fit: contain;
+  object-position: left center;
 }
 
 .topbar .brand em {
@@ -193,7 +202,12 @@ h1, h2, h3, h4 {
   position: relative;
   font-family: var(--display);
   font-size: 11px;
-  letter-spacing: 2px;
+  /* body has no font-weight, so these labels used to render at Montserrat
+     Regular (400) and read thin at 11px. Montserrat 800 is only ~1.3% wider
+     than 700, so ExtraBold is effectively free here — the labels still fit
+     the nav's width budget with tracking left at a legible 1.5px. */
+  font-weight: 800;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--bg);
   text-decoration: none;
@@ -233,7 +247,8 @@ h1, h2, h3, h4 {
 .topbar__actions .topbar__quote {
   padding: 10px 22px;
   font-size: 11px;
-  letter-spacing: 2px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
   line-height: 1;
 }
 
@@ -540,6 +555,80 @@ h1, h2, h3, h4 {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba(0, 20, 49, 0.65), rgba(0, 20, 49, 0.4));
+}
+
+/* --- Homepage hero: lighter shade than the other blur panels -------------
+   The shared rule above also styles the Home Plan and Interiors panels, so
+   the reduction is scoped to #hero.
+
+   The copy sits directly on the photo with nothing behind it - no scrim, no
+   panel, no box. Because the shadows below are too tight to darken the
+   background, the shade is what carries the contrast, so it sits a little
+   heavier than a copy with wide halos would need. Measured: white on the
+   paragraph reaches 5.05:1 across the copy with no shadow at all, and
+   5.2-6.2:1 with the rim in place. */
+#hero .blur-panel__media::after {
+  background:
+    /* re-darken the lower strip so the scroll cue stays readable */
+    linear-gradient(0deg, rgba(0, 20, 49, 0.42), rgba(0, 20, 49, 0) 20%),
+    linear-gradient(180deg, rgba(0, 20, 49, 0.62), rgba(0, 20, 49, 0.34));
+}
+
+/* Shadows are deliberately kept to a 5px radius. Wider blurs were measured
+   still darkening the photo 30px past the last glyph, and around a block of
+   text that halo merges into a soft panel - the same box the scrim used to
+   be, just blurrier. A tight rim cannot do that: it only touches the pixels
+   the letterforms actually cover, so nothing is visible behind the words.
+   Everything beyond ~8px is left to the full-bleed shade above, which spans
+   the whole panel and so never reads as a box behind the copy. */
+#hero .hero__content h1,
+#hero .hero__content h2 {
+  text-shadow:
+    0 0 2px rgba(0, 20, 49, 0.95),
+    0 1px 2px rgba(0, 20, 49, 0.88),
+    0 0 5px rgba(0, 20, 49, 0.55);
+}
+
+/* 15px text has strokes only 1-2px wide, so the rim has to sit ON the glyph
+   rather than around it. Repeating the 1px layer stacks two half-transparent
+   passes into a near-opaque edge; a single pass leaves bright gaps in the
+   counters and between the letters. */
+#hero .hero__content p,
+#hero .hero__content .eyebrow {
+  text-shadow:
+    0 0 1px rgba(0, 20, 49, 0.98),
+    0 0 1px rgba(0, 20, 49, 0.98),
+    0 0 2px rgba(0, 20, 49, 0.92),
+    0 0 4px rgba(0, 20, 49, 0.70),
+    0 0 6px rgba(0, 20, 49, 0.45);
+}
+
+/* 11px caps are the smallest thing on the panel. The brand token #E7C759 is
+   only 3.6:1 as a solid against this image and could not reach 4.5:1 however
+   dark the shade got, so the gold is lightened to #F7ECC4, which keeps the
+   warm cast and clears it at every breakpoint. */
+#hero .hero__content .eyebrow {
+  color: #f7ecc4;
+  text-shadow:
+    0 0 1px rgba(0, 20, 49, 1),
+    0 0 1px rgba(0, 20, 49, 1),
+    0 0 1px rgba(0, 20, 49, 1),
+    0 0 2px rgba(0, 20, 49, 0.96),
+    0 0 3px rgba(0, 20, 49, 0.88),
+    0 0 5px rgba(0, 20, 49, 0.70),
+    0 0 6px rgba(0, 20, 49, 0.50);
+}
+
+/* With the shade lifted, --gray (#CFCFCF) only reached 3.70:1 at 14-16px.
+   Near-white is what carries the paragraph over AA here. */
+#hero .blur-panel__content p {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* --muted (#9D9D9D) measured 1.63:1 over the image even before this change,
+   so the scroll cue was already failing; it is legible white now. */
+#hero .hero__scroll {
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .blur-panel__content {
@@ -1583,13 +1672,16 @@ h1, h2, h3, h4 {
   letter-spacing: 3px;
   font-size: 16px;
   display: inline-block;
-  margin-bottom: 0rem;
+  max-width: 100%;
+  margin-bottom: 1rem;
 }
 
+/* The lockup is far wider than the old stacked footer mark, so it is
+   sized by width here — a fixed height would overflow the column. */
 .footer-brand .brand img {
   display: block;
-  height: clamp(80px, 16vw, 110px);
-  width: auto;
+  width: min(100%, 260px);
+  height: auto;
   object-fit: contain;
 }
 
@@ -2181,7 +2273,8 @@ html.lenis,html.lenis body{height:auto}
   color: var(--bg);
   font-family: var(--display);
   font-size: 11px;
-  letter-spacing: 2px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   line-height: 1;
   cursor: pointer;

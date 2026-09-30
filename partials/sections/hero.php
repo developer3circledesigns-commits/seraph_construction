@@ -5,12 +5,12 @@
 <section id="hero" class="blur-panel" data-blur>
   <div class="blur-panel__media">
     <img
-      src="images/hero-front@1120w.webp"
-      srcset="images/hero-front@1120w.webp 1120w, images/hero-front@1680w.webp 1680w"
-      sizes="(min-width: 1400px) 1200px, 100vw"
+      src="images/hero-seraph@1280w.webp"
+      srcset="images/hero-seraph@640w.webp 640w, images/hero-seraph@960w.webp 960w, images/hero-seraph@1280w.webp 1280w, images/hero-seraph@1672w.webp 1672w"
+      sizes="100vw"
       alt="Luxury modern villa exterior at dusk with architectural lighting"
-      width="1376"
-      height="768"
+      width="1672"
+      height="942"
       fetchpriority="high"
       decoding="async"
     >

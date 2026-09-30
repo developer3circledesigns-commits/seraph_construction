@@ -31,7 +31,7 @@ $isCurrentPage = static function (string $url) use ($currentPage): bool {
 ?>
   <!-- Topbar (Layout 13 style) -->
   <header class="topbar">
-    <a href="<?php echo $homePrefix; ?>#hero" class="brand"><img src="images/seraph-logo@204w.webp" srcset="images/seraph-logo@204w.webp 204w, images/seraph-logo@102w.webp 102w" sizes="204px" alt="SERAPH BUILD CONSTRUCTION" width="400" height="94"></a>
+    <a href="<?php echo $homePrefix; ?>#hero" class="brand"><img src="images/seraph-logo@280w.webp" srcset="images/seraph-logo@140w.webp 140w, images/seraph-logo@186w.webp 186w, images/seraph-logo@280w.webp 280w, images/seraph-logo@372w.webp 372w, images/seraph-logo@480w.webp 480w, images/seraph-logo@620w.webp 620w, images/seraph-logo@800w.webp 800w" sizes="(max-width: 480px) 169px, (max-width: 768px) 190px, (max-width: 1359px) 265px, (max-width: 1699px) 222px, 296px" alt="SERAPH BUILD CONSTRUCTION" width="222" height="42" decoding="async" fetchpriority="high"></a>
     <nav class="topbar__nav" aria-label="Primary navigation">
       <?php foreach ($site['nav'] as $href => $label): ?>
         <a href="<?php echo htmlspecialchars($navLinks[$href]); ?>"

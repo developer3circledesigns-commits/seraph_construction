@@ -46,7 +46,7 @@ require __DIR__ . '/partials/header.php';
       <div class="atl-hero__grid">
         <div>
           <span class="sk-kicker">SBC Packages &middot; Turnkey specification</span>
-          <h1 class="sk-h1">Two packages.<br>Every line item named.</h1>
+          <h1 class="sk-h1">Build Better.<br>Choose the Right Package.</h1>
           <p class="sk-lede"><?php echo htmlspecialchars($pk['meta']['intro']); ?></p>
 
           <div class="sk-actions" style="margin-top:2rem">
@@ -329,6 +329,61 @@ require __DIR__ . '/partials/header.php';
       setTimeout(function () { row.classList.remove('atl-flash'); }, 1600);
     }
   });
+})();
+
+/* The two tier cards must be exactly the same size.
+
+   Side by side the grid alone does it (align-items: stretch). But the grid
+   collapses to a single column below 860px, where each card falls back to
+   its own content height — and Elite's copy runs longer than Premium's, so
+   the pair drifts apart by 20-50px. CSS has no way to equalise siblings
+   that each sit in their own grid row, so do it here.
+
+   min-height, not height: the shorter card grows, the taller one is left
+   at its natural size, and nothing can ever be clipped.
+
+   Guarded on width, because width is the only thing that changes the line
+   counts. That also keeps it clear of a ResizeObserver feedback loop —
+   equalising changes the page height, never the grid's width. */
+(function () {
+  var grid = document.querySelector('.atl-tiers');
+  if (!grid) { return; }
+
+  var tiers = grid.querySelectorAll('.atl-tier');
+  if (tiers.length < 2) { return; }
+
+  var lastW = -1;
+
+  function equalise() {
+    var w = grid.clientWidth;
+    if (w === lastW) { return; }
+    lastW = w;
+
+    var heights = [];
+    for (var i = 0; i < tiers.length; i++) {
+      tiers[i].style.minHeight = '';
+      heights.push(tiers[i].getBoundingClientRect().height);
+    }
+
+    var tallest = Math.ceil(Math.max.apply(null, heights));
+    for (var j = 0; j < tiers.length; j++) {
+      tiers[j].style.minHeight = tallest + 'px';
+    }
+  }
+
+  equalise();
+
+  /* Web fonts land after first paint and change every line count, so the
+     first measurement is a guess until the real faces are in. */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(equalise);
+  }
+
+  if (window.ResizeObserver) {
+    new ResizeObserver(equalise).observe(grid);
+  } else {
+    window.addEventListener('resize', equalise);
+  }
 })();
 </script>
 <?php require __DIR__ . '/partials/packages/_js.php'; ?>

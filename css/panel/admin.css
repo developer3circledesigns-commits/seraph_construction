@@ -30,7 +30,7 @@
   padding: 20px 20px 18px;
   border-bottom: 1px solid var(--color-border);
 }
-.sidebar__brand img { height: 34px; width: auto; }
+.sidebar__brand img { height: 34px; width: auto; max-width: 100%; object-fit: contain; object-position: left center; }
 .sidebar__brand span { font-family: var(--font-heading); font-weight: 520; color: var(--color-text); font-size: 0.95rem; letter-spacing: 0.06em; }
 
 .sidebar__nav { flex: 1; padding: 16px 12px; overflow-y: auto; }

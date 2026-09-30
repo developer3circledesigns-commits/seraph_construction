@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="auth-body">
   <div class="auth-card">
     <div class="auth-card__brand">
-      <img src="/images/seraph-logo@204w.webp" alt="Seraph Build Construction" width="170" height="40">
+      <img src="/images/seraph-logo@280w.webp" srcset="/images/seraph-logo@140w.webp 140w, /images/seraph-logo@186w.webp 186w, /images/seraph-logo@280w.webp 280w, /images/seraph-logo@372w.webp 372w, /images/seraph-logo@480w.webp 480w, /images/seraph-logo@620w.webp 620w" sizes="211px" alt="Seraph Build Construction" width="211" height="40" decoding="async">
       <div>
         <span class="auth-card__label"><i class="fa-solid fa-user-check"></i> Client Portal</span>
         <h1>Track your construction project</h1>

@@ -28,7 +28,7 @@
   flex: 1 1 auto;
   overflow: hidden;
 }
-.client-topbar__brand img { height: 30px; flex-shrink: 0; }
+.client-topbar__brand img { height: 30px; width: auto; max-width: min(159px, 42vw); flex-shrink: 0; object-fit: contain; object-position: left center; }
 .client-topbar__brand span {
   font-family: var(--font-heading);
   font-weight: 520;
@@ -153,5 +153,6 @@
 
 @media (max-width: 640px) {
   .client-topbar { padding: 0 16px; gap: 10px; }
+  .client-topbar__brand img { height: 26px; max-width: min(137px, 38vw); }
   .client-content { padding: 24px 16px 60px; }
 }

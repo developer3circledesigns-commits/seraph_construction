@@ -28,7 +28,7 @@ $title = $title ?? 'My Portal';
 <body>
 <header class="client-topbar">
   <div class="client-topbar__brand">
-    <img src="/images/seraph-logo@204w.webp" alt="Seraph Build" width="128" height="30">
+    <img src="/images/seraph-logo@280w.webp" srcset="/images/seraph-logo@140w.webp 140w, /images/seraph-logo@186w.webp 186w, /images/seraph-logo@280w.webp 280w, /images/seraph-logo@372w.webp 372w, /images/seraph-logo@480w.webp 480w, /images/seraph-logo@620w.webp 620w" sizes="(max-width: 480px) 137px, 159px" alt="Seraph Build" width="159" height="30" decoding="async">
     <span>Client Portal</span>
   </div>
   <div class="client-topbar__right">

@@ -34,7 +34,7 @@ $unread = Notification::unreadCount('admin', (int)$user['id']);
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar__brand">
-      <img src="/images/seraph-logo@204w.webp" alt="Seraph Build" width="145" height="34">
+      <img src="/images/seraph-logo@280w.webp" srcset="/images/seraph-logo@140w.webp 140w, /images/seraph-logo@186w.webp 186w, /images/seraph-logo@280w.webp 280w, /images/seraph-logo@372w.webp 372w, /images/seraph-logo@480w.webp 480w, /images/seraph-logo@620w.webp 620w" sizes="180px" alt="Seraph Build" width="180" height="34" decoding="async">
     </div>
 
     <nav class="sidebar__nav">

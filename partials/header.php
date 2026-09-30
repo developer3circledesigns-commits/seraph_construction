@@ -28,7 +28,7 @@ $metaKeywords    = $pageMeta['keywords'] ?? 'luxury construction, architecture, 
 $metaRobots      = $pageMeta['robots'] ?? 'index, follow';
 $ogTitle         = $pageMeta['og_title'] ?? ($site['name'] . ' | Premium Luxury Architecture');
 $ogDescription   = $pageMeta['og_description'] ?? 'Building premium spaces. Creating timeless experiences. Luxury construction, interiors & architecture.';
-$ogImagePath     = $pageMeta['og_image'] ?? '/images/hero-front@1680w.webp';
+$ogImagePath     = $pageMeta['og_image'] ?? '/images/hero-seraph@1672w.webp';
 $ogImageAlt      = $pageMeta['og_image_alt'] ?? 'Luxury modern villa exterior — SERAPH BUILD CONSTRUCTION';
 $ogImage         = preg_match('#^https?://#i', $ogImagePath) ? $ogImagePath : $ogBase . $ogImagePath;
 ?>
@@ -54,8 +54,8 @@ $ogImage         = preg_match('#^https?://#i', $ogImagePath) ? $ogImagePath : $o
   <meta property="og:description" content="<?php echo htmlspecialchars($ogDescription); ?>">
   <meta property="og:url" content="<?php echo htmlspecialchars($ogUrl); ?>">
   <meta property="og:image" content="<?php echo htmlspecialchars($ogImage); ?>">
-  <meta property="og:image:width" content="1680">
-  <meta property="og:image:height" content="945">
+  <meta property="og:image:width" content="1672">
+  <meta property="og:image:height" content="942">
   <meta property="og:image:alt" content="<?php echo htmlspecialchars($ogImageAlt); ?>">
   <meta property="og:site_name" content="SERAPH BUILD CONSTRUCTION">
   <meta property="og:locale" content="en_IN">
@@ -77,8 +77,10 @@ $ogImage         = preg_match('#^https?://#i', $ogImagePath) ? $ogImagePath : $o
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
   <!-- Google Fonts (non-render-blocking: preloaded here, applied by js/async-css.js after parse) -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"></noscript>
+  <!-- Montserrat 800 is loaded for the topbar nav labels; without it the
+       800 request falls back to faux-bold and renders uneven. -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap"></noscript>
 
   <!-- Font Awesome (non-render-blocking: preloaded here, applied by js/async-css.js after parse) -->
   <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -87,11 +89,10 @@ $ogImage         = preg_match('#^https?://#i', $ogImagePath) ? $ogImagePath : $o
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
-<?php if ($ogImagePath === '/images/hero-front@1680w.webp'): ?>
-  <link rel="preload" as="image" type="image/webp" href="images/hero-front@1120w.webp"
-        imagesrcset="images/hero-front@1120w.webp 1120w, images/hero-front@1680w.webp 1680w"
-        imagesizes="(min-width: 1400px) 1200px, 100vw">
-<?php endif; ?>
+<?php /* Hero LCP uses fetchpriority="high" in partials/sections/hero.php. A manual
+       <link rel=preload> here caused a duplicate network fetch of the hero
+       (and an aborted ~200KB request on mobile), so it is intentionally not
+       emitted — the preload scanner already finds the hero img immediately. */ ?>
   <link rel="stylesheet" href="css/responsive.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="css/responsive.css"></noscript>
 
