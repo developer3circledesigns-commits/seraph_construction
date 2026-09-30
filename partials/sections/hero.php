@@ -5,12 +5,10 @@
 <section id="hero" class="blur-panel" data-blur>
   <div class="blur-panel__media">
     <img
-      src="images/hero-seraph@1280w.webp"
-      srcset="images/hero-seraph@640w.webp 640w, images/hero-seraph@960w.webp 960w, images/hero-seraph@1280w.webp 1280w, images/hero-seraph@1672w.webp 1672w"
-      sizes="100vw"
-      alt="Luxury modern villa exterior at dusk with architectural lighting"
+      src="images/Hero%20Banner_seraph.png"
+      alt="Seraph Build Construction — luxury construction, interior design and commercial projects"
       width="1672"
-      height="942"
+      height="941"
       fetchpriority="high"
       decoding="async"
     >

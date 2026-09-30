@@ -568,11 +568,17 @@ h1, h2, h3, h4 {
   background: linear-gradient(180deg, rgba(0, 20, 49, 0.65), rgba(0, 20, 49, 0.4));
 }
 
-/* --- Homepage hero: same backdrop as Home Plan ---------------------------
-   The hero carries no override, so it takes the shared panel shade above -
-   the same linear-gradient the Home Plan images use in
-   .kitchen-sequence__img::after. Delete this note and the hero changes with
-   the other panels rather than drifting to its own tint. */
+/* --- Homepage hero: heavier shade than the other blur panels --------------
+   Every other panel runs a photograph: the shared 0.65 -> 0.40 gradient above
+   was tuned against dark villa imagery, where even the lightest sky sits far
+   below the copy. Hero Banner_seraph.png is a 1672x941 (16:9) banner that
+   carries near-white highlights inside the copy block (peak luminance 0.99),
+   and under the shared shade the worst pixel behind the text measured only
+   3.34:1 - short of the 4.5:1 the 15px paragraph and 11px eyebrow need.
+   Lifting both stops to 0.72 -> 0.60 clears it at 5.63:1. */
+#hero .blur-panel__media::after {
+  background: linear-gradient(180deg, rgba(0, 20, 49, 0.72), rgba(0, 20, 49, 0.6));
+}
 
 /* The hero section now fills the full viewport height below the fixed topbar.
    The body padding-top accounts for the topbar height. */
