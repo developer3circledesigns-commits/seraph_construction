@@ -114,6 +114,24 @@
     /* ---------- Topbar scroll state ---------- */
     var topbar = document.querySelector('.topbar');
     if (topbar) {
+      /* The bar is sticky, so the hero below it is sized from the space the
+         bar actually leaves: 18px padding + 42px lockup + 1px border on
+         desktop, but the padding, lockup and CTA all change at every
+         breakpoint. Measure it rather than hard-coding a number per band,
+         and re-measure when the bar resizes (font swap, breakpoint change,
+         mobile menu opening) so the hero never drifts out of step. */
+      var publishTopbarHeight = function () {
+        document.documentElement.style.setProperty(
+          '--topbar-h', topbar.offsetHeight + 'px'
+        );
+      };
+      publishTopbarHeight();
+      if (window.ResizeObserver) {
+        new window.ResizeObserver(publishTopbarHeight).observe(topbar);
+      } else {
+        window.addEventListener('resize', publishTopbarHeight, { passive: true });
+      }
+
       var topbarTicking = false;
       var onScroll = function () {
         if (topbarTicking) { return; }

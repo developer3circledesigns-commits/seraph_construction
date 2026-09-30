@@ -127,17 +127,20 @@
 
 /* ---------- 2. Page frame + sticky offsets ---------------------- */
 
-/* The live stylesheet sets `body { overflow-x: hidden }`, and `hidden`
+/* The live stylesheet used to set `body { overflow-x: hidden }`, and `hidden`
    makes <body> a scroll container that never scrolls — which silently
-   kills every `position: sticky` on the page. `clip` clips exactly like
-   `hidden` but does *not* create a scroll container, so sticky works
-   again. Scoped with :has() so the live pages are untouched. */
+   killed every `position: sticky` on the page, the sticky topbar included.
+   It now sets `clip` instead, so this :has() rule is only kept as a
+   belt-and-braces for anyone who overrides the live value. */
 body:has(> .sk) { overflow-x: clip; }
 
 .sk {
   display: block;
   min-height: 60vh;
-  padding-top: var(--sk-head);
+  /* No padding for the site header: .topbar is sticky and sits in the flow,
+     so the page already begins underneath it. --sk-head is still live and
+     still measured — it is what --sk-sticky parks the toolbar against. */
+  padding-top: 0;
   padding-bottom: 0;
   overflow-x: clip;
   position: relative;

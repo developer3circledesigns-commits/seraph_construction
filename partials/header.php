@@ -89,30 +89,22 @@ $ogImage         = preg_match('#^https?://#i', $ogImagePath) ? $ogImagePath : $o
   <!-- Font Awesome (non-render-blocking: preloaded here, applied by js/async-css.js after parse) -->
   <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
-  <script src="js/async-css.js" defer></script>
+  <script src="<?php echo e(asset('js/async-css.js')); ?>" defer></script>
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="css/style.css">
+  <!-- Custom CSS — asset() adds the mtime token, see helpers.php -->
+  <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>">
 <?php /* Hero LCP uses fetchpriority="high" in partials/sections/hero.php. A manual
-       <link rel=preload> here caused a duplicate network fetch of the hero
+       <link rel=preload> here caused a duplicate network fetch of the hero img
        (and an aborted ~200KB request on mobile), so it is intentionally not
        emitted — the preload scanner already finds the hero img immediately. */ ?>
-  <link rel="stylesheet" href="css/responsive.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="css/responsive.css"></noscript>
+  <link rel="stylesheet" href="<?php echo e(asset('css/responsive.css')); ?>" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="<?php echo e(asset('css/responsive.css')); ?>"></noscript>
 
 <?php
 // Optional extra stylesheets declared by the page itself, e.g.
 // packages.php: 'styles' => ['css/packages/packages-base.css'].
-// .htaccess serves CSS with a one-year immutable cache, so a ?v=
-// derived from the file's mtime is what keeps an edited stylesheet
-// from being served stale.
 foreach ((array) ($pageMeta['styles'] ?? []) as $skStyle) {
-    $skHref = (string) $skStyle;
-    $skPath = ROOT_PATH . '/' . ltrim($skHref, '/');
-    if (is_file($skPath)) {
-        $skHref .= '?v=' . filemtime($skPath);
-    }
-    echo '  <link rel="stylesheet" href="' . htmlspecialchars($skHref) . '">' . "\n";
+    echo '  <link rel="stylesheet" href="' . e(asset((string) $skStyle)) . '">' . "\n";
 }
 
 // Optional extra webfonts for a page that needs to break from the

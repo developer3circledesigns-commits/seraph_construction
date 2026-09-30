@@ -92,10 +92,10 @@ $contactUrl  = $site['contact_url'] ?? 'contact.php';
   <!-- Scripts — Layout 13 uses GSAP + ScrollTrigger + Lenis (smooth scroll) -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-  <script src="js/vendor/lenis.min.js" defer></script>
-  <script src="js/smooth-scroll.js" defer></script>
-  <script src="js/responsive-images.js" defer></script>
-  <script src="js/animations.js" defer></script>
-  <script src="js/main.js" defer></script>
+  <script src="<?php echo e(asset('js/vendor/lenis.min.js')); ?>" defer></script>
+  <script src="<?php echo e(asset('js/smooth-scroll.js')); ?>" defer></script>
+  <script src="<?php echo e(asset('js/responsive-images.js')); ?>" defer></script>
+  <script src="<?php echo e(asset('js/animations.js')); ?>" defer></script>
+  <script src="<?php echo e(asset('js/main.js')); ?>" defer></script>
 </body>
 </html>

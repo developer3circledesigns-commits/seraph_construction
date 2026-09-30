@@ -43,25 +43,32 @@
     /* Full-bleed panels: scrub scale/opacity only (not filter — causes scroll jank). */
     gsap.utils.toArray('[data-blur]').forEach(function (panel) {
       var img = panel.querySelector('img');
-      if (!img) {
-        return;
-      }
+      var isHero = panel.id === 'hero';
 
-      gsap.fromTo(img,
-        { scale: 1.12, opacity: 0.88 },
-        {
-          scale: 1,
-          opacity: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: panel,
-            start: 'top bottom',
-            end: 'center center',
-            scrub: 0.35,
-            fastScrollEnd: true,
-          },
-        }
-      );
+      /* The hero is excluded from the scrub. It is the first thing on the
+         page, so it is already past `top bottom` before the first scroll and
+         the tween can never run — it just parks the photo at 0.88 opacity /
+         1.12 scale, which is 0.994 / 1.006 in practice. That left the hero's
+         shared blue backdrop sitting on a slightly transparent image, so it
+         read lighter than the identical backdrop on the Home Plan panels,
+         whose first image is a clean opacity 1 / no scale. */
+      if (img && !isHero) {
+        gsap.fromTo(img,
+          { scale: 1.12, opacity: 0.88 },
+          {
+            scale: 1,
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: panel,
+              start: 'top bottom',
+              end: 'center center',
+              scrub: 0.35,
+              fastScrollEnd: true,
+            },
+          }
+        );
+      }
 
       var content = panel.querySelector('.blur-panel__content');
       if (content) {

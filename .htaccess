@@ -64,7 +64,13 @@ DirectoryIndex index.php
   ExpiresActive On
   ExpiresDefault "access plus 1 hour"
 
-  ExpiresByType text/html "access plus 1 hour"
+  # HTML is revalidated on every load, never served from cache. It carries the
+  # ?v=<mtime> token on every stylesheet and script, so it has to be the
+  # freshest thing the browser sees: a cached page hands out last hour's
+  # tokens, which point at the previous year-long-cached CSS and JS, and an
+  # edited stylesheet then never reaches the browser at all.
+  ExpiresByType text/html "access plus 0 seconds"
+
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
   ExpiresByType application/json "access plus 1 year"
@@ -84,8 +90,15 @@ DirectoryIndex index.php
   <FilesMatch "\.(webp|jpe?g|png|svg|ico|woff2?|ttf)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
+  # Safe because the URL changes whenever the file does — see asset() in
+  # api/functions/helpers.php, which appends ?v=<mtime> to every local .css
+  # and .js reference. An edited file gets a new URL and is fetched once; an
+  # untouched file keeps its cached copy.
   <FilesMatch "\.(css|js)$">
     Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+  <FilesMatch "\.php$">
+    Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
 

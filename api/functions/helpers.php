@@ -11,6 +11,33 @@ function e(mixed $value): string
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
 
+/**
+ * Append a cache-busting token to a local asset path.
+ *
+ * .htaccess serves .css and .js with `Cache-Control: public, max-age=31536000`
+ * — a year. Without a token in the URL an edited stylesheet or script is never
+ * re-fetched, so the deploy succeeds and the browser keeps rendering the old
+ * file. The mtime changes on every edit, so a new token means a new URL and the
+ * year-long cache is still fully used for everything that has not changed.
+ *
+ * External URLs (CDN fonts, Font Awesome) are returned untouched: their cache
+ * headers are not ours to manage, and appending a token there would only break
+ * a long-lived SRI hash.
+ */
+function asset(string $path): string
+{
+    if (preg_match('#^(https?:)?//#i', $path) || $path === '') {
+        return $path;
+    }
+
+    $file = ROOT_PATH . '/' . ltrim($path, '/');
+    if (!is_file($file)) {
+        return $path;
+    }
+
+    return $path . '?v=' . filemtime($file);
+}
+
 /** Return JSON response and stop. */
 function json_response($data, int $status = 200): void
 {

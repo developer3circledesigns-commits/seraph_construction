@@ -47,7 +47,9 @@ function truncateDesc(string $text, int $length = 80): array
 ?>
 <main id="main-content" class="projects-page">
   <style>
-    .projects-page { padding: 7rem 0 5rem; }
+    /* 2rem, not 7rem: the topbar is sticky and occupies its own space in the
+       flow, so the page no longer has to pad past it. */
+    .projects-page { padding: 2rem 0 5rem; }
     .projects-page__head { max-width: 1320px; margin: 0 auto; padding: 0 2rem; }
     .projects-page__head .eyebrow { color: #C79A56; font-size: 0.78rem; letter-spacing: 0.35em; text-transform: uppercase; font-weight: 600; }
     .projects-page__head h1 { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: clamp(2.4rem, 5vw, 4rem); color: #f4efe8; margin: 0.8rem 0 1rem; }

@@ -55,7 +55,12 @@ body {
   color: var(--gray);
   font-family: var(--font);
   line-height: 1.7;
-  overflow-x: hidden;
+  /* `clip`, not `hidden`: `hidden` would make <body> a scroll container that
+     never scrolls, which silently kills every `position: sticky` inside it -
+     the sticky topbar and .projects-story__inner both depend on this. `clip`
+     clips exactly the same overflow without creating a scroll container. */
+  overflow-x: clip;
+  padding-top: var(--topbar-h, 79px);
 }
 
 img {
@@ -138,6 +143,8 @@ h1, h2, h3, h4 {
 /* =====================================================
    TOPBAR
    ===================================================== */
+/* Fixed positioning to keep the topbar always visible at the top,
+   with the hero section starting below it. */
 .topbar {
   position: fixed;
   top: 0;
@@ -546,7 +553,11 @@ h1, h2, h3, h4 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.12);
+  /* No scale: the zoom only existed as the starting frame of the
+     scroll-scrubbed reveal, which the hero never ran (see js/animations.js).
+     Left in place it cropped 12% off the photo and left the hero's image in a
+     different state from the Home Plan panels it shares a backdrop with. */
+  transform: none;
   will-change: transform, opacity;
 }
 
@@ -557,16 +568,20 @@ h1, h2, h3, h4 {
   background: linear-gradient(180deg, rgba(0, 20, 49, 0.65), rgba(0, 20, 49, 0.4));
 }
 
-/* --- Homepage hero: no shade ---------------------------------------------
-   The shared rule above also styles the Home Plan and Interiors panels, so
-   the override is scoped to #hero. The photo runs edge to edge with no tint
-   over it. */
-#hero .blur-panel__media::after {
-  background: none;
+/* --- Homepage hero: same backdrop as Home Plan ---------------------------
+   The hero carries no override, so it takes the shared panel shade above -
+   the same linear-gradient the Home Plan images use in
+   .kitchen-sequence__img::after. Delete this note and the hero changes with
+   the other panels rather than drifting to its own tint. */
+
+/* The hero section now fills the full viewport height below the fixed topbar.
+   The body padding-top accounts for the topbar height. */
+#hero {
+  height: 100dvh;
 }
 
-/* The whole hero copy is plain white with no rim, so it reads as flat type
-   sitting straight on the photo. */
+/* The whole hero copy is plain white with no rim; the backdrop above is what
+   carries the contrast, so no text-shadow is needed on top of it. */
 #hero .hero__content h1,
 #hero .hero__content h2,
 #hero .hero__content .eyebrow,
@@ -2583,8 +2598,11 @@ html.lenis,html.lenis body{height:auto}
 /* =====================================================
    CONTACT PAGE — quote request form
    ===================================================== */
+/* 2rem, not 7rem: the topbar is sticky and takes its own space in the flow
+   now, so the page no longer has to pad past it. 7rem - the 79px bar left
+   33px of visible gap, which is what this restores. */
 .contact-page {
-  padding: 7rem 2rem 5rem;
+  padding: 2rem 2rem 5rem;
   max-width: 1320px;
   margin: 0 auto;
 }
