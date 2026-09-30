@@ -1182,16 +1182,6 @@
     min-width: 0;
   }
 
-  /* Phones crop the hero much tighter, which lands the copy over the
-     brightest part of the photo, so the shade needs a little more here than
-     it does on a wide screen. The copy is centred, so the overlay stays
-     symmetric rather than drifting to one side. */
-  #hero .blur-panel__media::after {
-    background:
-      linear-gradient(0deg, rgba(0, 20, 49, 0.42), rgba(0, 20, 49, 0) 20%),
-      linear-gradient(180deg, rgba(0, 20, 49, 0.68), rgba(0, 20, 49, 0.44));
-  }
-
   .blur-card {
     grid-template-columns: 1fr;
     gap: 20px;

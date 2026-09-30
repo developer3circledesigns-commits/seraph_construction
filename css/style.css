@@ -557,72 +557,22 @@ h1, h2, h3, h4 {
   background: linear-gradient(180deg, rgba(0, 20, 49, 0.65), rgba(0, 20, 49, 0.4));
 }
 
-/* --- Homepage hero: lighter shade than the other blur panels -------------
+/* --- Homepage hero: no shade ---------------------------------------------
    The shared rule above also styles the Home Plan and Interiors panels, so
-   the reduction is scoped to #hero.
-
-   The copy sits directly on the photo with nothing behind it - no scrim, no
-   panel, no box. Because the shadows below are too tight to darken the
-   background, the shade is what carries the contrast, so it sits a little
-   heavier than a copy with wide halos would need. Measured: white on the
-   paragraph reaches 5.05:1 across the copy with no shadow at all, and
-   5.2-6.2:1 with the rim in place. */
+   the override is scoped to #hero. The photo runs edge to edge with no tint
+   over it. */
 #hero .blur-panel__media::after {
-  background:
-    /* re-darken the lower strip so the scroll cue stays readable */
-    linear-gradient(0deg, rgba(0, 20, 49, 0.42), rgba(0, 20, 49, 0) 20%),
-    linear-gradient(180deg, rgba(0, 20, 49, 0.62), rgba(0, 20, 49, 0.34));
+  background: none;
 }
 
-/* Shadows are deliberately kept to a 5px radius. Wider blurs were measured
-   still darkening the photo 30px past the last glyph, and around a block of
-   text that halo merges into a soft panel - the same box the scrim used to
-   be, just blurrier. A tight rim cannot do that: it only touches the pixels
-   the letterforms actually cover, so nothing is visible behind the words.
-   Everything beyond ~8px is left to the full-bleed shade above, which spans
-   the whole panel and so never reads as a box behind the copy. */
+/* The whole hero copy is plain white with no rim, so it reads as flat type
+   sitting straight on the photo. */
 #hero .hero__content h1,
-#hero .hero__content h2 {
-  text-shadow:
-    0 0 2px rgba(0, 20, 49, 0.95),
-    0 1px 2px rgba(0, 20, 49, 0.88),
-    0 0 5px rgba(0, 20, 49, 0.55);
-}
-
-/* 15px text has strokes only 1-2px wide, so the rim has to sit ON the glyph
-   rather than around it. Repeating the 1px layer stacks two half-transparent
-   passes into a near-opaque edge; a single pass leaves bright gaps in the
-   counters and between the letters. */
-#hero .hero__content p,
-#hero .hero__content .eyebrow {
-  text-shadow:
-    0 0 1px rgba(0, 20, 49, 0.98),
-    0 0 1px rgba(0, 20, 49, 0.98),
-    0 0 2px rgba(0, 20, 49, 0.92),
-    0 0 4px rgba(0, 20, 49, 0.70),
-    0 0 6px rgba(0, 20, 49, 0.45);
-}
-
-/* 11px caps are the smallest thing on the panel. The brand token #E7C759 is
-   only 3.6:1 as a solid against this image and could not reach 4.5:1 however
-   dark the shade got, so the gold is lightened to #F7ECC4, which keeps the
-   warm cast and clears it at every breakpoint. */
-#hero .hero__content .eyebrow {
-  color: #f7ecc4;
-  text-shadow:
-    0 0 1px rgba(0, 20, 49, 1),
-    0 0 1px rgba(0, 20, 49, 1),
-    0 0 1px rgba(0, 20, 49, 1),
-    0 0 2px rgba(0, 20, 49, 0.96),
-    0 0 3px rgba(0, 20, 49, 0.88),
-    0 0 5px rgba(0, 20, 49, 0.70),
-    0 0 6px rgba(0, 20, 49, 0.50);
-}
-
-/* With the shade lifted, --gray (#CFCFCF) only reached 3.70:1 at 14-16px.
-   Near-white is what carries the paragraph over AA here. */
-#hero .blur-panel__content p {
-  color: rgba(255, 255, 255, 0.92);
+#hero .hero__content h2,
+#hero .hero__content .eyebrow,
+#hero .hero__content p {
+  color: #fff;
+  text-shadow: none;
 }
 
 /* --muted (#9D9D9D) measured 1.63:1 over the image even before this change,
