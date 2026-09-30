@@ -153,7 +153,7 @@ h1, h2, h3, h4 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 28px;
+  padding: 14px 28px;
   z-index: 1000;
   background: #ffffff;
   backdrop-filter: blur(12px);
