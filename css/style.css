@@ -577,7 +577,7 @@ h1, h2, h3, h4 {
    3.34:1 - short of the 4.5:1 the 15px paragraph and 11px eyebrow need.
    Lifting both stops to 0.72 -> 0.60 clears it at 5.63:1. */
 #hero .blur-panel__media::after {
-  background: linear-gradient(180deg, rgba(0, 20, 49, 0.72), rgba(0, 20, 49, 0.6));
+  background: linear-gradient(to right, transparent 40%, rgba(0, 20, 49, 0.35) 65%, rgba(0, 20, 49, 0.72) 100%);
 }
 
 /* The hero section now fills the full viewport height below the fixed topbar.

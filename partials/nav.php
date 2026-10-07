@@ -72,9 +72,10 @@ $isCurrentPage = static function (string $url) use ($currentPage): bool {
     <span class="side-nav__label">Scroll</span>
     <ul class="side-nav__list">
       <?php foreach ($site['nav'] as $href => $label): ?>
+        <?php if ($href === 'packages'): continue; endif; // page link, not an on-page section — it rendered an extra dead dot ?>
         <li><a href="<?php echo htmlspecialchars($navLinks[$href]); ?>" class="side-nav__link" data-side-nav<?php if ($isCurrentPage($navLinks[$href])): ?> aria-current="page"<?php endif; ?>><span class="side-nav__dot"></span><span class="side-nav__name"><?php echo htmlspecialchars($label); ?></span></a></li>
       <?php endforeach; ?>
-      <li><a href="<?php echo $contactUrl; ?>" class="side-nav__link" data-side-nav><span class="side-nav__dot"></span><span class="side-nav__name">Contact</span></a></li>
+      <li><a href="<?php echo $currentPage === 'index' ? '#contact' : htmlspecialchars($contactUrl); ?>" class="side-nav__link" data-side-nav><span class="side-nav__dot"></span><span class="side-nav__name">Contact</span></a></li>
     </ul>
     <span class="side-nav__progress" id="sideNavProgress"></span>
   </nav>

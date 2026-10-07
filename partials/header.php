@@ -23,7 +23,7 @@ $ogUrl    = $ogBase . ($_SERVER['REQUEST_URI'] ?? '/');
 $pageMeta = is_array($pageMeta ?? null) ? $pageMeta : [];
 
 $metaTitle       = $pageMeta['title'] ?? ($site['name'] . ' | ' . $site['tagline']);
-$metaDescription = $pageMeta['description'] ?? 'SERAPH BUILD CONSTRUCTION delivers premium construction, interior design, and commercial projects across Chennai with timeless craftsmanship.';
+$metaDescription = $pageMeta['description'] ?? 'Seraph Build Construction delivers premium construction, interior design, and commercial projects across Chennai with timeless craftsmanship.';
 $metaKeywords    = $pageMeta['keywords'] ?? 'luxury construction, architecture, interior design, modular kitchen, premium materials, commercial construction';
 $metaRobots      = $pageMeta['robots'] ?? 'index, follow';
 $ogTitle         = $pageMeta['og_title'] ?? ($site['name'] . ' | Premium Luxury Architecture');
@@ -121,7 +121,7 @@ foreach ((array) ($pageMeta['fonts'] ?? []) as $skFont) {
   {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "SERAPH BUILD CONSTRUCTION",
+    "name": "Seraph Build Construction",
     "description": "Premium luxury construction, interior design, and commercial company.",
     "founder": {
       "@type": "Person",

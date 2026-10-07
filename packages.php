@@ -389,6 +389,19 @@ require __DIR__ . '/partials/header.php';
   }
 })();
 </script>
+<button type="button" id="calcFab" class="calc-fab" aria-label="Open cost calculator">
+  <i class="fa-solid fa-calculator" aria-hidden="true"></i>
+</button>
+
+<style>
+/* z-index above every other fixed element on the page so it is never
+   covered by the sticky topbar or the specification toolbar. */
+.calc-fab{position:fixed;right:24px;bottom:24px;z-index:9990;width:56px;height:56px;border:0;border-radius:50%;background:#E7C959;color:#001431;font-size:1.3rem;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .3s ease,transform .3s ease,visibility .3s ease}
+.calc-fab.is-visible{opacity:1;visibility:visible;transform:translateY(0)}
+.calc-fab.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+.calc-fab:hover{background:#F0DA8C}
+</style>
+
 <!-- ======================= COST CALCULATOR POPUP ======================= -->
 <div class="calc-pop" id="calcPop" role="dialog" aria-modal="true" aria-labelledby="calcTitle" hidden>
   <div class="calc-pop__backdrop" data-calc-close></div>
@@ -511,11 +524,13 @@ require __DIR__ . '/partials/header.php';
   document.getElementById('calcOpen').addEventListener('click', function () {
     pop.hidden = false;
     document.body.style.overflow = 'hidden';
+    if (window.lenis) { window.lenis.stop(); }
   });
 
   function close() {
     pop.hidden = true;
     document.body.style.overflow = '';
+    if (window.lenis) { window.lenis.start(); }
   }
   pop.querySelectorAll('[data-calc-close]').forEach(function (el) {
     el.addEventListener('click', close);
@@ -577,6 +592,46 @@ require __DIR__ . '/partials/header.php';
     inp.addEventListener('input', calc);
   });
   setFloors();
+})();
+
+/* Floating calculator button (bottom-right).
+
+   Lives after the modal markup on purpose: it needs #calcPop to exist at
+   bind time, and an earlier placement silently returned early — the button
+   then kept `visibility: hidden` forever and appeared to do nothing.
+
+   Scroll position is read from Lenis when it is present, but the listener
+   is attached to the native scroll event either way: this script runs
+   before js/smooth-scroll.js (both are deferred/inline at parse time), so
+   window.lenis does not exist yet, and Lenis drives real window scroll,
+   which does fire native scroll events. */
+(function () {
+  var fab = document.getElementById('calcFab');
+  var pop = document.getElementById('calcPop');
+  if (!fab || !pop) { return; }
+
+  function onScroll() {
+    var y = window.lenis ? window.lenis.scroll : (window.scrollY || window.pageYOffset);
+    fab.classList.toggle('is-visible', y > 120);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+
+  /* The button is chrome over the page, never over the dialog. */
+  var fabObserve = function () {
+    fab.classList.toggle('is-hidden', !pop.hidden);
+  };
+  new MutationObserver(fabObserve).observe(pop, { attributes: true, attributeFilter: ['hidden'] });
+  fabObserve();
+
+  fab.addEventListener('click', function () {
+    pop.hidden = false;
+    document.body.style.overflow = 'hidden';
+    if (window.lenis) { window.lenis.stop(); }
+    onScroll();
+  });
 })();
 </script>
 

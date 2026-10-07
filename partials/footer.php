@@ -8,7 +8,7 @@ $homePrefix  = ($currentPage === 'index' || $currentPage === '') ? '' : 'index.p
 $contactUrl  = $site['contact_url'] ?? 'contact.php';
 ?>
   <!-- 7. FOOTER — Footer 02 marquee band + original footer content -->
-  <footer class="site-footer footer-02">
+  <footer class="site-footer footer-02" id="contact">
     <div class="marquee" aria-hidden="true">
       <div class="marquee__track" id="marqueeTrack">
         <span class="marquee__item">SERAPH <em>&bull;</em> BUILD <em>&bull;</em></span>

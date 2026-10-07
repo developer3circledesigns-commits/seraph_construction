@@ -36,7 +36,12 @@
               if (!t.vars || !t.vars.pin) { continue; }
               var triggerEl = (t.trigger && t.trigger.nodeType === 1) ? t.trigger : null;
               if (triggerEl === sec ||
-                  (sec.id && triggerEl && triggerEl.id === sec.id)) {
+                  (sec.id && triggerEl && triggerEl.id === sec.id) ||
+                  (triggerEl && typeof sec.contains === 'function' && sec.contains(triggerEl))) {
+                /* For pinned horizontal sections t.start is the true pin
+                   start; the section's box while pinned sits at its pinned
+                   offset, so a getBoundingClientRect fallback would be off
+                   by the current scroll position. */
                 start = t.start;
                 break;
               }
@@ -59,6 +64,17 @@
             active = i;
           }
         }
+        /* A short last section (testimonials) plus the footer can sit entirely
+           above the viewport midpoint all the way to the page bottom, so the
+           midpoint test alone never marks it active. Force the last real
+           section when the page is scrolled to its end. */
+        if (scrollY + window.innerHeight >= pageHeight - 4) {
+          for (var j = sideNavSections.length - 1; j >= 0; j--) {
+            if (sideNavSections[j]) { active = j; break; }
+          }
+        }
+        var hasAny = sideNavSections.some(function (s) { return !!s; });
+        if (!hasAny) { return; }
         sideNavLinks.forEach(function (link, i) {
           link.classList.toggle('is-active', i === active);
         });

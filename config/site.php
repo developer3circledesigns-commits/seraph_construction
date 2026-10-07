@@ -5,7 +5,7 @@
  */
 
 return [
-    'name'     => 'SERAPH BUILD CONSTRUCTION',
+    'name'     => 'Seraph Build Construction',
     'tagline'  => 'Premium Luxury Architecture & Design',
     'since'    => '2005',
     'email'    => 'seraphbuildconstruction@gmail.com',
