@@ -56,6 +56,9 @@ require __DIR__ . '/partials/header.php';
             <a class="sk-btn sk-btn--wa" href="<?php echo htmlspecialchars($wa); ?>" target="_blank" rel="noopener noreferrer">
               <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp us
             </a>
+            <button type="button" class="sk-btn sk-btn--ghost" id="calcOpen">
+              <i class="fa-solid fa-calculator" aria-hidden="true"></i> Cost Calculator
+            </button>
           </div>
         </div>
 
@@ -386,5 +389,196 @@ require __DIR__ . '/partials/header.php';
   }
 })();
 </script>
+<!-- ======================= COST CALCULATOR POPUP ======================= -->
+<div class="calc-pop" id="calcPop" role="dialog" aria-modal="true" aria-labelledby="calcTitle" hidden>
+  <div class="calc-pop__backdrop" data-calc-close></div>
+  <div class="calc-pop__box">
+    <button type="button" class="calc-pop__x" data-calc-close aria-label="Close calculator">&times;</button>
+    <h2 class="sk-h2" id="calcTitle" style="font-size:1.5rem;margin-bottom:.25rem">Home Construction Cost Calculator</h2>
+    <p class="sk-lede sk-lede--sm" style="margin-bottom:1.25rem">You can arrive at your construction estimate here</p>
+
+    <div class="calc-pop__controls">
+      <label>No. of Floors
+        <select id="calcFloors" class="calc-pop__sel">
+          <option value="1">Ground</option>
+          <option value="2">G + 1</option>
+          <option value="3">G + 2</option>
+          <option value="4">G + 3</option>
+          <option value="5">G + 4</option>
+          <option value="6">G + 5</option>
+        </select>
+      </label>
+      <label>Package
+        <select id="calcPkg" class="calc-pop__sel">
+          <option value="2300">Premium Package @ &#8377;2,300/sqft</option>
+          <option value="2900">Elite Package @ &#8377;2,900/sqft</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="calc-pop__tablewrap">
+      <table class="calc-pop__tbl">
+        <thead>
+          <tr>
+            <th scope="col">Work</th>
+            <th scope="col">Area</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php $floorNames = ['Ground Floor', 'First Floor', 'Second Floor', 'Third Floor', 'Fourth Floor', 'Fifth Floor']; ?>
+          <?php for ($i = 1; $i <= 6; $i++): ?>
+          <tr<?php echo $i > 1 ? ' class="calc-floor" data-floor="' . $i . '" hidden' : ''; ?>>
+            <td>Enter required Built up Area for <?php echo $floorNames[$i - 1]; ?></td>
+            <td><input type="number" min="0" id="calcCost<?php echo $i; ?>" class="calc-pop__inp" placeholder="Area in sqft"></td>
+            <td>sqft</td>
+            <td>&#8377;<span class="calc-pkg-rate">2300</span></td>
+            <td>&#8377; <span id="calcPrice<?php echo $i; ?>">0</span></td>
+          </tr>
+          <?php endfor; ?>
+          <tr>
+            <td>Size of RCC Water Sump (a 4 member family requires 9000 ltr)</td>
+            <td><input type="number" min="0" id="calcSump" class="calc-pop__inp" placeholder="No. of Litres"></td>
+            <td>ltr</td>
+            <td>&#8377;30</td>
+            <td>&#8377; <span id="calcSumpPrice">0</span></td>
+          </tr>
+          <tr>
+            <td>Size of Septic Tank</td>
+            <td><input type="number" min="0" id="calcSeptic" class="calc-pop__inp" placeholder="No. of Litres"></td>
+            <td>ltr</td>
+            <td>&#8377;30</td>
+            <td>&#8377; <span id="calcSepticPrice">0</span></td>
+          </tr>
+          <tr>
+            <td>Plain Compound Wall</td>
+            <td>
+              <input type="number" min="0" id="calcWallL" class="calc-pop__inp" placeholder="Length" style="margin-bottom:4px">
+              <input type="number" min="0" id="calcWallH" class="calc-pop__inp" placeholder="Height">
+            </td>
+            <td>sqft</td>
+            <td>&#8377;425</td>
+            <td>&#8377; <span id="calcWallPrice">0</span></td>
+          </tr>
+          <tr class="calc-pop__total">
+            <td colspan="4" style="text-align:right"><b>Total Construction Cost</b></td>
+            <td><b>&#8377; <span id="calcTotal">0</span></b></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sk-actions" style="margin-top:1.25rem">
+      <a class="sk-btn sk-btn--primary" href="<?php echo htmlspecialchars($contact); ?>">
+        <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i> Get Free Estimate Now
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+.calc-pop[hidden]{display:none}
+.calc-pop{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem}
+.calc-pop__backdrop{position:absolute;inset:0;background:rgba(0,10,25,.78);backdrop-filter:blur(4px)}
+.calc-pop__box{position:relative;background:#0A2540;border:1px solid rgba(231,201,89,.35);color:#C3CDDC;max-width:1040px;width:100%;max-height:90vh;overflow:auto;padding:1.75rem;box-shadow:0 28px 60px -24px rgba(0,0,0,.8)}
+.calc-pop__box h2{color:#F2F5FA}
+.calc-pop__x{position:absolute;top:.9rem;right:1rem;border:0;background:transparent;font-size:1.6rem;line-height:1;cursor:pointer;color:#93A0B4}
+.calc-pop__x:hover{color:#E7C959}
+.calc-pop__controls{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1rem}
+.calc-pop__controls label{display:flex;flex-direction:column;gap:.35rem;font-weight:600;font-size:.9rem;color:#F2F5FA}
+.calc-pop__sel,.calc-pop__inp{width:100%;padding:.55rem .7rem;border:1px solid rgba(255,255,255,.2);background:#001431;color:#F2F5FA;font-size:.95rem}
+.calc-pop__sel:focus,.calc-pop__inp:focus{outline:none;border-color:#E7C959;box-shadow:0 0 0 3px rgba(231,201,89,.25)}
+.calc-pop__controls .calc-pop__sel{min-width:240px}
+.calc-pop__tbl{width:100%;border-collapse:collapse}
+.calc-pop__tbl th,.calc-pop__tbl td{border:1px solid rgba(255,255,255,.14);padding:.6rem .7rem;text-align:left;color:#C3CDDC}
+.calc-pop__tbl thead th{background:#001431;color:#E7C959;font-weight:700}
+.calc-pop__tbl tbody tr:hover{background:rgba(255,255,255,.05)}
+.calc-pop__inp{width:100%;min-width:130px}
+.calc-pop__total td{background:rgba(231,201,89,.12);color:#F2F5FA}
+.calc-pop .sk-btn--primary{background:#E7C959;color:#001431}
+.calc-pop .sk-btn--primary:hover{background:#F0DA8C}
+.calc-pop__tablewrap{overflow-x:auto}
+.calc-pop ::placeholder{color:#7E8CA6}
+</style>
+
+<script>
+(function () {
+  var pop = document.getElementById('calcPop');
+  if (!pop) { return; }
+
+  document.getElementById('calcOpen').addEventListener('click', function () {
+    pop.hidden = false;
+    document.body.style.overflow = 'hidden';
+  });
+
+  function close() {
+    pop.hidden = true;
+    document.body.style.overflow = '';
+  }
+  pop.querySelectorAll('[data-calc-close]').forEach(function (el) {
+    el.addEventListener('click', close);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !pop.hidden) { close(); }
+  });
+
+  var floorsSel = document.getElementById('calcFloors');
+  var pkgSel = document.getElementById('calcPkg');
+
+  function fmt(n) {
+    n = String(Math.round(n) || 0);
+    var last3 = n.slice(-3), rest = n.slice(0, -3);
+    if (rest !== '') { last3 = ',' + last3; }
+    return rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + last3;
+  }
+
+  function num(id) {
+    var v = parseFloat(document.getElementById(id).value);
+    return isNaN(v) || v < 0 ? 0 : v;
+  }
+
+  function setFloors() {
+    var n = parseInt(floorsSel.value, 10);
+    pop.querySelectorAll('tr.calc-floor').forEach(function (tr) {
+      tr.hidden = parseInt(tr.getAttribute('data-floor'), 10) > n;
+    });
+    calc();
+  }
+
+  function setPkg() {
+    var rate = pkgSel.value;
+    pop.querySelectorAll('.calc-pkg-rate').forEach(function (s) { s.textContent = rate; });
+    calc();
+  }
+
+  function calc() {
+    var rate = parseFloat(pkgSel.value) || 0;
+    var total = 0;
+    for (var i = 1; i <= 6; i++) {
+      var p = Math.round(num('calcCost' + i) * rate);
+      document.getElementById('calcPrice' + i).textContent = fmt(p);
+      total += p;
+    }
+    var sump = Math.round(num('calcSump') * 30);
+    var septic = Math.round(num('calcSeptic') * 30);
+    var wall = Math.round(num('calcWallL') * num('calcWallH') * 425);
+    document.getElementById('calcSumpPrice').textContent = fmt(sump);
+    document.getElementById('calcSepticPrice').textContent = fmt(septic);
+    document.getElementById('calcWallPrice').textContent = fmt(wall);
+    total += sump + septic + wall;
+    document.getElementById('calcTotal').textContent = fmt(total);
+  }
+
+  floorsSel.addEventListener('change', setFloors);
+  pkgSel.addEventListener('change', setPkg);
+  pop.querySelectorAll('.calc-pop__inp').forEach(function (inp) {
+    inp.addEventListener('input', calc);
+  });
+  setFloors();
+})();
+</script>
+
 <?php require __DIR__ . '/partials/packages/_js.php'; ?>
 <?php require __DIR__ . '/partials/footer.php'; ?>
