@@ -38,7 +38,8 @@ include __DIR__ . '/partials/header.php';
   </div>
 </div>
 
-<div class="card">
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:stretch">
+<div class="card" style="flex:1 1 260px;padding:14px 16px;margin-top:0">
   <div class="card__header">
     <h2>Contact Details</h2>
   </div>
@@ -54,11 +55,31 @@ include __DIR__ . '/partials/header.php';
   </div>
 </div>
 
-<div class="card">
+<?php $calcView = !empty($inquiry['calc_json']) ? json_decode((string)$inquiry['calc_json'], true) : null; ?>
+<?php if (is_array($calcView)): ?>
+<div class="card" style="flex:1 1 260px;padding:14px 16px;margin-top:0">
+  <div class="card__header">
+    <h2>Cost Calculator Estimate</h2>
+  </div>
+  <div class="small">
+    <div class="flex flex--between mb-1"><span class="muted">Package</span><strong><?php echo e(ucfirst((string)$calcView['package'])); ?> @ ₹<?php echo inr_format($calcView['rate']); ?>/sqft</strong></div>
+    <?php foreach ((array)($calcView['floors'] ?? []) as $f): ?>
+      <div class="flex flex--between mb-1"><span class="muted"><?php echo e($f['label']); ?></span><strong><?php echo e((string)$f['area']); ?> sqft</strong></div>
+    <?php endforeach; ?>
+    <div class="flex flex--between mb-1"><span class="muted">RCC Water Sump</span><strong><?php echo e((string)$calcView['sump_ltr']); ?> ltr</strong></div>
+    <div class="flex flex--between mb-1"><span class="muted">Septic Tank</span><strong><?php echo e((string)$calcView['septic_ltr']); ?> ltr</strong></div>
+    <div class="flex flex--between mb-1"><span class="muted">Compound Wall</span><strong><?php echo e((string)$calcView['wall_l']); ?> × <?php echo e((string)$calcView['wall_h']); ?> sqft</strong></div>
+    <div class="flex flex--between mb-1"><span class="muted"><strong>Estimated Total</strong></span><strong>₹<?php echo inr_format($calcView['total']); ?></strong></div>
+  </div>
+</div>
+<?php endif; ?>
+
+<div class="card" style="flex:2 1 320px;padding:14px 16px;margin-top:0">
   <div class="card__header">
     <h2>Message</h2>
   </div>
   <p class="small" style="white-space:pre-wrap;line-height:1.7"><?php echo e(trim((string)($inquiry['message'] ?? '')) !== '' ? $inquiry['message'] : '(Not provided)'); ?></p>
+</div>
 </div>
 
 <?php include __DIR__ . '/partials/footer.php'; ?>

@@ -11,6 +11,16 @@ $isSuper = Auth::isSuper($user);
 $stats = Project::stats();
 $projects = Project::allForAdmin((int)$user['id'], $isSuper, ['limit' => 6]);
 
+$enquiryTotal = 0;
+$recentInquiries = [];
+try {
+    $enquiryResult = ContactInquiry::paginated(null, 1, 6);
+    $enquiryTotal = $enquiryResult['total'];
+    $recentInquiries = $enquiryResult['items'];
+} catch (Throwable $e) {
+    error_log('Dashboard enquiries load failed: ' . $e->getMessage());
+}
+
 // Non-super admins only see updates for the projects they are assigned to.
 if ($isSuper) {
     $recentUpdates = Database::all(
@@ -47,7 +57,6 @@ include __DIR__ . '/partials/header.php';
     <p>Here's what's happening across your construction projects today.</p>
   </div>
   <div class="flex">
-    <span class="live-dot" id="liveIndicator">Live</span>
     <a href="/admin/projects/create" class="btn btn--primary">
       <i class="fa-solid fa-circle-plus"></i> New Project
     </a>
@@ -74,6 +83,10 @@ include __DIR__ . '/partials/header.php';
   <div class="stat-card">
     <div class="stat-card__label">Clients</div>
     <div class="stat-card__value"><?php echo $stats['clients']; ?></div>
+  </div>
+  <div class="stat-card stat-card--gold">
+    <div class="stat-card__label">Contact Enquiries</div>
+    <div class="stat-card__value"><?php echo $enquiryTotal; ?></div>
   </div>
   <!-- <div class="stat-card">
     <div class="stat-card__label">Updates (30d)</div>
@@ -147,4 +160,46 @@ include __DIR__ . '/partials/header.php';
     </div>
   </div>
 </div>
+
+<div class="card" style="margin-top:18px">
+  <div class="card__header">
+    <h2 class="card__title">Most Recent Contact Enquiries</h2>
+    <a href="/admin/contact-inquiries" class="btn btn--ghost btn--sm">View all</a>
+  </div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Service</th>
+          <th>Estimate</th>
+          <th>Date</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      <?php if (empty($recentInquiries)): ?>
+        <tr><td colspan="7" class="text-center muted">No enquiries yet.</td></tr>
+      <?php endif; ?>
+      <?php foreach ($recentInquiries as $i): ?>
+        <tr>
+          <td><strong><?php echo e($i['full_name'] ?: '—'); ?></strong></td>
+          <td class="small"><?php echo e($i['email']); ?></td>
+          <td class="small"><?php echo e($i['phone']); ?></td>
+          <td class="small"><?php echo e(ContactInquiry::serviceLabel($i['service_type'] ?? null)); ?></td>
+          <td class="small"><?php
+              $calcArr = !empty($i['calc_json']) ? json_decode((string)$i['calc_json'], true) : null;
+              echo e(ContactInquiry::calcSummary(is_array($calcArr) ? $calcArr : null));
+          ?></td>
+          <td class="small muted"><?php echo e($i['query_date'] ?? date('Y-m-d', strtotime((string)$i['created_at']))); ?></td>
+          <td><a class="btn btn--secondary btn--sm" href="/admin/contact-inquiry-view?id=<?php echo (int)$i['id']; ?>">View</a></td>
+        </tr>
+      <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <?php include __DIR__ . '/partials/footer.php'; ?>

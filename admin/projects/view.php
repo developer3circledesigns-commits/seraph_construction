@@ -39,7 +39,6 @@ include dirname(__DIR__) . '/partials/header.php';
       <?php if ($project['location']): ?> &middot; <?php echo e($project['location']); ?><?php endif; ?></p>
   </div>
   <div class="flex flex--wrap">
-    <span class="live-dot" id="liveIndicator">Live</span>
     <a href="/admin/updates/create?project_id=<?php echo (int)$id; ?>" class="btn btn--primary">
       <i class="fa-solid fa-calendar-plus"></i> Add Daily Update
     </a>

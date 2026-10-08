@@ -31,6 +31,16 @@ class ContactInquiry
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
         );
 
+        try {
+            Database::execute("ALTER TABLE contact_inquiries ADD COLUMN calc_package VARCHAR(20) DEFAULT NULL");
+        } catch (Throwable $e) { /* column exists */ }
+        try {
+            Database::execute("ALTER TABLE contact_inquiries ADD COLUMN calc_total INT UNSIGNED DEFAULT NULL");
+        } catch (Throwable $e) { /* column exists */ }
+        try {
+            Database::execute("ALTER TABLE contact_inquiries ADD COLUMN calc_json JSON DEFAULT NULL");
+        } catch (Throwable $e) { /* column exists */ }
+
         self::$schemaReady = true;
     }
 
@@ -104,8 +114,8 @@ class ContactInquiry
         self::ensureSchema();
 
         return Database::insert(
-            "INSERT INTO contact_inquiries (full_name, email, phone, service_type, message, ip_address)
-             VALUES (:name, :email, :phone, :service, :message, :ip)",
+            "INSERT INTO contact_inquiries (full_name, email, phone, service_type, message, ip_address, calc_package, calc_total, calc_json)
+             VALUES (:name, :email, :phone, :service, :message, :ip, :calc_package, :calc_total, :calc_json)",
             [
                 ':name'    => $data['full_name'],
                 ':email'   => $data['email'],
@@ -113,8 +123,22 @@ class ContactInquiry
                 ':service' => ($data['service_type'] ?? '') !== '' ? $data['service_type'] : null,
                 ':message' => $data['message'],
                 ':ip'      => $data['ip_address'],
+                ':calc_package' => $data['calc']['package'] ?? null,
+                ':calc_total'   => isset($data['calc']['total']) ? (int)$data['calc']['total'] : null,
+                ':calc_json'    => isset($data['calc']) ? json_encode($data['calc'], JSON_UNESCAPED_UNICODE) : null,
             ]
         );
+    }
+
+    /** Human-readable one-line summary of a stored calculator estimate. */
+    public static function calcSummary(?array $calc): string
+    {
+        if (!$calc) {
+            return '—';
+        }
+        $pkg = ucfirst((string)($calc['package'] ?? 'package'));
+        $total = isset($calc['total']) ? '₹' . inr_format($calc['total']) : '';
+        return trim($pkg . ' ' . $total);
     }
 
     public static function serviceLabel(?string $type): string

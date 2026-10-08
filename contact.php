@@ -29,6 +29,59 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $prefillService !== '' && array_key
     $old['service_type'] = $prefillService;
 }
 
+if (isset($_GET['clear_estimate'])) {
+    unset($_SESSION['calc_estimate']);
+    redirect('/contact');
+}
+
+/* Step 1: the cost calculator on packages.php posts its figures here.
+   Validate, recompute the total server-side, park it in the session and
+   bounce the visitor to the enquiry form. */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['calc_estimate'])) {
+    $body = request_body();
+
+    if (!CSRF::verify($body['_csrf'] ?? null)) {
+        redirect('/packages', 'Your session has expired. Please try the calculator again.', 'error');
+    }
+
+    $floors = max(1, min(6, (int)($body['calc_floors'] ?? 1)));
+    $packageKey = (($body['calc_package'] ?? '') === 'elite') ? 'elite' : 'premium';
+    $rate = $packageKey === 'elite' ? 2900 : 2300;
+
+    $floorNames = ['Ground Floor', 'First Floor', 'Second Floor', 'Third Floor', 'Fourth Floor', 'Fifth Floor'];
+    $areas = [];
+    $total = 0;
+    for ($i = 1; $i <= $floors; $i++) {
+        $area = max(0, (float)($body['calc_area_' . $i] ?? 0));
+        $areas[] = ['label' => $floorNames[$i - 1], 'area' => $area];
+        $total += (int)round($area * $rate);
+    }
+
+    $sump = max(0, (float)($body['calc_sump'] ?? 0));
+    $septic = max(0, (float)($body['calc_septic'] ?? 0));
+    $wallL = max(0, (float)($body['calc_wall_l'] ?? 0));
+    $wallH = max(0, (float)($body['calc_wall_h'] ?? 0));
+
+    $sumpCost = (int)round($sump * 30);
+    $septicCost = (int)round($septic * 30);
+    $wallCost = (int)round($wallL * $wallH * 425);
+    $total += $sumpCost + $septicCost + $wallCost;
+
+    $_SESSION['calc_estimate'] = [
+        'package'  => $packageKey,
+        'rate'     => $rate,
+        'floors'   => $areas,
+        'sump_ltr' => $sump,
+        'septic_ltr' => $septic,
+        'wall_l'   => $wallL,
+        'wall_h'   => $wallH,
+        'total'    => $total,
+    ];
+
+    release_session_lock();
+    redirect('/contact', 'Your estimate is ready — fill in your details below and we will send you a detailed quote.');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $body = request_body();
     $old = array_merge($old, array_intersect_key($body, $old));
@@ -75,12 +128,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$errors) {
         try {
-            $ip = client_ip();
+                $ip = client_ip();
             $recentCount = ContactInquiry::recentCountByIp($ip);
 
             if ($recentCount >= 5) {
                 $errors[] = 'Too many requests. Please wait an hour before submitting again.';
             } else {
+                $calc = $_SESSION['calc_estimate'] ?? null;
                 $inquiryId = ContactInquiry::create([
                     'full_name'    => $fullName,
                     'email'        => $email,
@@ -88,13 +142,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'service_type' => $serviceType,
                     'message'      => $message,
                     'ip_address'   => $ip,
+                    'calc'         => is_array($calc) ? $calc : null,
                 ]);
+                if (function_exists('session_reopen_if_needed')) {
+                    session_reopen_if_needed();
+                }
+                unset($_SESSION['calc_estimate']);
 
                 try {
                     Notification::notifyAllAdmins(
                         'contact_inquiry',
                         'New contact enquiry',
-                        $fullName . ' (' . $email . ')',
+                        $fullName . ' (' . $email . ')' . (is_array($calc) ? ' — est. ₹' . inr_format($calc['total']) : ''),
                         $inquiryId
                     );
                 } catch (Throwable $notifyErr) {
@@ -113,8 +172,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     . "Email: {$email}\n"
                     . "Phone: {$phone}\n"
                     . "Service: {$serviceLabel}\n\n"
-                    . "Message:\n" . ($message !== '' ? $message : '(Not provided)') . "\n\n"
-                    . "View in admin: {$adminLink}\n";
+                    . "Message:\n" . ($message !== '' ? $message : '(Not provided)') . "\n\n";
+
+                if (is_array($calc)) {
+                    $mailBody .= "Cost Calculator Estimate:\n";
+                    $mailBody .= 'Package: ' . ucfirst((string)$calc['package']) . ' @ ₹' . inr_format($calc['rate']) . "/sqft\n";
+                    foreach ((array)($calc['floors'] ?? []) as $f) {
+                        $mailBody .= $f['label'] . ': ' . $f['area'] . " sqft\n";
+                    }
+                    $mailBody .= 'Water sump: ' . $calc['sump_ltr'] . " ltr\n";
+                    $mailBody .= 'Septic tank: ' . $calc['septic_ltr'] . " ltr\n";
+                    $mailBody .= 'Compound wall: ' . $calc['wall_l'] . ' x ' . $calc['wall_h'] . " sqft\n";
+                    $mailBody .= 'Estimated total: ₹' . inr_format($calc['total']) . "\n\n";
+                }
+
+                $mailBody .= "View in admin: {$adminLink}\n";
 
                 $mailSubject = 'New contact enquiry from ' . $fullName;
                 $mailReplyTo = $email;
@@ -209,6 +281,20 @@ require __DIR__ . '/partials/header.php';
 
       <form class="contact-form" id="contactForm" method="POST" action="" novalidate>
         <?php echo CSRF::field(); ?>
+
+        <?php $calcSession = $_SESSION['calc_estimate'] ?? null; ?>
+        <?php if (is_array($calcSession)): ?>
+          <div class="contact-alert" role="note" style="background:rgba(231,201,89,.12);border:1px solid rgba(231,201,89,.4);padding:1rem;border-radius:8px;margin-bottom:1rem">
+            <p style="margin:0 0 .5rem"><strong>Your cost estimate</strong> — <?php echo e(ucfirst((string)$calcSession['package'])); ?> package @ ₹<?php echo inr_format($calcSession['rate']); ?>/sqft, total <strong>₹<?php echo inr_format($calcSession['total']); ?></strong></p>
+            <ul style="margin:0 0 .5rem;padding-left:1.25rem">
+              <?php foreach ((array)$calcSession['floors'] as $f): ?>
+                <li><?php echo e($f['label']); ?>: <?php echo e((string)$f['area']); ?> sqft</li>
+              <?php endforeach; ?>
+              <li>Water sump: <?php echo e((string)$calcSession['sump_ltr']); ?> ltr &middot; Septic tank: <?php echo e((string)$calcSession['septic_ltr']); ?> ltr &middot; Compound wall: <?php echo e((string)$calcSession['wall_l']); ?> × <?php echo e((string)$calcSession['wall_h']); ?> sqft</li>
+            </ul>
+            <a href="/contact?clear_estimate=1" style="font-size:.85rem">Remove this estimate</a>
+          </div>
+        <?php endif; ?>
 
         <div class="contact-form__field">
           <label for="contactFullName">Full Name <span aria-hidden="true">*</span></label>

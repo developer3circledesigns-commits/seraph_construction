@@ -83,6 +83,7 @@ $unread = Notification::unreadCount('admin', (int)$user['id']);
       </div>
 
       <div class="topbar__actions">
+        <span class="live-dot" id="liveIndicator">Live</span>
         <form class="topbar__search" action="/admin/projects" method="GET">
           <i class="fa-solid fa-magnifying-glass"></i>
           <input type="search" name="search" placeholder="Search projects..." value="<?php echo e($_GET['search'] ?? ''); ?>">

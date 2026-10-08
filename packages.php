@@ -396,10 +396,12 @@ require __DIR__ . '/partials/header.php';
 <style>
 /* z-index above every other fixed element on the page so it is never
    covered by the sticky topbar or the specification toolbar. */
-.calc-fab{position:fixed;right:24px;bottom:24px;z-index:9990;width:56px;height:56px;border:0;border-radius:50%;background:#E7C959;color:#001431;font-size:1.3rem;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .3s ease,transform .3s ease,visibility .3s ease}
+.calc-fab{position:fixed;right:24px;bottom:24px;z-index:9990;width:56px;height:56px;border:0;border-radius:50%;background:#ffffff;color:#001431;font-size:1.3rem;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .3s ease,transform .3s ease,visibility .3s ease}
 .calc-fab.is-visible{opacity:1;visibility:visible;transform:translateY(0)}
 .calc-fab.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
-.calc-fab:hover{background:#F0DA8C}
+.calc-fab:hover{background:#f0f0f0}
+.calc-fab::after{content:'Cost Calculator';position:absolute;bottom:calc(100% + 10px);right:0;background:#001431;color:#E7C959;font-size:.8rem;font-weight:600;padding:.35rem .6rem;border-radius:6px;white-space:nowrap;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .2s ease,transform .2s ease,visibility .2s ease;pointer-events:none}
+.calc-fab:hover::after{opacity:1;visibility:visible;transform:translateY(0)}
 </style>
 
 <!-- ======================= COST CALCULATOR POPUP ======================= -->
@@ -483,11 +485,22 @@ require __DIR__ . '/partials/header.php';
       </table>
     </div>
 
-    <div class="sk-actions" style="margin-top:1.25rem">
-      <a class="sk-btn sk-btn--primary" href="<?php echo htmlspecialchars($contact); ?>">
+    <form class="sk-actions" style="margin-top:1.25rem" id="calcEstimateForm" method="POST" action="contact.php">
+      <?php echo CSRF::field(); ?>
+      <input type="hidden" name="calc_estimate" value="1">
+      <input type="hidden" name="calc_floors" id="hCalcFloors" value="1">
+      <input type="hidden" name="calc_package" id="hCalcPackage" value="premium">
+      <?php for ($i = 1; $i <= 6; $i++): ?>
+        <input type="hidden" name="calc_area_<?php echo $i; ?>" id="hCalcArea<?php echo $i; ?>" value="0">
+      <?php endfor; ?>
+      <input type="hidden" name="calc_sump" id="hCalcSump" value="0">
+      <input type="hidden" name="calc_septic" id="hCalcSeptic" value="0">
+      <input type="hidden" name="calc_wall_l" id="hCalcWallL" value="0">
+      <input type="hidden" name="calc_wall_h" id="hCalcWallH" value="0">
+      <button type="submit" class="sk-btn sk-btn--primary">
         <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i> Get Free Estimate Now
-      </a>
-    </div>
+      </button>
+    </form>
   </div>
 </div>
 
@@ -495,7 +508,7 @@ require __DIR__ . '/partials/header.php';
 .calc-pop[hidden]{display:none}
 .calc-pop{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem}
 .calc-pop__backdrop{position:absolute;inset:0;background:rgba(0,10,25,.78);backdrop-filter:blur(4px)}
-.calc-pop__box{position:relative;background:#0A2540;border:1px solid rgba(231,201,89,.35);color:#C3CDDC;max-width:1040px;width:100%;max-height:90vh;overflow:auto;padding:1.75rem;box-shadow:0 28px 60px -24px rgba(0,0,0,.8)}
+.calc-pop__box{position:relative;background:#0A2540;border:1px solid rgba(231,201,89,.35);color:#C3CDDC;max-width:1400px;width:100%;max-height:90vh;overflow:auto;padding:1.75rem;box-shadow:0 28px 60px -24px rgba(0,0,0,.8)}
 .calc-pop__box h2{color:#F2F5FA}
 .calc-pop__x{position:absolute;top:.9rem;right:1rem;border:0;background:transparent;font-size:1.6rem;line-height:1;cursor:pointer;color:#93A0B4}
 .calc-pop__x:hover{color:#E7C959}
@@ -570,9 +583,10 @@ require __DIR__ . '/partials/header.php';
 
   function calc() {
     var rate = parseFloat(pkgSel.value) || 0;
+    var nFloors = parseInt(floorsSel.value, 10) || 1;
     var total = 0;
     for (var i = 1; i <= 6; i++) {
-      var p = Math.round(num('calcCost' + i) * rate);
+      var p = i <= nFloors ? Math.round(num('calcCost' + i) * rate) : 0;
       document.getElementById('calcPrice' + i).textContent = fmt(p);
       total += p;
     }
@@ -592,6 +606,18 @@ require __DIR__ . '/partials/header.php';
     inp.addEventListener('input', calc);
   });
   setFloors();
+
+  document.getElementById('calcEstimateForm').addEventListener('submit', function () {
+    document.getElementById('hCalcFloors').value = floorsSel.value;
+    document.getElementById('hCalcPackage').value = pkgSel.value === '2900' ? 'elite' : 'premium';
+    for (var i = 1; i <= 6; i++) {
+      document.getElementById('hCalcArea' + i).value = i <= parseInt(floorsSel.value, 10) ? num('calcCost' + i) : 0;
+    }
+    document.getElementById('hCalcSump').value = num('calcSump');
+    document.getElementById('hCalcSeptic').value = num('calcSeptic');
+    document.getElementById('hCalcWallL').value = num('calcWallL');
+    document.getElementById('hCalcWallH').value = num('calcWallH');
+  });
 })();
 
 /* Floating calculator button (bottom-right).

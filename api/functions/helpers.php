@@ -65,6 +65,23 @@ function json_success($data = [], int $status = 200): void
     json_response(['success' => true, 'data' => $data], $status);
 }
 
+/** Format an amount with Indian digit grouping (e.g. 53,00,500). */
+function inr_format($amount): string
+{
+    $n = (string)(int)round((float)$amount);
+    $negative = str_starts_with($n, '-');
+    if ($negative) {
+        $n = substr($n, 1);
+    }
+    if (strlen($n) > 3) {
+        $last3 = substr($n, -3);
+        $rest = substr($n, 0, -3);
+        $rest = preg_replace('/\B(?=(\d{2})+(?!\d))/', ',', $rest);
+        $n = $rest . ',' . $last3;
+    }
+    return ($negative ? '-' : '') . $n;
+}
+
 /** Get request JSON body or POST fields as array. */
 function request_body(): array
 {

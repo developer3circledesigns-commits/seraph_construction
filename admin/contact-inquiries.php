@@ -91,6 +91,7 @@ include __DIR__ . '/partials/header.php';
             <th>Email</th>
             <th>Phone</th>
             <th>Service</th>
+            <th>Estimate</th>
             <th>Date</th>
             <th style="width:180px;">Actions</th>
           </tr>
@@ -102,6 +103,10 @@ include __DIR__ . '/partials/header.php';
               <td><a href="mailto:<?php echo e($i['email']); ?>"><?php echo e(strlen($i['email']) > 30 ? substr($i['email'], 0, 30) . '...' : $i['email']); ?></a></td>
               <td class="small"><?php echo e($i['phone']); ?></td>
               <td class="small"><?php echo e(ContactInquiry::serviceLabel($i['service_type'] ?? null)); ?></td>
+              <td class="small"><?php
+                  $calcArr = !empty($i['calc_json']) ? json_decode((string)$i['calc_json'], true) : null;
+                  echo e(ContactInquiry::calcSummary(is_array($calcArr) ? $calcArr : null));
+              ?></td>
               <td class="small muted"><?php echo e($i['query_date'] ?? date('Y-m-d', strtotime((string)$i['created_at']))); ?></td>
               <td style="white-space:nowrap">
                 <a class="btn btn--secondary btn--sm" href="/admin/contact-inquiry-view?id=<?php echo (int)$i['id']; ?>" aria-label="View inquiry #<?php echo (int)$i['id']; ?>"><i class="fa-solid fa-eye"></i> View</a>

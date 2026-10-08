@@ -344,6 +344,18 @@ body:has(> .sk) { overflow-x: clip; }
 }
 .sk-btn--ghost:hover { border-color: var(--sk-line-gold); color: var(--sk-gold); background: var(--sk-panel-2); }
 
+/* Cost calculator button override - white background with project blue text */
+#calcOpen.sk-btn--ghost {
+  background: #ffffff;
+  color: #001431;
+  border-color: #001431;
+}
+#calcOpen.sk-btn--ghost:hover {
+  background: #f0f0f0;
+  color: #001431;
+  border-color: #001431;
+}
+
 .sk-btn--soft {
   background: var(--sk-panel-2);
   color: var(--sk-ink);
