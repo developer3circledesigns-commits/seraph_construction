@@ -485,7 +485,7 @@ require __DIR__ . '/partials/header.php';
       </table>
     </div>
 
-    <form class="sk-actions" style="margin-top:1.25rem" id="calcEstimateForm" method="POST" action="contact.php">
+    <form class="sk-actions" style="margin-top:1.25rem" id="calcEstimateForm" method="POST" action="/contact">
       <?php echo CSRF::field(); ?>
       <input type="hidden" name="calc_estimate" value="1">
       <input type="hidden" name="calc_floors" id="hCalcFloors" value="1">
