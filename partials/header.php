@@ -33,10 +33,13 @@ $ogImageAlt      = $pageMeta['og_image_alt'] ?? 'Luxury modern villa exterior â€
 $ogImage         = preg_match('#^https?://#i', $ogImagePath) ? $ogImagePath : $ogBase . $ogImagePath;
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<!-- text-size-adjust:100% stops iOS Safari inflating every text node
+     when the device is rotated to landscape, which silently blows the
+     layout past the viewport width on the packages specification table. -->
+<html lang="en" style="-webkit-text-size-adjust:100%;text-size-adjust:100%">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme-color" content="#001431">
   <meta name="color-scheme" content="dark">

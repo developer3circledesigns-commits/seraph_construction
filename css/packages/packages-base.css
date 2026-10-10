@@ -123,6 +123,56 @@
      11px is the floor: anything under it stops being legible on a
      laptop panel, and this page is full of them. */
   --sk-micro:      .7rem;
+
+  /* ---------- Fluid type scale ----------
+     Every size on this page has to shrink as the device narrows, and
+     almost all of it is declared in `rem` — which is root-relative, so
+     changing `.sk { font-size }` would scale nothing. The only correct
+     mechanism is a clamp() with a viewport term in the middle slot.
+
+     Each token interpolates smoothly from its floor (a 280–320px
+     phone) to its ceiling (the desktop value it had before), so
+     type is continuous at every width instead of stepping at
+     breakpoints. css/packages/packages-responsive.css consumes these
+     tokens; it loads after this file so the declarations there win.
+     Inputs are the deliberate exception — see --sk-fs-input. */
+  --sk-fs-h1:       clamp(1.50rem, 0.72rem + 4.10vw, 3.60rem);
+  --sk-fs-h2:       clamp(1.18rem, 0.85rem + 1.75vw, 2.10rem);
+  --sk-fs-h3:       clamp(0.94rem, 0.86rem + 0.42vw, 1.28rem);
+  --sk-fs-h4:       clamp(0.85rem, 0.82rem + 0.16vw, 0.95rem);
+  --sk-fs-title:    clamp(0.86rem, 0.83rem + 0.18vw, 1.00rem);
+
+  --sk-fs-lede:     clamp(0.82rem, 0.75rem + 0.37vw, 1.10rem);
+  --sk-fs-lede-sm:  clamp(0.78rem, 0.74rem + 0.21vw, 0.95rem);
+  --sk-fs-body:     clamp(0.78rem, 0.74rem + 0.21vw, 0.95rem);
+  --sk-fs-tick:     clamp(0.80rem, 0.77rem + 0.16vw, 0.90rem);
+  --sk-fs-note:     clamp(0.74rem, 0.71rem + 0.16vw, 0.82rem);
+
+  /* Micro-labels. The floor stays near the old 11px — these are dense
+     technical labels and the gain from shrinking them further is nil. */
+  --sk-fs-micro:    clamp(0.68rem, 0.67rem + 0.05vw, 0.70rem);
+
+  --sk-fs-btn:      clamp(0.72rem, 0.68rem + 0.22vw, 0.82rem);
+  --sk-fs-btn-sm:   clamp(0.68rem, 0.65rem + 0.16vw, 0.76rem);
+  --sk-fs-btn-lg:   clamp(0.80rem, 0.75rem + 0.30vw, 0.90rem);
+
+  /* Specification table. Held higher than the body scale: it is the one
+     place on the page where legibility beats density, because the whole
+     table stays a real 3-column table at every width. */
+  --sk-fs-spec:     clamp(0.70rem, 0.65rem + 0.28vw, 0.875rem);
+  --sk-fs-spec-th:  clamp(0.66rem, 0.64rem + 0.10vw, 0.74rem);
+  --sk-fs-ref:      clamp(0.62rem, 0.60rem + 0.12vw, 0.70rem);
+  --sk-fs-rail:     clamp(0.72rem, 0.69rem + 0.16vw, 0.80rem);
+
+  --sk-fs-stat-n:   clamp(1.15rem, 0.95rem + 1.10vw, 1.75rem);
+  --sk-fs-rate:     clamp(1.05rem, 0.95rem + 0.55vw, 1.35rem);
+  --sk-fs-tier-num: clamp(1.90rem, 1.10rem + 4.20vw, 3.50rem);
+
+  /* Text inside <input>/<select>. css/responsive.css forces 16px on
+     every form control at mobile widths to stop iOS zooming the viewport
+     on focus, so this must never fall below 16px either — it is a floor,
+     not a scale. */
+  --sk-fs-input:    max(16px, var(--sk-fs-body));
 }
 
 /* ---------- 2. Page frame + sticky offsets ---------------------- */
@@ -572,36 +622,12 @@ body:has(> .sk) { overflow-x: clip; }
   font-variant-numeric: tabular-nums;
 }
 
-/* Below 900px each row becomes its own card, labelled by data-l. */
-@media (max-width: 900px) {
-  .sk-spec, .sk-spec tbody, .sk-spec tr, .sk-spec td, .sk-spec tbody th[scope='row'] { display: block; width: auto; }
-  .sk-spec thead { display: none; }
-  .sk-spec tbody tr {
-    border: 1px solid var(--sk-line);
-    border-radius: var(--sk-r);
-    margin: .75rem;
-    padding: .25rem 0;
-    background: var(--sk-panel);
-  }
-  .sk-spec tbody tr.is-same { opacity: .72; }
-  .sk-spec__sec {
-    margin: 1.25rem .75rem .25rem;
-    border: 0;
-  }
-  .sk-spec__sec th { background: transparent; padding-inline: 0; }
-  .sk-spec tbody th[scope='row'] { padding: .85rem 1rem .35rem; font-weight: 600; color: var(--sk-ink); }
-  .sk-spec td { border-left: 0; padding: .35rem 1rem; }
-  .sk-spec td::before {
-    content: attr(data-l) ' — ';
-    font-family: var(--display);
-    font-size: var(--sk-micro);
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--sk-ink-4);
-  }
-  .sk-spec tr.is-diff td:last-child { background: rgba(231, 201, 89, .06); }
-}
+/* The specification stays a real <table> at every width — on narrow
+   screens it scrolls horizontally with a pinned first column rather
+   than dissolving into stacked cards. That treatment (scroller,
+   sticky column, column widths, type scale) lives in
+   css/packages/packages-responsive.css, which loads after this file.
+   The rules that used to live here did the opposite and are gone. */
 
 /* ---------- 8. Accordion ---------------------------------------- */
 
@@ -969,7 +995,7 @@ body:has(> .sk) { overflow-x: clip; }
 
 /* ---------- 13. Responsive ------------------------------------- */
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .sk-toolbar { gap: .55rem; padding: .6rem 0; }
   .sk-search { flex-basis: 100%; max-width: none; }
   .sk-btn--block-sm { width: 100%; }
@@ -991,9 +1017,11 @@ body:has(> .sk) { overflow-x: clip; }
 
   /* .sk-stickybar is the outer wrapper that makes the toolbar sticky on
      screen; with its contents hidden it would still print an empty
-     bordered band, so the wrapper goes too. */
+     bordered band, so the wrapper goes too. The calculator is screen
+     chrome and has no print representation. */
   .topbar, .side-nav, .mobile-menu, .site-footer,
-  .sk-stickybar, .sk-toolbar, .sk-top, .sk-actions { display: none !important; }
+  .sk-stickybar, .sk-toolbar, .sk-top, .sk-actions,
+  .calc-pop, .calc-fab { display: none !important; }
 
   .sk, .sk--light {
     --sk-bg: #fff; --sk-bg-2: #fff; --sk-panel: transparent; --sk-panel-2: transparent;
@@ -1028,3 +1056,220 @@ body:has(> .sk) { overflow-x: clip; }
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------- 16. Cost calculator ---------------------------------
+   These two components render as siblings of <main class="sk">, not
+   descendants of it, so they cannot inherit the kit's tokens — the
+   values they need are re-declared on the components themselves.
+   They used to live in a <style> block inside packages.php, which
+   meant they were injected after every stylesheet and so beat any
+   responsive rule regardless of specificity; the mobile treatment in
+   css/packages/packages-responsive.css needs to override them, hence
+   this move. */
+
+.calc-fab, .calc-pop {
+  --sk-bg:        #001431;
+  --sk-bg-2:      #0A2540;
+  --sk-line:      rgba(255, 255, 255, .14);
+  --sk-line-2:    rgba(255, 255, 255, .2);
+  --sk-ink:       #F2F5FA;
+  --sk-ink-2:     #C3CDDC;
+  --sk-ink-3:     #93A0B4;
+  --sk-ink-4:     #7E8CA6;
+  --sk-gold:      #E7C959;
+  --sk-gold-hi:   #F0DA8C;
+  --sk-on-gold:   #001431;
+  --sk-r-sm:      0;
+  --sk-r:         0;
+  --sk-r-lg:      0;
+  --sk-r-pill:    0;
+  --sk-ease:      cubic-bezier(.22, 1, .36, 1);
+}
+
+/* Floating calculator button. z-index above every other fixed element on
+   the page so it is never covered by the sticky topbar or the
+   specification toolbar. */
+.calc-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9990;
+  width: 56px; height: 56px;
+  border: 0; border-radius: 50%;
+  background: #fff; color: #001431;
+  font-size: 1.3rem; cursor: pointer;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .45);
+  opacity: 0; visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity .3s ease, transform .3s ease, visibility .3s ease;
+}
+.calc-fab.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.calc-fab.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.calc-fab:hover { background: #f0f0f0; }
+.calc-fab::after {
+  content: 'Cost Calculator';
+  position: absolute; bottom: calc(100% + 10px); right: 0;
+  background: #001431; color: #E7C959;
+  font-size: .8rem; font-weight: 600;
+  padding: .35rem .6rem; border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0; visibility: hidden; transform: translateY(4px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+  pointer-events: none;
+}
+.calc-fab:hover::after { opacity: 1; visibility: visible; transform: translateY(0); }
+/* Touch devices never hover, so the tooltip would never be seen and only
+   ever sits in the accessibility tree as a stray string. */
+@media (hover: none) { .calc-fab::after { content: none; } }
+
+.calc-pop[hidden] { display: none; }
+.calc-pop {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.calc-pop__backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0, 10, 25, .78);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.calc-pop__box {
+  position: relative;
+  background: var(--sk-bg-2);
+  border: 1px solid rgba(231, 201, 89, .35);
+  color: var(--sk-ink-2);
+  max-width: 1400px; width: 100%;
+  max-height: 90vh; max-height: 90dvh;
+  overflow: auto;
+  padding: 1.75rem;
+  box-shadow: 0 28px 60px -24px rgba(0, 0, 0, .8);
+}
+.calc-pop__box h2 { color: var(--sk-ink); }
+.calc-pop__x {
+  position: absolute; top: .9rem; right: 1rem;
+  border: 0; background: transparent;
+  font-size: 1.6rem; line-height: 1; cursor: pointer;
+  color: var(--sk-ink-3);
+}
+.calc-pop__x:hover { color: var(--sk-gold); }
+.calc-pop__controls { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
+.calc-pop__field { display: flex; flex-direction: column; gap: .35rem; min-width: 0; }
+.calc-pop__fieldlab {
+  font-weight: 600; font-size: .9rem; color: var(--sk-ink);
+}
+.calc-pop__sel, .calc-pop__inp {
+  width: 100%;
+  padding: .55rem .7rem;
+  border: 1px solid rgba(255, 255, 255, .2);
+  background: var(--sk-bg); color: var(--sk-ink);
+  font-size: var(--sk-fs-input);
+  font-family: inherit;
+  text-align: left;
+}
+.calc-pop__sel {
+  display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+  min-width: 240px; cursor: pointer;
+}
+.calc-pop__sel:focus-visible, .calc-pop__inp:focus {
+  outline: none; border-color: var(--sk-gold);
+  box-shadow: 0 0 0 3px rgba(231, 201, 89, .25);
+}
+.calc-pop__sel[aria-expanded='true'] { border-color: var(--sk-gold); }
+
+/* The dropdown listbox.
+
+   In normal flow on purpose: it scrolls with the rest of the dialog and
+   cannot be clipped by an overflow ancestor or stranded off-screen. The
+   options therefore get the same fluid type scale as every other control
+   — which a native <select>'s popup never would, being drawn by the OS. */
+.calc-dd { position: relative; min-width: 0; }
+.calc-dd__val { min-width: 0; overflow-wrap: anywhere; }
+.calc-dd__chev {
+  flex: none;
+  font-size: .75em;
+  color: var(--sk-ink-3);
+  transition: transform var(--sk-t-fast, .16s ease);
+}
+.calc-pop__sel[aria-expanded='true'] .calc-dd__chev { transform: rotate(180deg); }
+.calc-dd__list {
+  list-style: none;
+  margin: .3rem 0 0;
+  padding: .2rem;
+  border: 1px solid var(--sk-line-2);
+  background: var(--sk-bg);
+  max-height: 40vh; max-height: 40dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+.calc-dd__list[hidden] { display: none; }
+.calc-dd__list [role='option'] {
+  padding: .6rem .7rem;
+  font-size: var(--sk-fs-input);
+  color: var(--sk-ink-2);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+.calc-dd__list [role='option']:hover { background: rgba(255, 255, 255, .05); }
+.calc-dd__list [role='option'][aria-selected='true'] {
+  background: rgba(231, 201, 89, .12);
+  border-left-color: var(--sk-gold);
+  color: var(--sk-ink);
+  font-weight: 600;
+}
+.calc-pop__tbl { width: 100%; border-collapse: collapse; }
+.calc-pop__tbl th, .calc-pop__tbl td {
+  border: 1px solid rgba(255, 255, 255, .14);
+  padding: .6rem .7rem;
+  text-align: left;
+  color: var(--sk-ink-2);
+}
+.calc-pop__tbl thead th { background: var(--sk-bg); color: var(--sk-gold); font-weight: 700; }
+.calc-pop__tbl tbody tr:hover { background: rgba(255, 255, 255, .05); }
+.calc-pop__inp { width: 100%; min-width: 120px; }
+.calc-pop__total td { background: rgba(231, 201, 89, .12); color: var(--sk-ink); }
+.calc-pop .sk-btn--primary { background: var(--sk-gold); color: var(--sk-on-gold); }
+.calc-pop .sk-btn--primary:hover { background: var(--sk-gold-hi); }
+.calc-pop__tablewrap { overflow-x: auto; }
+.calc-pop ::placeholder { color: var(--sk-ink-4); }
+.calc-pop .sk-actions { margin-top: 1.25rem; justify-content: center; }
+
+/* The wall row carries two number inputs in one cell. Both are inside
+   real <label>s with visible captions, so each has an accessible name
+   that survives the placeholder disappearing once a value is typed —
+   which is the only label they had before. */
+.calc-pop__pair { display: grid; gap: .35rem; }
+.calc-pop__mini { display: grid; gap: .15rem; }
+.calc-pop__minilab {
+  color: var(--sk-ink-3);
+  font-size: var(--sk-fs-micro);
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.calc-pop__work { font-weight: 600; color: var(--sk-ink); }
+.calc-pop__work small { font-weight: 400; color: var(--sk-ink-3); }
+
+/* Sizes for the dialog heading and lede.
+
+   .sk-h2 and .sk-lede are global classes, so they render here — but they
+   read their colour from --sk-ink and their size from a clamp(), which
+   is why they used to ignore the mobile scale entirely. Both now step
+   down with the rest of the page. */
+.calc-pop__box .sk-h2 {
+  font-size: clamp(1.15rem, .9rem + 1.4vw, 1.8rem);
+  margin: 0;
+  text-align: center;
+}
+.calc-pop__box .sk-lede {
+  font-size: clamp(.78rem, .74rem + .21vw, .95rem);
+  margin: .3rem auto 1rem;
+  max-width: 46ch;
+  text-align: center;
+}
+
+/* Number inputs get a comfortable touch target by default. 44px is the
+   smallest reliably hittable size on a phone. */
+.calc-pop__inp { min-height: 40px; }
+@media (pointer: coarse) { .calc-pop__inp, .calc-pop__sel { min-height: 44px; } }

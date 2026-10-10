@@ -1,0 +1,991 @@
+/* =============================================================
+   SERAPH — SBC Packages · responsive layer
+   -------------------------------------------------------------
+   Loads LAST, after packages-base.css and packages-atlas.css, so at
+   equal specificity these declarations win. Everything device-
+   dependent about the packages page lives here.
+
+   Contents
+     1.  Type — consume the fluid tokens
+     2.  Rhythm — fluid spacing
+     3.  Alignment — centring contract
+     4.  Tables — the specification and the calculator stay tables
+     5.  Hero
+     6.  Stat strip
+     7.  Tier cards
+     8.  Specification toolbar
+     9.  Contents rail
+     10. Section cards
+     11. Notes, empty state, CTA
+     12. Cost calculator
+     13. Width tiers
+     14. Orientation / short-viewport tiers
+     15. Print reset
+
+   Breakpoint map (ascending, so later rules win):
+     xs        <= 359px   Fold cover, iPhone SE (1st gen)
+     sm        360-479    SE 2/3, most Android
+     md        480-767    Pro Max, large Android
+     tab       768-1023   iPad portrait — the previously worst gap
+     tab-land  1024-1279  iPad landscape
+     landscape phones          (max-width 915 and max-height 500)
+     short portrait phones      (max-width 767 and max-height 700)
+   ============================================================= */
+
+/* ---------- 1. Type ---------------------------------------------
+   The kit declares nearly all of its sizes in `rem`, which is
+   root-relative — so scaling `.sk { font-size }` would scale nothing.
+   Each rule below is re-pointed at a clamp() token from
+   packages-base.css §1, which interpolates continuously between a
+   phone floor and the desktop ceiling it replaces. That is what makes
+   type shrink automatically with the device rather than jumping at
+   named breakpoints. */
+
+.sk { font-size: clamp(15px, 14.4px + .25vw, 16px); }
+
+.sk-h1 { font-size: var(--sk-fs-h1); }
+.sk-h2 { font-size: var(--sk-fs-h2); }
+.sk-h3 { font-size: var(--sk-fs-h3); }
+.sk-h4 { font-size: var(--sk-fs-h4); }
+.sk-kicker { font-size: var(--sk-fs-micro); }
+
+.sk-lede { font-size: var(--sk-fs-lede); }
+.sk-lede--sm { font-size: var(--sk-fs-lede-sm); }
+.sk-p { font-size: var(--sk-fs-body); }
+
+.sk-btn { font-size: var(--sk-fs-btn); }
+.sk-btn--sm { font-size: var(--sk-fs-btn-sm); }
+.sk-btn--lg { font-size: var(--sk-fs-btn-lg); }
+
+.sk-pill { font-size: var(--sk-fs-micro); }
+.sk-stat__n { font-size: var(--sk-fs-stat-n); }
+.sk-stat__l { font-size: var(--sk-fs-micro); }
+.sk-kv__row { font-size: var(--sk-fs-body); }
+.sk-ticks li { font-size: var(--sk-fs-tick); }
+
+.sk-spec { font-size: var(--sk-fs-spec); }
+.sk-spec thead th { font-size: var(--sk-fs-spec-th); }
+.sk-spec thead th small { font-size: var(--sk-fs-micro); }
+.sk-spec__sec th { font-size: var(--sk-fs-spec-th); }
+.sk-spec__ref { font-size: var(--sk-fs-ref); }
+
+.sk-acc__t { font-size: var(--sk-fs-title); }
+.sk-acc__c, .sk-acc__blurb { font-size: var(--sk-fs-body); }
+.sk-tab { font-size: var(--sk-fs-body); }
+.sk-rail__a { font-size: var(--sk-fs-rail); }
+.sk-search input { font-size: var(--sk-fs-input); }
+.sk-chip { font-size: var(--sk-fs-btn-sm); }
+.sk-switch__lab { font-size: var(--sk-fs-body); }
+.sk-count { font-size: var(--sk-fs-rail); }
+.sk-note { font-size: var(--sk-fs-note); }
+.sk-empty p { font-size: var(--sk-fs-tick); }
+
+/* Atlas */
+.atl-rateline__n { font-size: var(--sk-fs-body); }
+.atl-rateline__v > span { font-size: var(--sk-fs-rate); }
+.atl-rateline__v small { font-size: var(--sk-fs-spec-th); }
+.atl-hero__note { font-size: var(--sk-fs-micro); }
+.atl-tier__name { font-size: var(--sk-fs-h2); }
+.atl-tier__tag { font-size: var(--sk-fs-lede-sm); }
+.atl-tier__cur { font-size: var(--sk-fs-rate); }
+.atl-tier__num { font-size: var(--sk-fs-tier-num); }
+.atl-tier__unit { font-size: var(--sk-fs-tick); }
+.atl-tier__hl-h { font-size: var(--sk-fs-micro); }
+.atl-tiers__foot { font-size: var(--sk-fs-note); }
+.atl-sec__num { font-size: var(--sk-fs-body); }
+.atl-sec__blurb { font-size: var(--sk-fs-note); }
+.atl-sec__meta { font-size: var(--sk-fs-spec-th); }
+
+/* ---------- 2. Rhythm --------------------------------------------
+   Vertical space has to compress faster than horizontal space: a
+   phone has far less height than a desktop has width, and the same
+   --sk-section pad plus the same card pad leaves the cards floating in
+   the middle of a very short screen. */
+
+.sk-card { padding: clamp(1rem, 0.85rem + 1.1vw, 1.85rem); }
+.sk-card--feature::before { inset-inline: clamp(1rem, 0.85rem + 1.1vw, 1.85rem); }
+.sk-section { padding-block: var(--sk-section); }
+.sk-section--tight { padding-block: calc(var(--sk-section) * .6); }
+.sk-stat { padding: clamp(.75rem, .68rem + .5vw, 1.05rem) clamp(.7rem, .62rem + .6vw, 1.15rem); }
+.sk-toolbar { padding: clamp(.5rem, .45rem + .3vw, .7rem) 0; }
+.atl-hero { padding-block: var(--atl-hero-pad) clamp(1.75rem, 1.4rem + 2vw, 4rem); }
+.atl-sec__head { padding: clamp(.85rem, .78rem + .4vw, 1.1rem) clamp(.85rem, .7rem + 1vw, 1.5rem); }
+.sk-note { padding: clamp(.85rem, .78rem + .4vw, 1.05rem) clamp(.9rem, .8rem + .6vw, 1.25rem); }
+.sk-empty { padding: clamp(2rem, 4vw, 3rem) 1.5rem; }
+.atl-hero__rate { padding: clamp(.9rem, .8rem + .7vw, 1.4rem); }
+
+/* ---------- 3. Alignment -----------------------------------------
+   Contract: all prose, headings, labels and controls are centred.
+   Table cells are deliberately excluded — centring a column of
+   specification values makes long strings far harder to scan and
+   breaks the vertical alignment that makes a table read as a table.
+   Do not "fix" the exclusions below; they are load-bearing. */
+
+.sk-center,
+.atl-hero .sk-kicker,
+.atl-hero .sk-h1,
+.atl-hero .sk-lede,
+.atl-hero__note,
+.atl-tiers__foot,
+.atl-tier,
+.atl-sec__blurb,
+.atl-sec__meta,
+.sk-note,
+.sk-empty,
+.sk-cta,
+.sk-cta .sk-h2,
+.sk-cta .sk-lede,
+.sk-count { text-align: center; }
+
+/* Centring needs the block itself centred too, otherwise a centred
+   line inside a full-width flex/grid item still hugs the left edge. */
+.sk-center .sk-lede { margin-inline: auto; }
+.atl-hero__grid > div:first-child { text-align: center; }
+.atl-hero__grid > div:first-child .sk-actions { justify-content: center; }
+.atl-tier__rate { justify-content: center; }
+.atl-tier__cta .sk-btn { text-align: center; }
+
+/* ---------- 4. Tables -------------------------------------------
+   The page has two tables and both stay tables at every width.
+
+   Below 768px each one lives in a horizontal scroller with its first
+   column pinned, so the row/column relationship survives while the
+   Premium and Elite columns swipe. The old rule that set
+   `display: block` on the table parts and hid thead is gone. */
+
+.sk-tablewrap {
+  position: relative;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+.sk-tablewrap::-webkit-scrollbar { height: 6px; }
+.sk-tablewrap::-webkit-scrollbar-thumb { background: var(--sk-line-2); border-radius: 6px; }
+.sk-tablewrap::-webkit-scrollbar-track { background: var(--sk-line); }
+
+/* Pure-CSS scroll shadows: the `local` layers sit on the content and
+   travel with it, the `scroll` layers stay pinned to the box, so the
+   gradient only appears on the side there is more table to see. */
+.sk-tablewrap {
+  background:
+    linear-gradient(to right, var(--sk-bg) 30%, rgba(0, 20, 49, 0)) left center,
+    linear-gradient(to left,  var(--sk-bg) 30%, rgba(0, 20, 49, 0)) right center,
+    radial-gradient(farthest-side at 0 50%,   rgba(0, 0, 0, .55), rgba(0, 0, 0, 0)) left center,
+    radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, .55), rgba(0, 0, 0, 0)) right center;
+  background-repeat: no-repeat;
+  background-size: 44px 100%, 44px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@media (max-width: 767px) {
+  /* Fixed layout plus a floor width is what keeps the columns from
+     being crushed into 3 unreadable slivers; the scroller absorbs the
+     overflow instead of the type.
+
+     Two numbers drive the whole table, so they are tokens and the width
+     tiers below only move the tokens:
+
+       --sk-col-item    share of the table given to the pinned row
+                        heading ("Specification item")
+       --sk-table-over  how much wider than the viewport the table is,
+                        i.e. the horizontal scroll distance S
+
+     They cannot be chosen independently. With the item column at share p,
+     each value column is q = (1 - p) / 2 of the table, and the table is
+     W + S wide where W is the viewport. The Premium column stays
+     reachable past the pinned column only while v >= S, which reduces to
+     S <= qW / (1 - q). A generous fixed min-width blows straight past
+     that: at 390px a 33rem table scrolls 173px against 159px value
+     columns, so Premium never appears at all. Keeping S small is what
+     makes the item column safely narrow.
+
+     Verified: at p = 34% the limit is 0.49W, at 27% it is 0.58W, so the
+     S values used below are always inside it. */
+  .sk-spec {
+    table-layout: fixed;
+    width: 100%;
+    --sk-col-item: 34%;
+    --sk-table-over: 5rem;
+    min-width: calc(100% + var(--sk-table-over));
+  }
+  .sk-spec thead th:first-child,
+  .sk-spec tbody th[scope='row'] { width: var(--sk-col-item); }
+
+  /* The reference code reserved a fixed 3.2rem of the heading column —
+     over a third of a narrow track, spent on a five-character label.
+     Inline with no reservation, the label takes the whole line. */
+  .sk-spec__ref {
+    min-width: 0;
+    margin-right: .4rem;
+  }
+
+  .sk-spec thead th,
+  .sk-spec td,
+  .sk-spec tbody th[scope='row'] { padding: .55rem .4rem; }
+
+  /* The column headers are nowrap on desktop so the tier name and its
+     rate stay on one line. In a narrow fixed-layout track that overflows,
+     so headers wrap here instead.
+
+     Hyphenation is what keeps the first header honest once the item
+     column is narrow: "Specification" alone is ~116px and the content
+     box is 60–92px, so without it the word either clips or force the
+     column wide again. `hyphens: auto` breaks it as Spec-i-fi-ca-tion
+     rather than losing characters. */
+  .sk-spec thead th {
+    white-space: normal;
+    hyphens: auto;
+    overflow-wrap: break-word;
+    /* The desktop header is uppercase with .14em tracking, which is
+       ~19px of pure letter-spacing on the 13-character word
+       "Specification" — enough on its own to overflow the narrowed item
+       column and force an ugly mid-word break. .04em keeps the label
+       style and buys that back. */
+    letter-spacing: .04em;
+  }
+  .sk-spec thead th small { white-space: nowrap; letter-spacing: 0; }
+
+  /* Long values such as "4'x2' double charged vitrified floor tiles @
+     Rs.120/sq.ft" must break rather than widen the column. */
+  .sk-spec td,
+  .sk-spec tbody th[scope='row'] { overflow-wrap: anywhere; hyphens: auto; }
+
+  /* Pinned first column. Needs an opaque background — a translucent
+     one lets the swiping column show through the label.
+
+     `top: auto` is load-bearing, not tidiness. packages-base.css sets
+     `position: sticky; top: var(--sk-sticky)` on .sk-spec thead th, and
+     re-declaring position: sticky here without resetting top would
+     inherit that offset and pin the header vertically too — at which
+     point it floats over the rows scrolling underneath it. These cells
+     must stick horizontally only. */
+  .sk-spec thead th:first-child,
+  .sk-spec tbody th[scope='row'] {
+    position: sticky;
+    top: auto;
+    left: 0;
+    z-index: 3;
+    background: var(--sk-bg-2);
+    box-shadow: 8px 0 12px -10px rgba(0, 0, 0, .95);
+  }
+  .sk-spec thead th:first-child { z-index: 4; }
+
+  /* Rates read as figures, so they are right-aligned and tabular
+     rather than centred with the prose. */
+  .sk-spec td { text-align: right; font-variant-numeric: tabular-nums; }
+  .sk-spec td:first-of-type { text-align: left; font-variant-numeric: normal; }
+
+  /* Row hover must not only tint the swiping cells, or the pinned
+     label visibly detaches from its row. */
+  .sk-spec tbody tr:hover th[scope='row'] { background: var(--sk-bg-2); }
+}
+
+/* ---------- 4b. Cost calculator table ---------------------------
+
+   The calculator is a five-column table: Work, Area, Unit, Rate, Cost.
+   That does not fit a phone, and the previous treatment — a horizontally
+   scrolling table with a pinned "Work" column — was not a real answer:
+   the Cost column, the one number the user is actually there to read,
+   started roughly 200px off-screen on every device below ~520px, so it
+   was only visible after a sideways swipe on a touch screen and not at
+   all from a keyboard. Five columns of this content cannot be made to
+   fit, so below 768px the table stops being a table.
+
+   Each row becomes a self-contained card in a two-column grid: the work
+   label as the card title, the input full width underneath it, the unit
+   and the rate sharing one line, and the cost on its own line, right of
+   its label. Every input and every figure is on screen with no
+   horizontal scrolling, and the card count no longer depends on how
+   many columns happen to fit.
+
+   Landscape phones are in this layout too, and the gate has to say so.
+   A pure `max-width: 767px` query leaves an 844x390 iPhone on the
+   desktop table, which then collides with the two-column card grid that
+   the orientation query below applies — the <tbody> becomes a grid
+   while its <td>s are still table cells, and the whole thing collapses
+   into unreadable slivers. */
+@media (max-width: 767px),
+       (max-width: 915px) and (max-height: 500px) and (orientation: landscape) {
+  .calc-pop__tablewrap {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    /* A visible edge-to-edge card run needs no inner padding of its
+       own — the sheet already provides it. */
+    padding: 0;
+  }
+
+  .calc-pop__tbl {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    table-layout: auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: var(--sk-fs-body);
+  }
+
+  /* The column headers stay in the accessibility tree — they are what
+     tells a screen reader what each figure in a card is — but are not
+     painted, because every card now carries its own labels. */
+  .calc-pop__tbl thead {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0; border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .calc-pop__tbl tbody { display: block; }
+
+  /* The JS that shows and hides floors sets the `hidden` attribute. A
+     bare `tr { display: block }` outranks the UA's
+     `[hidden] { display: none }` on specificity, so without this line
+     every deselected floor would stay on screen. */
+  .calc-pop__tbl tbody tr[hidden] { display: none; }
+
+  .calc-pop__tbl tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: .1rem .7rem;
+    align-items: baseline;
+    margin-bottom: .5rem;
+    padding: .5rem .65rem .55rem;
+    border: 1px solid var(--sk-line);
+    background: var(--sk-panel);
+  }
+
+  .calc-pop__tbl tbody td,
+  .calc-pop__tbl tbody th {
+    display: block;
+    position: static;
+    width: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    text-align: left;
+    font-size: var(--sk-fs-body);
+    color: var(--sk-ink-2);
+  }
+
+  /* Field labels, printed from the data-l each cell carries. Fixed
+     minimum width keeps Unit, Rate and Cost on one baseline grid
+     regardless of label length. */
+  .calc-pop__tbl tbody td[data-l]::before,
+  .calc-pop__tbl tbody th[data-l]::before {
+    content: attr(data-l);
+    display: inline-block;
+    min-width: 3.2rem;
+    color: var(--sk-ink-3);
+    font-size: var(--sk-fs-micro);
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+  }
+
+  /* The work cell is the card's title, not a field: no label of its
+     own, and a gold rule down its edge to mark it as the heading. */
+  .calc-pop__work {
+    grid-column: 1 / -1;
+    padding-left: .5rem;
+    border-left: 2px solid var(--sk-gold);
+    color: var(--sk-ink);
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: .3rem;
+  }
+  .calc-pop__work::before { content: none; }
+
+  /* The input spans the card: it is the one control that has to be
+     comfortable to hit. */
+  .calc-pop__tbl tbody td[data-l='Area'] { grid-column: 1 / -1; }
+  .calc-pop__inp {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: .5rem .6rem;
+    font-size: var(--sk-fs-input);
+  }
+
+  /* The wall row's two inputs sit side by side rather than stacked:
+     each loses half its width, which is still far wider than the 44px
+     touch target, and it keeps the card four lines tall like the rest. */
+  .calc-pop__pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+
+  .calc-pop__tbl tbody td[data-l='Unit'] { grid-column: 1; }
+  .calc-pop__tbl tbody td[data-l='Rate'] {
+    grid-column: 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: .4rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Cost is the answer the user came for, so it gets its own line,
+     separated from the inputs, in the accent colour. */
+  .calc-pop__tbl tbody td[data-l='Cost'] {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: .6rem;
+    margin-top: .35rem;
+    padding-top: .35rem;
+    border-top: 1px dashed var(--sk-line-2);
+    color: var(--sk-gold);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The total row is not a field grid: one label, one figure. */
+  .calc-pop__tbl tbody tr.calc-pop__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: .6rem;
+    margin-bottom: 0;
+    border-color: var(--sk-line-gold);
+    background: rgba(231, 201, 89, .12);
+  }
+  /* "Total" and "Cost" are already the cells' own labels — the generated
+     ones would just repeat them. The selector has to out-specify the
+     `td[data-l]::before` rule above, which a bare `.calc-pop__total`
+     does not. */
+  .calc-pop__tbl tbody tr.calc-pop__total td::before { content: none; }
+  .calc-pop__total td:last-child {
+    flex: none;
+    color: var(--sk-gold);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ---------- 5. Hero ---------------------------------------------- */
+
+.atl-hero__grid { gap: clamp(1.5rem, 1.1rem + 2.4vw, 4rem); }
+.atl-hero__actions { margin-top: clamp(1.25rem, 1rem + 1.4vw, 2rem); }
+.atl-hero__stats { margin-top: clamp(1.5rem, 1.2rem + 1.8vw, 2.75rem); }
+.atl-hero__note { margin-top: .85rem; }
+
+/* ---------- 6. Stat strip ----------------------------------------
+   minmax(132px, 1fr) cannot fit two columns below ~300px, so the strip
+   collapsed to a single tall column on small phones. An explicit
+   two-column grid holds at every phone width. */
+
+.sk-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 560px) {
+  .sk-stats { grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); }
+}
+.sk-stat { text-align: center; }
+
+/* The kit drew the stat dividers with `gap: 1px` over a line-coloured
+   container. That works only when the cells fill the grid exactly —
+   there are five stats, and 2 or 3 columns always leave the last row
+   short, so the uncovered track rendered as a bright empty block.
+   Shadows on the cells give the same dividers while an unfilled cell
+   simply shows the page ground. */
+.sk-stats {
+  gap: 0;
+  background: var(--sk-bg);
+}
+.sk-stat {
+  box-shadow: 1px 0 0 var(--sk-line), 0 1px 0 var(--sk-line);
+}
+
+/* ---------- 7. Tier cards ---------------------------------------- */
+
+.atl-tiers { margin-top: clamp(1.5rem, 1.2rem + 1.8vw, 2.75rem); gap: 1.25rem; }
+.atl-tier__badge { align-self: center; }
+.atl-tier__hl-h { text-align: center; }
+.atl-tier .sk-ticks { text-align: left; }
+.atl-tier__rate { flex-wrap: wrap; }
+
+/* ---------- 8. Specification toolbar -----------------------------
+   Below 768px the search field takes the full first row and the switch
+   and count share the second, which is what makes the toolbar taller
+   than --sk-toolbar's default. _js.php measures the real height, so the
+   only job here is to keep the rows from getting taller than needed. */
+
+.sk-toolbar { gap: clamp(.45rem, .4rem + .3vw, .75rem); }
+.sk-search { flex: 1 1 260px; }
+.sk-search input { padding: .6rem 2.5rem; }
+
+/* ---------- 9. Contents rail -------------------------------------
+   Below 1000px .atl-rail becomes a horizontal chip scroller. The rules
+   that turn the links into chips live in packages-atlas.css under
+   `.atl-rail__a` / `.atl-rail__h`, but the markup only ever emits
+   `sk-rail__a` / `sk-rail__h` — those selectors match nothing, so the
+   strip kept its vertical-rail styling: a "Contents" heading floating
+   in a horizontal row and a stray gold border-left on the active chip.
+   Targeted again here against the classes that actually exist. */
+
+@media (max-width: 1000px) {
+  .atl-rail { justify-content: flex-start; padding-inline: 2px; }
+
+  /* The heading used to be display:none in the chip layout. It is a
+     label, not decoration: without it the strip of chips has no
+     introduction. Keep it, pinned to the left edge so it does not
+     scroll away with the chips. */
+  .atl-rail .sk-rail__h {
+    display: flex;
+    align-items: center;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    flex: none;
+    margin: 0 .25rem 0 0;
+    padding: 0 .5rem 0 2px;
+    background: var(--sk-bg);
+    font-size: var(--sk-fs-micro);
+    white-space: nowrap;
+  }
+  .atl-rail .sk-rail__a {
+    flex: none;
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    align-items: baseline;
+    gap: .45rem;
+    white-space: nowrap;
+    border: 1px solid var(--sk-line);
+    border-left-width: 1px;
+    border-radius: var(--sk-r-pill);
+    padding: .4rem .85rem;
+  }
+  .atl-rail .sk-rail__a.is-active {
+    border-color: var(--sk-line-gold);
+    background: rgba(231, 201, 89, .12);
+  }
+}
+
+/* ---------- 10. Section cards ------------------------------------ */
+
+.atl-sec__head { gap: .75rem; }
+.atl-sec__num { width: clamp(32px, 28px + 2vw, 40px); height: clamp(32px, 28px + 2vw, 40px); }
+
+/* ---------- 11. Notes, empty state, CTA -------------------------- */
+
+.sk-note { grid-template-columns: 20px 1fr; }
+.sk-note--spaced { margin-top: clamp(1.25rem, 1rem + 1.5vw, 2rem); }
+.sk-cta__actions { margin-top: clamp(1.1rem, .9rem + 1.2vw, 1.75rem); }
+
+/* ---------- 12. Cost calculator ----------------------------------
+   Full-screen sheet on phones. As a centred box with max-height:90vh,
+   the top and bottom of the calculator become unreachable on short and
+   landscape screens.
+
+   The sheet itself is the scroll container, and the submit button is a
+   sticky footer inside it. This is deliberately ONE scroller rather than
+   a fixed frame around a nested scroll region:
+
+   - Lenis, the site-wide smooth scroll, owns wheel and touch across the
+     whole document. A nested scroller inside a scroll-locked body is
+     exactly the case it swallows — the region reports a large
+     scrollHeight and then simply never moves, so the lower inputs cannot
+     be reached. One scroller on the sheet itself has nothing to
+     delegate to. (data-lenis-prevent on the dialog backs this up; see
+     packages.php.)
+   - A nested region also has to win an overflow contest against every
+     ancestor before it scrolls at all on mobile Safari.
+   - The sticky footer keeps the submit button on screen at every scroll
+     position, which is what the fixed frame was there to achieve. */
+
+.calc-pop__tablewrap { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.calc-pop__total td { font-weight: 700; }
+.calc-pop .sk-actions { justify-content: center; }
+
+@media (max-width: 767px) {
+  .calc-fab {
+    right: calc(12px + env(safe-area-inset-right));
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    width: 48px; height: 48px;
+    font-size: 1.1rem;
+  }
+
+  .calc-pop { padding: 0; align-items: stretch; }
+
+  .calc-pop__box {
+    max-width: none;
+    width: 100%;
+    height: 100vh; height: 100dvh;
+    max-height: 100vh; max-height: 100dvh;
+    border: 0;
+    /* The safe-area insets are horizontal too: in landscape on a notched
+       phone the notch cuts into the left and right edges, and a card
+       flush to that edge is unreachable behind it. */
+    padding: 1rem calc(.75rem + env(safe-area-inset-right)) 0
+             calc(.75rem + env(safe-area-inset-left));
+    box-shadow: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  .calc-pop__x { top: .4rem; right: .5rem; }
+
+  .calc-pop__box .sk-h2,
+  .calc-pop__box .sk-lede { text-align: center; margin-inline: auto; }
+  .calc-pop__box .sk-h2 { font-size: var(--sk-fs-h4); margin-bottom: .2rem; }
+  .calc-pop__box .sk-lede { font-size: var(--sk-fs-note); margin-bottom: .7rem; }
+
+  /* Both dropdowns full width. Their labels are long — "Premium Package
+     @ ₹2,300/sqft" — and a truncated rate is worse than spending the
+     extra 44px of height to keep the whole label readable. */
+  .calc-pop__controls { gap: .5rem; margin-bottom: .7rem; }
+  .calc-pop__field { flex: 1 1 100%; gap: .25rem; font-size: var(--sk-fs-note); }
+  .calc-pop__sel {
+    min-width: 0;
+    min-height: 44px;
+    padding: .5rem .55rem;
+    font-size: var(--sk-fs-input);
+  }
+  /* The options are real page content now, so they take the fluid scale
+     and can be a comfortable touch target tall. */
+  .calc-dd__list { max-height: none; overflow: visible; }
+  .calc-dd__list [role='option'] { padding: .7rem .6rem; }
+
+  /* No nested scroller: the cards are ordinary flow content and the
+     sheet scrolls past them. */
+  .calc-pop__tablewrap { flex: none; overflow: visible; }
+
+  .calc-pop .sk-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    margin-top: .75rem;
+    /* Opaque, because cards scroll underneath it. */
+    padding: .7rem 0 calc(.7rem + env(safe-area-inset-bottom));
+    background: var(--sk-bg-2);
+    border-top: 1px solid var(--sk-line);
+  }
+  .calc-pop .sk-actions .sk-btn { width: 100%; min-height: 46px; }
+}
+
+/* ---------- 13. Width tiers -------------------------------------- */
+
+/* ---- xs: <= 359px (Fold cover, iPhone SE 1st gen) ---- */
+@media (max-width: 359px) {
+  .sk-card { padding: .9rem; }
+  .sk-card--feature::before { inset-inline: .9rem; }
+
+  .sk-btn { padding: .7rem 1rem; }
+  .sk-btn--lg { padding: .85rem 1.15rem; }
+
+  /* Three filter actions plus a search box have to stack. */
+  .sk-toolbar { gap: .45rem; }
+  .sk-search { flex-basis: 100%; max-width: none; }
+  .sk-toolbar__spacer { display: none; }
+  .sk-switch { flex: 1 1 auto; justify-content: flex-start; }
+  .sk-count { flex: 1 1 100%; text-align: center; }
+
+  /* 132px min is wider than the column once the card padding is
+     taken off, so the strip is forced to two equal columns. */
+  .sk-stat__n { font-size: clamp(1.05rem, 0.95rem + 1.1vw, 1.15rem); }
+
+  .atl-tier__rate { margin: 1.1rem 0 .9rem; padding-bottom: 1.1rem; }
+  .atl-sec__head { grid-template-columns: 34px minmax(0, 1fr); }
+  .atl-sec__meta { grid-column: 2; padding-top: 0; }
+
+  .calc-pop__x { top: .35rem; right: .45rem; }
+
+  /* Narrowest tier: the row heading gives up another 3 points so the two
+     value columns — the part a reader actually compares — get the space
+     back. See the reachability limit in section 4: at 27% it is 0.58W,
+     and 3rem of scroll is far inside that. */
+  .sk-spec {
+    --sk-col-item: 27%;
+    --sk-table-over: 3rem;
+  }
+  /* At 280px the item column is 82px. Every pixel of horizontal padding
+     comes straight out of the label, so it goes to a minimum here, and
+     the header tracking drops again — that is what lets
+     "SPECIFICATION" sit on one line instead of breaking mid-word. */
+  .sk-spec thead th,
+  .sk-spec td,
+  .sk-spec tbody th[scope='row'] { padding: .45rem .25rem; }
+  .sk-spec thead th { letter-spacing: .01em; }
+
+  /* At 280px a two-column card grid leaves ~120px per column, which is
+     the width the old fixed "Work" column was fighting for. Nothing to
+     tune now that the cards are full width — but the padding, the gap
+     and the label column all come straight out of that 280px, so they
+     are trimmed here. */
+  .calc-pop__box { padding-inline: calc(.55rem + env(safe-area-inset-right))
+                                calc(.55rem + env(safe-area-inset-left)); }
+  .calc-pop__tbl tbody tr { padding: .45rem .5rem .5rem; margin-bottom: .45rem; }
+  .calc-pop__tbl tbody td[data-l]::before,
+  .calc-pop__tbl tbody th[data-l]::before { min-width: 2.9rem; }
+  .calc-pop__tbl tbody tr { column-gap: .5rem; }
+  /* Every pixel of select padding is a pixel of the option label, and
+     "Premium Package @ ₹2,300/sqft" is already clipped at 280px. */
+  .calc-pop__controls .calc-pop__sel { padding-inline: .4rem; }
+  .calc-dd__list [role='option'] { padding: .6rem .5rem; }
+}
+
+/* ---- sm: 360-479px ---- */
+@media (max-width: 479px) {
+  .sk-btn { padding: .78rem 1.25rem; }
+
+  /* Full-width stacked actions: two side-by-side CTAs on a 360px
+     screen wrap their own labels onto two lines. */
+  .sk-actions { gap: .55rem; }
+  .sk-actions .sk-btn { flex: 1 1 100%; width: 100%; }
+
+  .atl-tiers__foot { grid-template-columns: minmax(0, 1fr); text-align: center; }
+  .atl-tiers__foot > i { display: none; }
+
+  /* The rate lines are a label/value pair split across the full width
+     by space-between, which reads as two unrelated fragments once the
+     panel is full-bleed on a phone. Centre the pair instead. */
+  .atl-rateline { justify-content: center; gap: .5rem; }
+  .atl-rateline__v { width: auto; justify-content: center; }
+  .atl-hero__note { text-align: center; }
+
+  .sk-spec {
+    --sk-col-item: 30%;
+    --sk-table-over: 4rem;
+  }
+}
+
+/* ---- md: 480-767px ---- */
+@media (max-width: 767px) {
+  /* Side-by-side hero actions still fit from 480px up. */
+  .sk-actions { justify-content: center; }
+
+  /* The rail chip strip is a scroll region, not a list — give it the
+     edge padding back so the first chip is not flush to the bezel. */
+  .atl-rail { padding-inline: 2px; }
+
+  .atl-sec__head { grid-template-columns: 36px minmax(0, 1fr); }
+  .atl-sec__meta { grid-column: 2; padding-top: 0; }
+
+  .atl-rateline__v > span { margin-left: auto; }
+}
+
+/* ---- tab: 768-1023px ----
+   This band had no rules at all. Above it the layout is desktop, below
+   it the hero and the tiers stack, so it is where the page looked
+   most broken. It gets tablet values of its own rather than inheriting
+   the phone treatment. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .atl-hero__grid { grid-template-columns: minmax(0, 1fr) minmax(240px, .8fr); }
+
+  .sk-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  /* The section header's third column needs more room than "auto"
+     gives it once the blurb is long. */
+  .atl-sec__head { grid-template-columns: 40px minmax(0, 1fr) auto; }
+
+  .sk-tablewrap { -webkit-overflow-scrolling: touch; }
+}
+
+/* ---- tab-land: 1024-1279px ---- */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .atl-hero__grid { gap: 2rem; }
+  .sk-wrap--wide { width: min(1180px, 100% - (var(--sk-pad-x) * 2)); }
+}
+
+/* ---------- 14. Orientation / short viewports ------------------- */
+
+/* ---- landscape phones: the page is wide and very short ---- */
+@media (max-width: 915px) and (max-height: 500px) and (orientation: landscape) {
+  .atl-hero { padding-block: 2rem 1.5rem; }
+  .sk-section { padding-block: 2.25rem; }
+
+  /* Side by side works here because there is width to spend. */
+  .atl-hero__grid { grid-template-columns: minmax(0, 1.2fr) minmax(220px, .8fr); }
+
+  .atl-tiers { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1.5rem; }
+  .atl-sec__head { grid-template-columns: 34px minmax(0, 1fr) auto; padding-block: .7rem; }
+  /* The section blurb stays. It used to be display:none here, which threw
+     away a full sentence of published specification copy on every one of
+     the fifteen sections just to save ~40px. The heading wraps instead. */
+  .atl-sec__blurb { display: block; margin-top: .2rem; }
+  .atl-sec__head h3 { font-size: var(--sk-fs-h4); }
+
+  /* The sticky toolbar plus the topbar would eat a 390px-tall
+     viewport, so the toolbar collapses to one row. */
+  .sk-toolbar { padding: .35rem 0; }
+  .sk-stats { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .sk-stat { padding: .55rem .6rem; }
+
+  /* Landscape: same single-scroller sheet as portrait, kept as a centred
+     modal because a full-bleed sheet would waste the bezel. The submit
+     button stays pinned to the bottom of the scroll viewport. */
+  .calc-pop { padding: .5rem; }
+  .calc-pop__box {
+    max-height: calc(100dvh - 1rem);
+    padding: 1rem 1rem 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  .calc-pop__box .sk-h2 { font-size: var(--sk-fs-h4); margin-bottom: .15rem; }
+  .calc-pop__box .sk-lede { font-size: var(--sk-fs-note); margin-bottom: .5rem; }
+  .calc-pop__controls { flex-direction: row; margin-bottom: .5rem; }
+  .calc-pop__field { flex: 1 1 0; }
+  .calc-pop__tablewrap { flex: none; overflow: visible; }
+
+  .calc-pop .sk-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    margin-top: .6rem;
+    padding: .6rem 0;
+    background: var(--sk-bg-2);
+    border-top: 1px solid var(--sk-line);
+  }
+
+  /* The option lists would be taller than the modal itself, so they
+     scroll inside themselves here. */
+  .calc-dd__list { max-height: 45dvh; overflow-y: auto; }
+
+  /* The cards are full width, so in landscape a single column leaves
+     half the screen empty and pushes rows below the fold. Two columns
+     of cards use the width the device actually has; the total card
+     spans both. */
+  .calc-pop__tbl tbody {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .5rem;
+    align-content: start;
+  }
+  .calc-pop__tbl tbody tr { margin-bottom: 0; }
+
+  /* There is width to spare here but almost no height, so the card's
+     four lines become three: unit, rate and cost share the last row.
+     That is what lets a second row of cards be visible at all. */
+  .calc-pop__tbl tbody tr {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    column-gap: .8rem;
+  }
+  .calc-pop__tbl tbody td[data-l='Unit'] { grid-column: 1; }
+  .calc-pop__tbl tbody td[data-l='Rate'] { grid-column: 2; }
+  .calc-pop__tbl tbody td[data-l='Cost'] {
+    grid-column: 3;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .calc-pop__tbl tbody tr.calc-pop__total { grid-column: 1 / -1; }
+
+  .calc-fab {
+    width: 44px; height: 44px; font-size: 1rem;
+    right: calc(10px + env(safe-area-inset-right));
+    bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+}
+
+/* ---- short portrait phones: 320x480, 360x640 class devices ---- */
+@media (max-width: 767px) and (max-height: 700px) and (orientation: portrait) {
+  .atl-hero { padding-block: 2rem 1.25rem; }
+  .sk-section { padding-block: 2.5rem; }
+  .sk-section--tight { padding-block: 1.75rem; }
+
+  /* One hero stat row is enough; five wrapped rows push the tiers
+     entirely below the fold. */
+  .sk-stats { margin-top: 1.25rem; }
+  .sk-stat { padding: .6rem .7rem; }
+
+  .atl-tier__rate { margin: 1rem 0 .85rem; padding-bottom: 1rem; }
+  .atl-tier__hr { margin: 1rem 0; }
+  .atl-tier .sk-ticks { gap: .5rem; margin-bottom: 1.25rem; }
+
+  .sk-card { padding: 1rem; }
+  .sk-card--feature::before { inset-inline: 1rem; }
+
+  /* Same idea for the calculator: on a 640px-tall phone the heading,
+     two selects and the submit button would otherwise leave room for
+     barely two cards. The frame's vertical rhythm is trimmed so the
+     rows — the part that is actually used — get the space. No copy is
+     removed here, per the rule this file follows. */
+  .calc-pop__box { padding-top: .7rem; }
+  .calc-pop__box .sk-h2 { margin-bottom: .1rem; }
+  .calc-pop__box .sk-lede { margin-bottom: .5rem; }
+  .calc-pop__controls { gap: .4rem; margin-bottom: .5rem; }
+  /* Label beside control rather than above it: two rows become two
+     rows, not four, and the option text keeps its full width.
+     flex-start, not center — once a listbox opens the field is taller
+     than the button, and centring would strand the label beside the
+     middle of the option list instead of beside its own control. */
+  .calc-pop__field { flex-direction: row; align-items: flex-start; gap: .5rem; }
+  .calc-pop__fieldlab { padding-top: .6rem; flex: none; }
+  .calc-pop__field .calc-dd { flex: 1 1 auto; min-width: 0; }
+  .calc-pop__controls .calc-pop__sel { min-height: 40px; }
+  .calc-pop__tbl tbody tr { margin-bottom: .4rem; padding: .4rem .55rem .45rem; }
+  .calc-pop__inp { min-height: 40px; }
+  .calc-pop .sk-actions { margin-top: .6rem; }
+}
+
+/* ---- very short portrait: 320x480 and smaller ----
+   Vertical space is reclaimed by tightening padding and rhythm, never by
+   removing copy. An earlier version of this block hid the hero rate note
+   and the tier taglines here; both are content, so both stay. */
+@media (max-width: 767px) and (max-height: 560px) and (orientation: portrait) {
+  .sk-stat__l { letter-spacing: .1em; }
+  .atl-hero { padding-block: 1.5rem 1rem; }
+  .sk-section { padding-block: 2rem; }
+  .atl-hero__actions { margin-top: 1rem; }
+}
+
+/* ---------- 15. Print reset -------------------------------------
+   The horizontal scrollers and the pinned first column are screen-only
+   affordances; on paper the table must lay out flat and full width. */
+
+@media print {
+  .sk-tablewrap,
+  .calc-pop__tablewrap {
+    overflow: visible !important;
+    background: none !important;
+    -webkit-overflow-scrolling: auto !important;
+  }
+  .sk-spec,
+  .calc-pop__tbl {
+    table-layout: auto !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  .sk-spec thead th:first-child,
+  .sk-spec tbody th[scope='row'],
+  .calc-pop__tbl th:first-child,
+  .calc-pop__tbl td:first-child {
+    position: static !important;
+    top: auto !important;
+    box-shadow: none !important;
+    background: #eee !important;
+  }
+
+  /* The calculator's phone layout restructures the table into cards —
+     block-level cells, a grid on every <tr>, and column headers hidden
+     because each cell prints its own data-l label. On paper the five
+     columns fit, so all of it has to come back off. */
+  .calc-pop__tbl thead {
+    position: static !important;
+    width: auto !important; height: auto !important;
+    margin: 0 !important; padding: 0 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+    white-space: normal !important;
+  }
+  .calc-pop__tbl,
+  .calc-pop__tbl tbody,
+  .calc-pop__tbl tbody tr,
+  .calc-pop__tbl tbody td,
+  .calc-pop__tbl tbody th {
+    display: revert !important;
+    margin: 0 !important;
+    padding: revert !important;
+    border: revert !important;
+    background: revert !important;
+  }
+  .calc-pop__tbl tbody tr.calc-pop__total { grid-column: auto !important; }
+  .calc-pop__tbl tbody td[data-l]::before,
+  .calc-pop__tbl tbody th[data-l]::before { content: none !important; }
+}

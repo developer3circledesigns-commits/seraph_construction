@@ -78,9 +78,30 @@ declare(strict_types=1);
       targets.forEach(function (el) { el.style.setProperty('--sk-toolbar', h + 'px'); });
     }
 
+    /* A resize listener alone is not enough. The toolbar changes *row
+       count* at the widths where the search field claims its own line,
+       and a resize that leaves the viewport in the same band fires no
+       useful signal after the media query has already settled — the
+       height changes on the match, not continuously with the width.
+       Watching the queries themselves covers both. */
+    var queries = [
+      window.matchMedia('(max-width: 479px)'),
+      window.matchMedia('(max-width: 767px)'),
+      window.matchMedia('(min-width: 768px)'),
+      window.matchMedia('(max-height: 700px)'),
+    ];
+
+    function onQuery(e) { if (e.matches) { sync(); } }
+
+    queries.forEach(function (q) {
+      if (q.addEventListener) { q.addEventListener('change', onQuery); }
+      else if (q.addListener) { q.addListener(onQuery); }
+    });
+
     sync();
     window.addEventListener('resize', sync);
     window.addEventListener('load', sync);
+    window.addEventListener('orientationchange', function () { setTimeout(sync, 200); });
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(sync); }
   })();
 

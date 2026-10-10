@@ -32,7 +32,11 @@ $pageMeta = [
         . ' sections, published in full — structure, finishes, services and site works.',
     'og_title'       => 'SBC Packages — Turnkey Homes, Every Line Item Named',
     'og_description' => 'Two turnkey packages. ' . $stats['rows'] . ' line items. No ambiguity about what you are paying for.',
-    'styles'         => ['css/packages/packages-base.css', 'css/packages/packages-atlas.css'],
+    'styles'         => [
+        'css/packages/packages-base.css',
+        'css/packages/packages-atlas.css',
+        'css/packages/packages-responsive.css',
+    ],
 ];
 
 require __DIR__ . '/partials/header.php';
@@ -49,7 +53,7 @@ require __DIR__ . '/partials/header.php';
           <h1 class="sk-h1">Build Better.<br>Choose the Right Package.</h1>
           <p class="sk-lede"><?php echo htmlspecialchars($pk['meta']['intro']); ?></p>
 
-          <div class="sk-actions" style="margin-top:2rem">
+          <div class="sk-actions atl-hero__actions">
             <a class="sk-btn sk-btn--primary" href="#pk-spec">
               <i class="fa-solid fa-arrow-down" aria-hidden="true"></i> Read the specification
             </a>
@@ -79,7 +83,7 @@ require __DIR__ . '/partials/header.php';
         </aside>
       </div>
 
-      <div class="sk-stats" style="margin-top:2.75rem">
+      <div class="sk-stats atl-hero__stats">
         <div class="sk-stat"><span class="sk-stat__n"><?php echo $stats['sections']; ?></span><span class="sk-stat__l">Sections</span></div>
         <div class="sk-stat"><span class="sk-stat__n"><?php echo $stats['rows']; ?></span><span class="sk-stat__l">Line items</span></div>
         <div class="sk-stat"><span class="sk-stat__n"><?php echo $stats['diff']; ?></span><span class="sk-stat__l">Upgraded in Elite</span></div>
@@ -186,7 +190,7 @@ require __DIR__ . '/partials/header.php';
       </div>
     </div>
 
-    <div class="sk-wrap--wide sk-wrap atl-body" data-sk-filter-scope style="margin-top:1.5rem">
+    <div class="sk-wrap--wide sk-wrap atl-body" data-sk-filter-scope>
 
       <!-- Contents rail -->
       <nav class="sk-rail atl-rail" aria-label="Specification sections">
@@ -229,11 +233,24 @@ require __DIR__ . '/partials/header.php';
               </span>
             </header>
 
+            <!-- role=region + tabindex makes the horizontal scroller reachable
+                 from the keyboard, which is the only way to reach the Elite
+                 column once the table is wider than a phone. -->
+            <div class="sk-tablewrap" role="region" tabindex="0"
+                 aria-label="<?php echo strip_tags($section['title']); ?> — <?php echo htmlspecialchars($premium['short']); ?> versus <?php echo htmlspecialchars($elite['short']); ?>, scrollable table">
             <table class="sk-spec sk-spec--bare">
               <caption class="visually-hidden"><?php echo strip_tags($section['title']); ?> — Premium versus Elite</caption>
               <thead>
                 <tr>
-                  <th scope="col">Specification item</th>
+                  <?php /* Soft hyphen inside "Specification": the row
+                        heading column is deliberately narrow on phones,
+                        and without a break opportunity the browser falls
+                        back to overflow-wrap and slices the word as
+                        "SPECIFICATI / ON". &shy; gives it a legal break
+                        ("SPECIFI-CATION") at any width, with no
+                        hyphenation dictionary required and no change to
+                        the accessible name. */ ?>
+                  <th scope="col">Specifi&shy;cation item</th>
                   <th scope="col"><?php echo htmlspecialchars($premium['short']); ?><small>&#8377;<?php echo htmlspecialchars($premium['rate']); ?>/sq.ft</small></th>
                   <th scope="col"><?php echo htmlspecialchars($elite['short']); ?><small>&#8377;<?php echo htmlspecialchars($elite['rate']); ?>/sq.ft</small></th>
                 </tr>
@@ -259,6 +276,7 @@ require __DIR__ . '/partials/header.php';
                 <?php endforeach; ?>
               </tbody>
             </table>
+            </div>
           </section>
         <?php endforeach; ?>
 
@@ -272,7 +290,7 @@ require __DIR__ . '/partials/header.php';
     </div>
 
     <div class="sk-wrap--wide sk-wrap">
-      <div class="sk-note" style="margin-top:2rem">
+      <div class="sk-note sk-note--spaced">
         <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
         <p><strong>Scope note.</strong> <?php echo htmlspecialchars($pk['meta']['disclaimer']); ?></p>
       </div>
@@ -289,7 +307,7 @@ require __DIR__ . '/partials/header.php';
           <p class="sk-lede">No obligation, no site visit required to get a first number. Share your
             carpet area and floor plan and we will come back with a line-by-line bill of quantities against
             either specification.</p>
-          <div class="sk-actions sk-actions--center" style="margin-top:1.75rem">
+          <div class="sk-actions sk-actions--center sk-cta__actions">
             <a class="sk-btn sk-btn--primary sk-btn--lg" href="<?php echo htmlspecialchars($contact); ?>">
               <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i> Request a quote
             </a>
@@ -345,19 +363,27 @@ require __DIR__ . '/partials/header.php';
    min-height, not height: the shorter card grows, the taller one is left
    at its natural size, and nothing can ever be clipped.
 
-   Guarded on width, because width is the only thing that changes the line
-   counts. That also keeps it clear of a ResizeObserver feedback loop —
-   equalising changes the page height, never the grid's width. */
+   Skipped below 861px, where the grid collapses to one column. Below that
+   each card sits in its own grid row, so a shared min-height would pad
+   the shorter card out with a large empty block rather than aligning
+   anything. */
 (function () {
   var grid = document.querySelector('.atl-tiers');
   if (!grid) { return; }
 
+  var stackQuery = window.matchMedia('(max-width: 860px)');
   var tiers = grid.querySelectorAll('.atl-tier');
   if (tiers.length < 2) { return; }
 
   var lastW = -1;
 
   function equalise() {
+    /* One column: clear anything a previous wide layout applied. */
+    if (stackQuery.matches) {
+      for (var k = 0; k < tiers.length; k++) { tiers[k].style.minHeight = ''; }
+      return;
+    }
+
     var w = grid.clientWidth;
     if (w === lastW) { return; }
     lastW = w;
@@ -376,6 +402,14 @@ require __DIR__ . '/partials/header.php';
 
   equalise();
 
+  /* Crossing the breakpoint changes the answer, and the observer only
+     fires on a width change, so the query itself has to be watched. */
+  if (stackQuery.addEventListener) {
+    stackQuery.addEventListener('change', equalise);
+  } else if (stackQuery.addListener) {
+    stackQuery.addListener(equalise);
+  }
+
   /* Web fonts land after first paint and change every line count, so the
      first measurement is a guess until the real faces are in. */
   if (document.fonts && document.fonts.ready) {
@@ -389,46 +423,77 @@ require __DIR__ . '/partials/header.php';
   }
 })();
 </script>
-<button type="button" id="calcFab" class="calc-fab" aria-label="Open cost calculator">
+<button type="button" id="calcFab" class="calc-fab sk-scope" aria-label="Open cost calculator">
   <i class="fa-solid fa-calculator" aria-hidden="true"></i>
 </button>
 
-<style>
-/* z-index above every other fixed element on the page so it is never
-   covered by the sticky topbar or the specification toolbar. */
-.calc-fab{position:fixed;right:24px;bottom:24px;z-index:9990;width:56px;height:56px;border:0;border-radius:50%;background:#ffffff;color:#001431;font-size:1.3rem;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .3s ease,transform .3s ease,visibility .3s ease}
-.calc-fab.is-visible{opacity:1;visibility:visible;transform:translateY(0)}
-.calc-fab.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
-.calc-fab:hover{background:#f0f0f0}
-.calc-fab::after{content:'Cost Calculator';position:absolute;bottom:calc(100% + 10px);right:0;background:#001431;color:#E7C959;font-size:.8rem;font-weight:600;padding:.35rem .6rem;border-radius:6px;white-space:nowrap;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .2s ease,transform .2s ease,visibility .2s ease;pointer-events:none}
-.calc-fab:hover::after{opacity:1;visibility:visible;transform:translateY(0)}
-</style>
-
 <!-- ======================= COST CALCULATOR POPUP ======================= -->
-<div class="calc-pop" id="calcPop" role="dialog" aria-modal="true" aria-labelledby="calcTitle" hidden>
-  <div class="calc-pop__backdrop" data-calc-close></div>
-  <div class="calc-pop__box">
-    <button type="button" class="calc-pop__x" data-calc-close aria-label="Close calculator">&times;</button>
-    <h2 class="sk-h2" id="calcTitle" style="font-size:1.5rem;margin-bottom:.25rem">Home Construction Cost Calculator</h2>
-    <p class="sk-lede sk-lede--sm" style="margin-bottom:1.25rem">You can arrive at your construction estimate here</p>
+<?php /* data-lenis-prevent(-wheel/-touch) are Lenis's own opt-outs.
 
+           Lenis owns wheel and touch events across the whole document.
+           Inside a modal that is fatal: it consumes the gesture, and the
+           sheet's scroll region — the only way to reach the lower
+           inputs — never moves. Marking the dialog tells Lenis to leave
+           scrolling inside it alone. Without these the calculator is
+           unusable on the live site. */ ?>
+<div class="calc-pop sk-scope" id="calcPop" role="dialog" aria-modal="true" aria-labelledby="calcTitle"
+     data-lenis-prevent data-lenis-prevent-wheel data-lenis-prevent-touch hidden>
+  <div class="calc-pop__backdrop" data-calc-close></div>
+  <div class="calc-pop__box" role="document">
+    <button type="button" class="calc-pop__x" data-calc-close aria-label="Close calculator">&times;</button>
+    <h2 class="sk-h2" id="calcTitle">Home Construction Cost Calculator</h2>
+    <p class="sk-lede sk-lede--sm">You can arrive at your construction estimate here</p>
+
+    <?php /* The two dropdowns are custom controls, not <select> elements.
+
+           A native select's option list is drawn by the OS — Android,
+           iOS and Windows each render it with their own font size,
+           padding and popup width, and none of it is reachable from CSS.
+           That is why the option text could not be made to match the
+           rest of the sheet: the rate inside the list was sized by the
+           platform, not by this page.
+
+           The hidden input keeps the id, the value and the change event
+           that the calculator script below already reads, so nothing
+           downstream had to change. The button + listbox pair is the
+           ARIA combobox pattern and is styled and sized like every other
+           part of the sheet. */ ?>
     <div class="calc-pop__controls">
-      <label>No. of Floors
-        <select id="calcFloors" class="calc-pop__sel">
-          <option value="1">Ground</option>
-          <option value="2">G + 1</option>
-          <option value="3">G + 2</option>
-          <option value="4">G + 3</option>
-          <option value="5">G + 4</option>
-          <option value="6">G + 5</option>
-        </select>
-      </label>
-      <label>Package
-        <select id="calcPkg" class="calc-pop__sel">
-          <option value="2300">Premium Package @ &#8377;2,300/sqft</option>
-          <option value="2900">Elite Package @ &#8377;2,900/sqft</option>
-        </select>
-      </label>
+      <div class="calc-pop__field">
+        <span class="calc-pop__fieldlab" id="calcFloorsLab">No. of Floors</span>
+        <div class="calc-dd" data-calc-dd>
+          <input type="hidden" id="calcFloors" value="1">
+          <button type="button" class="calc-pop__sel" role="combobox" aria-expanded="false"
+                  aria-haspopup="listbox" aria-labelledby="calcFloorsLab">
+            <span class="calc-dd__val">Ground</span>
+            <i class="fa-solid fa-chevron-down calc-dd__chev" aria-hidden="true"></i>
+          </button>
+          <ul class="calc-dd__list" role="listbox" aria-labelledby="calcFloorsLab" hidden>
+            <li role="option" aria-selected="true"  data-v="1" tabindex="-1">Ground</li>
+            <li role="option" aria-selected="false" data-v="2" tabindex="-1">G + 1</li>
+            <li role="option" aria-selected="false" data-v="3" tabindex="-1">G + 2</li>
+            <li role="option" aria-selected="false" data-v="4" tabindex="-1">G + 3</li>
+            <li role="option" aria-selected="false" data-v="5" tabindex="-1">G + 4</li>
+            <li role="option" aria-selected="false" data-v="6" tabindex="-1">G + 5</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="calc-pop__field">
+        <span class="calc-pop__fieldlab" id="calcPkgLab">Package</span>
+        <div class="calc-dd" data-calc-dd>
+          <input type="hidden" id="calcPkg" value="2300">
+          <button type="button" class="calc-pop__sel" role="combobox" aria-expanded="false"
+                  aria-haspopup="listbox" aria-labelledby="calcPkgLab">
+            <span class="calc-dd__val">Premium Package @ &#8377;2,300/sqft</span>
+            <i class="fa-solid fa-chevron-down calc-dd__chev" aria-hidden="true"></i>
+          </button>
+          <ul class="calc-dd__list" role="listbox" aria-labelledby="calcPkgLab" hidden>
+            <li role="option" aria-selected="true"  data-v="2300" tabindex="-1">Premium Package @ &#8377;2,300/sqft</li>
+            <li role="option" aria-selected="false" data-v="2900" tabindex="-1">Elite Package @ &#8377;2,900/sqft</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <div class="calc-pop__tablewrap">
@@ -443,49 +508,69 @@ require __DIR__ . '/partials/header.php';
           </tr>
         </thead>
         <tbody>
+          <?php /* The work cell is a <th scope="row"> and every value cell
+                 carries data-l. Both exist for the stacked phone layout
+                 in css/packages/packages-responsive.css: the row header
+                 gives a screen reader the row's subject, and data-l is
+                 what the card layout prints as the field label once the
+                 five columns stop being columns. On desktop neither is
+                 visible. */ ?>
           <?php $floorNames = ['Ground Floor', 'First Floor', 'Second Floor', 'Third Floor', 'Fourth Floor', 'Fifth Floor']; ?>
           <?php for ($i = 1; $i <= 6; $i++): ?>
-          <tr<?php echo $i > 1 ? ' class="calc-floor" data-floor="' . $i . '" hidden' : ''; ?>>
-            <td>Enter required Built up Area for <?php echo $floorNames[$i - 1]; ?></td>
-            <td><input type="number" min="0" id="calcCost<?php echo $i; ?>" class="calc-pop__inp" placeholder="Area in sqft"></td>
-            <td>sqft</td>
-            <td>&#8377;<span class="calc-pkg-rate">2300</span></td>
-            <td>&#8377; <span id="calcPrice<?php echo $i; ?>">0</span></td>
+          <tr class="calc-pop__row calc-floor" data-floor="<?php echo $i; ?>"<?php echo $i > 1 ? ' hidden' : ''; ?>>
+            <th scope="row" class="calc-pop__work" data-l="Work">Built-up area &mdash; <?php echo $floorNames[$i - 1]; ?></th>
+            <td data-l="Area">
+              <input type="number" min="0" step="1" inputmode="decimal" id="calcCost<?php echo $i; ?>" class="calc-pop__inp" placeholder="Area in sqft"
+                     aria-label="<?php echo $floorNames[$i - 1]; ?> built-up area in square feet">
+            </td>
+            <td data-l="Unit">sqft</td>
+            <td data-l="Rate">&#8377;<span class="calc-pkg-rate">2300</span></td>
+            <td data-l="Cost">&#8377; <span id="calcPrice<?php echo $i; ?>">0</span></td>
           </tr>
           <?php endfor; ?>
-          <tr>
-            <td>Size of RCC Water Sump (a 4 member family requires 9000 ltr)</td>
-            <td><input type="number" min="0" id="calcSump" class="calc-pop__inp" placeholder="No. of Litres"></td>
-            <td>ltr</td>
-            <td>&#8377;30</td>
-            <td>&#8377; <span id="calcSumpPrice">0</span></td>
-          </tr>
-          <tr>
-            <td>Size of Septic Tank</td>
-            <td><input type="number" min="0" id="calcSeptic" class="calc-pop__inp" placeholder="No. of Litres"></td>
-            <td>ltr</td>
-            <td>&#8377;30</td>
-            <td>&#8377; <span id="calcSepticPrice">0</span></td>
-          </tr>
-          <tr>
-            <td>Plain Compound Wall</td>
-            <td>
-              <input type="number" min="0" id="calcWallL" class="calc-pop__inp" placeholder="Length" style="margin-bottom:4px">
-              <input type="number" min="0" id="calcWallH" class="calc-pop__inp" placeholder="Height">
+          <tr class="calc-pop__row">
+            <th scope="row" class="calc-pop__work" data-l="Work">Size of RCC Water Sump <small>(a 4 member family requires 9000 ltr)</small></th>
+            <td data-l="Area">
+              <input type="number" min="0" step="1" inputmode="decimal" id="calcSump" class="calc-pop__inp" placeholder="No. of Litres" aria-label="RCC water sump capacity in litres">
             </td>
-            <td>sqft</td>
-            <td>&#8377;425</td>
-            <td>&#8377; <span id="calcWallPrice">0</span></td>
+            <td data-l="Unit">ltr</td>
+            <td data-l="Rate">&#8377;30</td>
+            <td data-l="Cost">&#8377; <span id="calcSumpPrice">0</span></td>
+          </tr>
+          <tr class="calc-pop__row">
+            <th scope="row" class="calc-pop__work" data-l="Work">Size of Septic Tank</th>
+            <td data-l="Area">
+              <input type="number" min="0" step="1" inputmode="decimal" id="calcSeptic" class="calc-pop__inp" placeholder="No. of Litres" aria-label="Septic tank capacity in litres">
+            </td>
+            <td data-l="Unit">ltr</td>
+            <td data-l="Rate">&#8377;30</td>
+            <td data-l="Cost">&#8377; <span id="calcSepticPrice">0</span></td>
+          </tr>
+          <tr class="calc-pop__row">
+            <th scope="row" class="calc-pop__work" data-l="Work">Plain Compound Wall</th>
+            <td class="calc-pop__pair" data-l="Area">
+              <label class="calc-pop__mini">
+                <span class="calc-pop__minilab">Length</span>
+                <input type="number" min="0" step="1" inputmode="decimal" id="calcWallL" class="calc-pop__inp" placeholder="in ft">
+              </label>
+              <label class="calc-pop__mini">
+                <span class="calc-pop__minilab">Height</span>
+                <input type="number" min="0" step="1" inputmode="decimal" id="calcWallH" class="calc-pop__inp" placeholder="in ft">
+              </label>
+            </td>
+            <td data-l="Unit">sqft</td>
+            <td data-l="Rate">&#8377;425</td>
+            <td data-l="Cost">&#8377; <span id="calcWallPrice">0</span></td>
           </tr>
           <tr class="calc-pop__total">
-            <td colspan="4" style="text-align:right"><b>Total Construction Cost</b></td>
-            <td><b>&#8377; <span id="calcTotal">0</span></b></td>
+            <td colspan="4" data-l="Total"><b>Total Construction Cost</b></td>
+            <td data-l="Cost"><b>&#8377; <span id="calcTotal">0</span></b></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <form class="sk-actions" style="margin-top:1.25rem" id="calcEstimateForm" method="POST" action="/contact">
+    <form class="sk-actions" id="calcEstimateForm" method="POST" action="/contact">
       <?php echo CSRF::field(); ?>
       <input type="hidden" name="calc_estimate" value="1">
       <input type="hidden" name="calc_floors" id="hCalcFloors" value="1">
@@ -504,52 +589,183 @@ require __DIR__ . '/partials/header.php';
   </div>
 </div>
 
-<style>
-.calc-pop[hidden]{display:none}
-.calc-pop{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem}
-.calc-pop__backdrop{position:absolute;inset:0;background:rgba(0,10,25,.78);backdrop-filter:blur(4px)}
-.calc-pop__box{position:relative;background:#0A2540;border:1px solid rgba(231,201,89,.35);color:#C3CDDC;max-width:1400px;width:100%;max-height:90vh;overflow:auto;padding:1.75rem;box-shadow:0 28px 60px -24px rgba(0,0,0,.8)}
-.calc-pop__box h2{color:#F2F5FA}
-.calc-pop__x{position:absolute;top:.9rem;right:1rem;border:0;background:transparent;font-size:1.6rem;line-height:1;cursor:pointer;color:#93A0B4}
-.calc-pop__x:hover{color:#E7C959}
-.calc-pop__controls{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1rem}
-.calc-pop__controls label{display:flex;flex-direction:column;gap:.35rem;font-weight:600;font-size:.9rem;color:#F2F5FA}
-.calc-pop__sel,.calc-pop__inp{width:100%;padding:.55rem .7rem;border:1px solid rgba(255,255,255,.2);background:#001431;color:#F2F5FA;font-size:.95rem}
-.calc-pop__sel:focus,.calc-pop__inp:focus{outline:none;border-color:#E7C959;box-shadow:0 0 0 3px rgba(231,201,89,.25)}
-.calc-pop__controls .calc-pop__sel{min-width:240px}
-.calc-pop__tbl{width:100%;border-collapse:collapse}
-.calc-pop__tbl th,.calc-pop__tbl td{border:1px solid rgba(255,255,255,.14);padding:.6rem .7rem;text-align:left;color:#C3CDDC}
-.calc-pop__tbl thead th{background:#001431;color:#E7C959;font-weight:700}
-.calc-pop__tbl tbody tr:hover{background:rgba(255,255,255,.05)}
-.calc-pop__inp{width:100%;min-width:130px}
-.calc-pop__total td{background:rgba(231,201,89,.12);color:#F2F5FA}
-.calc-pop .sk-btn--primary{background:#E7C959;color:#001431}
-.calc-pop .sk-btn--primary:hover{background:#F0DA8C}
-.calc-pop__tablewrap{overflow-x:auto}
-.calc-pop ::placeholder{color:#7E8CA6}
-</style>
-
 <script>
 (function () {
   var pop = document.getElementById('calcPop');
   if (!pop) { return; }
 
-  document.getElementById('calcOpen').addEventListener('click', function () {
-    pop.hidden = false;
+  var box = pop.querySelector('.calc-pop__box');
+  var lastFocus = null;
+
+  /* iOS ignores overflow:hidden on <body> — the page behind the sheet
+     still scrolls under your thumb. Pinning the body and restoring its
+     scroll offset on close is what actually holds it still. */
+  var lockY = 0;
+  function lock() {
+    lockY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + lockY + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+  }
+  function unlock() {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    document.body.style.overflow = '';
+    window.scrollTo(0, lockY);
+  }
+
+  function open(trigger) {
+    if (!pop.hidden) { return; }
+    lastFocus = trigger || document.activeElement;
+    pop.hidden = false;
+    lock();
     if (window.lenis) { window.lenis.stop(); }
-  });
+    /* Move focus into the dialog, or a screen reader and a keyboard user
+       are both still on the page behind it. */
+    var first = pop.querySelector('.calc-pop__x') || box;
+    if (first) { first.focus({ preventScroll: true }); }
+  }
 
   function close() {
+    if (pop.hidden) { return; }
     pop.hidden = true;
-    document.body.style.overflow = '';
+    unlock();
     if (window.lenis) { window.lenis.start(); }
+    if (lastFocus && lastFocus.focus) { lastFocus.focus({ preventScroll: true }); }
+    lastFocus = null;
   }
+
+  document.getElementById('calcOpen').addEventListener('click', function () { open(this); });
+
+  /* The floating action button lives in a separate script below and has
+     to open this same dialog — with the same scroll lock, focus move
+     and focus return — rather than just flipping `hidden`. */
+  window.openCostCalculator = open;
+
   pop.querySelectorAll('[data-calc-close]').forEach(function (el) {
     el.addEventListener('click', close);
   });
+
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !pop.hidden) { close(); }
+    if (pop.hidden) { return; }
+    if (e.key === 'Escape') { close(); return; }
+    /* Trap Tab inside the dialog. Without this, Tab walks off the end of
+       the sheet and into the page behind it, which is still visible on
+       landscape phones where the modal is not full-screen. */
+    if (e.key !== 'Tab') { return; }
+    var focusables = box.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    if (!focusables.length) { return; }
+    var firstEl = focusables[0];
+    var lastEl = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === firstEl) {
+      e.preventDefault(); lastEl.focus();
+    } else if (!e.shiftKey && document.activeElement === lastEl) {
+      e.preventDefault(); firstEl.focus();
+    }
+  });
+
+  /* ---------- Custom dropdowns ----------
+     Each one is a hidden input (the value), a combobox button (the
+     closed state) and a listbox (the options). Selecting fires a real
+     `change` on the input, so the handlers further down are unchanged.
+
+     The listbox is not portalled and not absolutely positioned against
+     the viewport: it is a plain block inside the dialog's own flow.
+     That is deliberate — it means the options scroll with the sheet
+     like any other content, cannot be clipped by an overflow ancestor,
+     and can never be left hanging off the bottom of the screen on a
+     short phone. */
+  var openList = null;
+
+  function closeDD() {
+    if (!openList) { return; }
+    var dd = openList.closest('[data-calc-dd]');
+    openList.hidden = true;
+    dd.querySelector('[role="combobox"]').setAttribute('aria-expanded', 'false');
+    openList = null;
+  }
+
+  pop.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && openList) {
+      e.stopPropagation();
+      closeDD();
+      openList = null;
+    }
+  });
+
+  document.addEventListener('click', function (e) {
+    if (openList && !e.target.closest('[data-calc-dd]')) { closeDD(); }
+  });
+
+  pop.querySelectorAll('[data-calc-dd]').forEach(function (dd) {
+    var input = dd.querySelector('input[type="hidden"]');
+    var btn = dd.querySelector('[role="combobox"]');
+    var list = dd.querySelector('[role="listbox"]');
+    var val = dd.querySelector('.calc-dd__val');
+    var opts = Array.prototype.slice.call(list.querySelectorAll('[role="option"]'));
+
+    function select(o) {
+      opts.forEach(function (x) { x.setAttribute('aria-selected', String(x === o)); });
+      input.value = o.getAttribute('data-v');
+      val.textContent = o.textContent.trim();
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    function openDD() {
+      closeDD();
+      list.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      openList = list;
+    }
+
+    function move(step) {
+      var i = opts.indexOf(opts.filter(function (o) {
+        return o.getAttribute('aria-selected') === 'true';
+      })[0]);
+      var next = opts[(i + step + opts.length) % opts.length];
+      select(next);
+    }
+
+    btn.addEventListener('click', function () {
+      if (list.hidden) { openDD(); } else { closeDD(); }
+    });
+
+    /* The listbox is walked with the arrow keys, but only while it is
+       open — otherwise the calculator's own Tab trap would fight it. */
+    dd.addEventListener('keydown', function (e) {
+      if (list.hidden) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          openDD();
+          move(e.key === 'ArrowDown' ? 1 : -1);
+        }
+        return;
+      }
+      if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+      else if (e.key === 'Home') { e.preventDefault(); select(opts[0]); }
+      else if (e.key === 'End') { e.preventDefault(); select(opts[opts.length - 1]); }
+    });
+
+    opts.forEach(function (o) {
+      o.addEventListener('click', function () {
+        select(o);
+        closeDD();
+        btn.focus();
+      });
+    });
+
+    /* Opening must not also trip the outside-click handler that is
+       about to run for this same click. */
+    list.addEventListener('click', function (e) { e.stopPropagation(); });
   });
 
   var floorsSel = document.getElementById('calcFloors');
@@ -653,9 +869,13 @@ require __DIR__ . '/partials/header.php';
   fabObserve();
 
   fab.addEventListener('click', function () {
-    pop.hidden = false;
-    document.body.style.overflow = 'hidden';
-    if (window.lenis) { window.lenis.stop(); }
+    if (window.openCostCalculator) {
+      window.openCostCalculator(this);
+    } else {
+      pop.hidden = false;
+      document.body.style.overflow = 'hidden';
+      if (window.lenis) { window.lenis.stop(); }
+    }
     onScroll();
   });
 })();

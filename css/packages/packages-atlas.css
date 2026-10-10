@@ -271,13 +271,7 @@
   .atl-sec .sk-spec tr.atl-flash > * { animation: none; }
 }
 
-/* Section rows become full-width cards on mobile — the card already
-   supplies the frame, so the generic table rule is neutralised. */
-@media (max-width: 900px) {
-  .atl-sec .sk-spec tbody tr {
-    margin: .6rem .85rem;
-    border-radius: var(--sk-r-sm);
-  }
-  .atl-sec .sk-spec__sec { margin-inline: .85rem; }
-  .atl-sec .sk-spec td:last-child { border-radius: 0 0 var(--sk-r-sm) var(--sk-r-sm); }
-}
+/* Section rows keep the table grid at every width. The mobile treatment
+   (horizontal scroller, pinned first column) is in
+   css/packages/packages-responsive.css — the rule that used to turn each
+   row into a card below 900px is deliberately absent. */

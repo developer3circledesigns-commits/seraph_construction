@@ -216,6 +216,38 @@
     var materialsTrack = document.getElementById('materialsTrack');
     var materialsProgress = document.getElementById('materialsProgress');
 
+    /* On mobile, pull .h-head out of the GSAP-translated track so the
+       header stays at the top of the pinned panel while cards scroll.
+       On desktop/tablet, ensure it stays inside the track (flex row). */
+    (function setupMaterialsDOM() {
+      var pin = materialsSection && materialsSection.querySelector('.h-pin');
+      var head = materialsSection && materialsSection.querySelector('.h-head');
+      if (!pin || !materialsTrack || !head) return;
+
+      function place() {
+        var isMobile = window.innerWidth <= 767;
+        if (isMobile && head.parentElement === materialsTrack) {
+          pin.insertBefore(head, materialsTrack);
+          materialsSection.setAttribute('data-mobile-head', '1');
+        } else if (!isMobile && head.parentElement !== materialsTrack) {
+          materialsTrack.insertBefore(head, materialsTrack.firstChild);
+          materialsSection.removeAttribute('data-mobile-head');
+        }
+      }
+
+      place();
+
+      /* Keep the head in sync with the CSS breakpoint and re-measure once
+         layout settles (debounced so ScrollTrigger measures the final DOM). */
+      window.addEventListener('resize', function () {
+        clearTimeout(window.__scMaterialsRsz);
+        window.__scMaterialsRsz = setTimeout(function () {
+          place();
+          if (window.ScrollTrigger) ScrollTrigger.refresh(true);
+        }, 180);
+      });
+    })();
+
     if (materialsSection && materialsTrack) {
       var materialsCards = gsap.utils.toArray(materialsTrack.querySelectorAll('.material-card'));
       var materialsBg = materialsSection.querySelector('.materials-bg');
@@ -281,9 +313,15 @@
       };
 
       var materialsTrackDist = null;
+      /* Distance the track must travel so its right edge reaches the viewport
+         right edge. Accounts for the track's own left offset (it can be
+         narrower than, or centred inside, the viewport). */
       var getTrackDist = function () {
         if (materialsTrackDist === null) {
-          materialsTrackDist = Math.max(0, materialsTrack.scrollWidth - window.innerWidth);
+          materialsTrackDist = Math.max(0, function () {
+            var trackLeft = materialsTrack.offsetLeft;
+            return materialsTrack.scrollWidth + trackLeft - window.innerWidth;
+          }());
         }
         return materialsTrackDist;
       };
@@ -308,7 +346,6 @@
           scrub: 0.4,
           invalidateOnRefresh: true,
           anticipatePin: 1,
-          fastScrollEnd: true,
           onUpdate: function (self) {
             if (materialsProgress) {
               materialsProgress.style.width = (self.progress * 100) + '%';
@@ -320,13 +357,16 @@
 
       setMaterialsBg();
 
-      var resizeTimer;
-      window.addEventListener('resize', function () {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function () {
-          ScrollTrigger.refresh();
-        }, 200);
-      });
+      /* Card widths settle once fonts/images land — re-measure then too. */
+      var remeasure = function () {
+        resetMaterialsTrackDist();
+        ScrollTrigger.refresh(true);
+        scheduleMaterialsBg();
+      };
+      window.addEventListener('load', remeasure);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(remeasure);
+      }
 
       window.addEventListener('materials-filter-updated', function () {
         materialsBgIndex = -1;

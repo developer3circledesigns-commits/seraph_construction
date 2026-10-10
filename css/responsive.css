@@ -374,10 +374,10 @@
   }
 }
 
-/* ============ MOBILE (<= 768) ============ */
-@media (max-width: 768px) {
+/* ============ MOBILE (<= 767) ============ */
+@media (max-width: 767px) {
   .topbar {
-    padding: 12px 18px;
+    padding: max(12px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) 12px max(18px, env(safe-area-inset-left));
   }
 
   .topbar .brand img {
@@ -398,52 +398,380 @@
     height: 100dvh;
   }
 
+  /* =====================================================
+     HERO SECTION — MOBILE FULL BACKGROUND IMAGE & OVERLAID CONTENT (<= 767px)
+     100% complete image visible as background with 0 cropping (aspect-ratio: 1672/941)
+     and text contents overlaid above with positive z-index: 10
+     ===================================================== */
+  #hero.blur-panel {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    aspect-ratio: 1672 / 941;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--bg);
+    padding: 0;
+  }
+
+  #hero .blur-panel__media {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: block;
+    margin: 0;
+  }
+
+  #hero .blur-panel__media img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1672 / 941;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+    transform: none !important;
+  }
+
+  #hero .blur-panel__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 20, 49, 0.52) 0%, rgba(0, 20, 49, 0.28) 45%, rgba(0, 20, 49, 0.65) 100%);
+    display: block;
+    z-index: 2;
+  }
+
+  #hero .blur-panel__content.hero__content,
+  .blur-panel__content.hero__content {
+    order: unset;
+    position: relative;
+    z-index: 10;
+    width: min(100%, 94%);
+    max-width: 540px;
+    text-align: center;
+    margin: auto;
+    padding: 0.5rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   .blur-panel__content h1,
   .blur-panel__content h2 {
-    font-size: clamp(30px, 8vw, 40px);
+    font-size: clamp(16px, 4.2vw, 30px);
   }
 
   .blur-panel__content p {
-    font-size: 14px;
+    font-size: clamp(10px, 2.5vw, 13px);
   }
 
   /* Hero section responsive text sizing */
   .hero__content .eyebrow {
-    font-size: 8px;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
+    font-size: clamp(8px, 2.2vw, 11px);
+    letter-spacing: 1.2px;
+    margin-bottom: 4px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
   }
 
   .hero__title .line-inner {
-    font-size: clamp(18px, 5.5vw, 26px);
+    font-size: clamp(14px, 3.8vw, 24px);
+    line-height: 1.18;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.85);
   }
 
   .hero__content p {
-    font-size: 11px;
-    line-height: 1.4;
-    margin-bottom: 14px;
+    font-size: clamp(9px, 2.4vw, 13px);
+    line-height: 1.35;
+    margin-bottom: 8px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
   }
 
   .hero__content .btn {
-    padding: 8px 16px;
-    font-size: 9px;
+    padding: 6px 18px;
+    font-size: clamp(9px, 2.3vw, 12px);
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   }
 
-  /* Center hero content on mobile for better readability */
-  .blur-panel__content.hero__content {
-    width: min(1200px, 92%);
-    max-width: 560px;
-    text-align: center;
-    margin: 0 auto;
-    padding: clamp(2rem, 6vh, 4rem) 5vw clamp(6vh, 12vw, 12rem) 5vw;
-  }
-
+  #hero .hero__content *,
   .blur-panel__content.hero__content h1,
   .blur-panel__content.hero__content h2,
   .blur-panel__content.hero__content p,
+  .blur-panel__content.hero__content .eyebrow,
   .blur-panel__content.hero__content .btn {
+    position: relative;
+    z-index: 10;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  #hero .hero__scroll {
+    display: none;
+  }
+
+  /* =====================================================
+     INTERIORS SECTION (<= 767px) — REDUCED TOP PADDING
+     ===================================================== */
+  #interior.blur-panel,
+  #interior.blur-panel--split {
+    height: auto;
+    min-height: auto;
+    padding-top: 1rem;
+    padding-bottom: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  #interior .blur-card {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  #interior .blur-card img {
+    height: auto;
+    max-height: 280px;
+    object-fit: cover;
+    transform: none;
+  }
+
+  /* =====================================================
+     MATERIALS SECTION (<= 767px) — FULL UNVEILED IMAGES
+     Display full images without any crop or obscuring text/gradients
+     ===================================================== */
+  /* ── Materials: top-centre header + horizontal card scroll ── */
+  #materials.materials-section,
+  .materials-section {
+    padding-top: 0;
+  }
+
+  /* Pin panel becomes a column: header on top, cards below */
+  .materials-section .h-pin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: max(64px, env(safe-area-inset-top));
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  /* Header: centred, full width, sits above the card track */
+  .materials-section .h-head {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 440px;
+    padding: 0 16px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 5;
+  }
+
+  .materials-section .h-head .eyebrow {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+
+  .materials-section .h-head h2 {
+    font-size: clamp(18px, 4.5vw, 24px);
+    line-height: 1.2;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .materials-section .h-head p {
+    font-size: 11px;
+    line-height: 1.4;
+    max-width: 320px;
+    margin: 0 auto 8px;
+    text-align: center;
+  }
+
+  .materials-section__cta {
+    margin: 0 auto 10px;
+    padding: 6px 18px;
+    font-size: 10px;
+    min-height: 34px;
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Filter pills: centred wrap */
+  .materials-section .h-head .materials-filter {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 6px;
+    margin: 0 auto;
+    padding: 0;
+    overflow-x: visible;
+  }
+
+  .materials-section .h-head .materials-filter__btn {
+    flex-shrink: 0;
+    min-height: 30px;
+    min-width: 30px;
+    padding: 3px 7px;
+    font-size: 8px;
+    gap: 2px;
+  }
+
+  .materials-section .h-head .materials-filter__btn i {
+    font-size: 11px;
+  }
+
+  /* Card track: horizontal flex row, GSAP translates this.
+     MUST span the full viewport width — otherwise the centred, content-sized
+     track overflows both edges and only ~half the cards are ever reachable. */
+  .materials-section .h-track {
+    align-self: stretch;
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    align-items: stretch;
+    gap: 14px;
+    padding: 10px 16px 26px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    will-change: transform;
+    z-index: 2;
+  }
+
+  /* Cards — one at a time, always fully inside the pinned panel */
+  .materials-section .material-card {
+    flex: 0 0 min(300px, 78vw);
+    width: min(300px, 78vw);
+    height: auto;
+    max-height: 100%;
+    align-self: center;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: rgba(4, 28, 64, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Remove dark gradient overlay so the image is fully visible */
+  .materials-section .material-card::after {
+    display: none;
+  }
+
+  .materials-section .material-card__img-wrap {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 92px;
+    aspect-ratio: 16 / 10;
+    background: rgba(0, 15, 38, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .materials-section .material-card__img-wrap img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+    transform: none !important;
+  }
+
+  .materials-section .material-card__body {
+    position: relative;
+    inset: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    flex: 0 0 auto;
+    padding: 14px 16px 16px;
+    z-index: 2;
+    text-align: left !important;
+    background: transparent;
+  }
+
+  .materials-section .material-card__body h3 {
+    font-size: clamp(16px, 4vw, 20px);
+    margin-bottom: 2px;
+    color: var(--white);
+    text-align: left;
+  }
+
+  .materials-section .material-card__type {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    color: var(--gold);
+    text-align: left;
+  }
+
+  .materials-section .material-card__specs {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .materials-section .material-card__specs li {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.82);
+    padding-left: 12px;
+    position: relative;
+    text-align: left;
+  }
+
+  .materials-section .material-card__specs li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  /* Progress bar anchored at bottom of pin panel */
+  .materials-section .progress-bar {
+    bottom: 12px;
+    left: 16px;
+    width: calc(100% - 32px);
   }
 }
 
@@ -489,19 +817,22 @@
     grid-template-columns: 1fr;
   }
 
-  /* Hero section responsive text for large phones */
+  /* Hero section responsive text for small phones */
   .hero__content .eyebrow {
-    font-size: 8px;
-    letter-spacing: 1px;
+    font-size: clamp(9px, 2.5vw, 10px);
+    letter-spacing: 1.2px;
+    margin-bottom: 8px;
   }
 
   .hero__title .line-inner {
-    font-size: clamp(18px, 5.5vw, 24px);
+    font-size: clamp(18px, 5.2vw, 24px);
+    line-height: 1.25;
   }
 
   .hero__content p {
-    font-size: 11px;
-    line-height: 1.4;
+    font-size: clamp(12px, 3.2vw, 13px);
+    line-height: 1.45;
+    margin-bottom: 16px;
   }
 
   .projects-story__inner {
@@ -520,7 +851,7 @@
 }
 
 /* ============ TABLET PORTRAIT (768px - 1024px) ============ */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   /* Keep hero content right-middle on tablet portrait */
   .blur-panel__content.hero__content {
     width: min(420px, 48%);
@@ -586,25 +917,10 @@
     width: 20px;
   }
 
-  /* Materials — larger cards, mobile paddings */
-  .materials-section .h-head {
-    flex: 0 0 80vw;
-    min-width: 0;
-  }
-
-  .materials-section .h-track {
-    gap: 24px;
-    padding: 0 8vw;
-  }
-
+  /* Materials — smaller phones: slightly narrower cards */
   .materials-section .material-card {
-    flex-basis: 78vw;
-    height: 52vh;
-  }
-
-  .materials-section .progress-bar {
-    left: 8vw;
-    width: 84vw;
+    flex: 0 0 min(280px, 82vw);
+    width: min(280px, 82vw);
   }
 
   .services-section {
@@ -824,12 +1140,6 @@
 
   .materials-section .material-card {
     flex-basis: 86vw;
-  }
-
-  .materials-section .material-card__body {
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
   }
 
   .materials-section .material-card__body h3 {
@@ -1123,6 +1433,60 @@
     min-height: 60vh;
   }
 
+  /* Materials: landscape phones — same top-centre layout, compact cards */
+  .materials-section .h-pin {
+    padding-top: max(40px, env(safe-area-inset-top));
+  }
+
+  .materials-section .h-head {
+    max-width: 100%;
+    padding: 0 12px;
+  }
+
+  .materials-section .h-head h2 {
+    font-size: clamp(14px, 3.5vw, 18px);
+    margin-bottom: 2px;
+  }
+
+  .materials-section .h-head p {
+    font-size: 10px;
+    margin-bottom: 4px;
+  }
+
+  .materials-section__cta {
+    min-height: 28px;
+    padding: 4px 14px;
+    font-size: 9px;
+    margin-bottom: 6px;
+  }
+
+  .materials-section .material-card {
+    flex: 0 0 min(240px, 46vw);
+    width: min(240px, 46vw);
+  }
+
+  .materials-section .material-card__img-wrap {
+    max-height: 120px;
+    padding: 6px;
+  }
+
+  .materials-section .material-card__body {
+    padding: 8px 12px 10px;
+  }
+
+  .materials-section .material-card__body h3 {
+    font-size: 15px;
+  }
+
+  .materials-section .material-card__type {
+    font-size: 9px;
+    margin-bottom: 4px;
+  }
+
+  .materials-section .material-card__specs li {
+    font-size: 10px;
+  }
+
   .projects-story__inner {
     padding: 40px 4vw 32px;
     gap: 12px;
@@ -1168,6 +1532,28 @@
   .kitchen-sequence__copy-stack {
     min-height: 40vh;
   }
+
+  /* Materials: the header competes with the cards for height on short phones.
+     Drop the intro copy so each material card keeps a usable image. */
+  .materials-section .h-head p {
+    display: none;
+  }
+
+  .materials-section .h-head h2 {
+    margin-bottom: 4px;
+  }
+
+  .materials-section__cta {
+    margin-bottom: 6px;
+  }
+
+  .materials-section .h-head .materials-filter {
+    gap: 2px 4px;
+  }
+
+  .materials-section .material-card__img-wrap {
+    min-height: 110px;
+  }
 }
 
 /* =====================================================
@@ -1210,26 +1596,36 @@
     margin-top: 1.25rem;
   }
 
+  /* Materials: ensure top-centre layout rules apply from this pass too */
   .materials-section .h-head {
-    flex: 0 0 85vw;
-    min-width: 0;
+    flex: 0 0 auto;
   }
 
   .materials-section .h-track {
-    gap: 18px;
-    padding: 0 6vw;
-    min-width: 0;
+    align-self: stretch;
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    align-items: stretch;
+    gap: 14px;
+    padding: 10px 16px 26px;
+    box-sizing: border-box;
   }
 
   .materials-section .material-card {
-    flex-basis: 86vw;
+    flex: 0 0 min(290px, 80vw);
+    width: min(290px, 80vw);
     height: auto;
-    min-height: 46vh;
+    max-height: 100%;
+    align-self: center;
+    min-height: 0;
   }
 
   .materials-section .progress-bar {
-    left: 6vw;
-    width: 88vw;
+    bottom: 12px;
+    left: 16px;
+    width: calc(100% - 32px);
   }
 
   .materials-filter__btn {
@@ -1596,7 +1992,7 @@
    GLOBAL MOBILE — centered text & flex content
    Public marketing pages only; desktop/tablet unchanged
    ===================================================== */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   #main-content,
   #main-content section,
   .site-footer .footer-grid,
@@ -1795,6 +2191,87 @@
     justify-content: center;
     text-align: center;
     width: 100%;
+  }
+
+  /* Prevent iOS automatic viewport zoom & improve touch ergonomics */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  select,
+  textarea,
+  .newsletter-form input,
+  .contact-form__field input,
+  .contact-form__field select,
+  .contact-form__field textarea,
+  .sk-search input,
+  .sk-input {
+    font-size: 16px !important;
+    min-height: 48px;
+    box-sizing: border-box;
+  }
+
+  textarea,
+  .contact-form__field textarea {
+    min-height: 110px;
+  }
+
+  /* Touch target standards (min 44px-48px) */
+  .btn,
+  .btn--solid,
+  .btn--gold,
+  .sk-btn,
+  .contact-form__submit,
+  .login-form__submit,
+  .calcOpen {
+    min-height: 48px;
+    box-sizing: border-box;
+  }
+
+  .login-modal__close {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .toggle-password {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer-social a {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #projectsDots button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .site-footer .footer-links a {
+    display: inline-block;
+    padding: 8px 0;
+    min-height: 38px;
+  }
+
+  /* Safe area insets for notched phones */
+  .mobile-menu {
+    padding-top: max(20px, env(safe-area-inset-top));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+
+  .site-footer {
+    padding-bottom: max(32px, env(safe-area-inset-bottom));
   }
 }
 
