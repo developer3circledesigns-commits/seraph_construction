@@ -42,7 +42,7 @@ include dirname(__DIR__) . '/partials/header.php';
 
 <form method="POST" action="/admin/projects/assign?id=<?php echo (int)$id; ?>">
   <?php echo CSRF::field(); ?>
-  <div class="card" style="max-width:560px">
+  <div class="card narrow">
     <div class="checklist">
       <?php foreach ($admins as $a): ?>
         <label>
@@ -55,7 +55,7 @@ include dirname(__DIR__) . '/partials/header.php';
         </label>
       <?php endforeach; ?>
     </div>
-    <div class="flex mt-2">
+    <div class="card__form-actions">
       <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Save Assignments</button>
       <a href="/admin/projects/view?id=<?php echo (int)$id; ?>" class="btn btn--ghost">Cancel</a>
     </div>

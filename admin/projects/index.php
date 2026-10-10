@@ -45,7 +45,7 @@ include dirname(__DIR__) . '/partials/header.php';
 </div>
 
 <div class="table-wrap">
-  <table class="table">
+  <table class="table table--dense">
     <thead>
       <tr>
         <th>Project</th>
@@ -71,8 +71,8 @@ include dirname(__DIR__) . '/partials/header.php';
         <td class="muted small"><?php echo e($p['location'] ?: '—'); ?></td>
         <td><span class="badge badge--<?php echo e($p['status']); ?>"><?php echo e(str_replace('_', ' ', $p['status'])); ?></span></td>
         <td>
-          <div class="flex" style="min-width:110px">
-            <div class="progress progress--sm" style="flex:1"><div class="progress__bar" style="width:<?php echo (int)$p['progress_percentage']; ?>%"></div></div>
+          <div class="table__progress">
+            <div class="progress progress--sm progress--inline"><div class="progress__bar" style="width:<?php echo (int)$p['progress_percentage']; ?>%"></div></div>
             <span class="small muted"><?php echo (int)$p['progress_percentage']; ?>%</span>
           </div>
         </td>

@@ -83,7 +83,7 @@ include dirname(__DIR__) . '/partials/header.php';
 
 <form method="POST" action="/admin/clients/edit?id=<?php echo (int)$id; ?>">
   <?php echo CSRF::field(); ?>
-  <div class="card" style="max-width:640px">
+  <div class="card narrow--wide">
     <div class="form-group">
       <label class="form-label" for="company_name">Company / Organisation</label>
       <input class="form-control" type="text" id="company_name" name="company_name" value="<?php echo e($old['company_name']); ?>">
@@ -111,14 +111,14 @@ include dirname(__DIR__) . '/partials/header.php';
       <input class="form-control" type="text" id="new_password" name="new_password" minlength="8" value="" placeholder="New password (min 8 chars)" autocomplete="off">
     </div>
     <div class="form-group">
-      <label class="flex" style="cursor:pointer;gap:10px">
-        <input type="checkbox" name="is_active" value="1" style="accent-color:var(--color-gold);width:16px;height:16px"
+      <label class="check-field">
+        <input type="checkbox" name="is_active" value="1" class="check-control"
           <?php echo $old['is_active'] ? 'checked' : ''; ?>>
         <span><strong>Account active</strong> <span class="muted small">(client can log in)</span></span>
       </label>
     </div>
   </div>
-  <div class="flex mt-2">
+  <div class="card__form-actions">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Save Changes</button>
     <a href="/admin/clients" class="btn btn--ghost">Cancel</a>
   </div>
@@ -133,12 +133,12 @@ include dirname(__DIR__) . '/partials/header.php';
     <p class="muted small">No projects assigned to this client yet.</p>
   <?php endif; ?>
   <?php foreach ($projects as $p): ?>
-    <div class="flex flex--between" style="padding:10px 0;border-bottom:1px solid var(--color-border)">
-      <div>
+    <div class="list-row">
+      <div class="list-row__main">
         <strong><?php echo e($p['name']); ?></strong>
         <div class="small muted"><?php echo e($p['location'] ?: ''); ?></div>
       </div>
-      <div class="flex">
+      <div class="list-row__actions">
         <span class="badge badge--<?php echo e($p['status']); ?>"><?php echo e(str_replace('_', ' ', $p['status'])); ?></span>
         <a class="btn btn--secondary btn--sm" href="/admin/projects/view?id=<?php echo (int)$p['id']; ?>" aria-label="View project <?php echo e($p['name']); ?>">View</a>
       </div>

@@ -83,7 +83,7 @@ include dirname(__DIR__) . '/partials/header.php';
 
 <form method="POST" action="/admin/admins/edit?id=<?php echo (int)$id; ?>">
   <?php echo CSRF::field(); ?>
-  <div class="card" style="max-width:560px">
+  <div class="card narrow">
     <div class="form-group">
       <label class="form-label" for="full_name">Full Name *</label>
       <input class="form-control" type="text" id="full_name" name="full_name" required value="<?php echo e($old['full_name']); ?>">
@@ -112,15 +112,15 @@ include dirname(__DIR__) . '/partials/header.php';
       </div>
       <div class="form-group">
         <label class="form-label">Status</label>
-        <label class="flex" style="cursor:pointer;gap:10px;padding-top:12px">
-          <input type="checkbox" name="is_active" value="1" style="accent-color:var(--color-gold);width:16px;height:16px"
+        <label class="check-field">
+          <input type="checkbox" name="is_active" value="1" class="check-control"
             <?php echo $old['is_active'] ? 'checked' : ''; ?>>
           <span>Active</span>
         </label>
       </div>
     </div>
   </div>
-  <div class="flex mt-2">
+  <div class="card__form-actions">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Save Changes</button>
     <a href="/admin/admins" class="btn btn--ghost">Cancel</a>
   </div>

@@ -60,7 +60,7 @@ include dirname(__DIR__) . '/partials/header.php';
 
 <form method="POST" action="/admin/clients/create">
   <?php echo CSRF::field(); ?>
-  <div class="card" style="max-width:640px">
+  <div class="card narrow--wide">
     <div class="form-group">
       <label class="form-label" for="company_name">Company / Organisation</label>
       <input class="form-control" type="text" id="company_name" name="company_name" value="<?php echo e($old['company_name']); ?>" placeholder="e.g. Azure Enterprises">
@@ -89,7 +89,7 @@ include dirname(__DIR__) . '/partials/header.php';
       <div class="form-help">Share this password with the client securely — they'll use it with their email to log in to the client portal.</div>
     </div>
   </div>
-  <div class="flex mt-2">
+  <div class="card__form-actions">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Create Client</button>
     <a href="/admin/clients" class="btn btn--ghost">Cancel</a>
   </div>

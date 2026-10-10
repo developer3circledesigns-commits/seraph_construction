@@ -260,9 +260,9 @@ include dirname(__DIR__) . '/partials/header.php';
     <div class="form-group">
       <label class="form-label" for="thumbnail">Project Thumbnail (card image)</label>
       <?php if (!empty($project['thumbnail']) && file_exists(dirname(__DIR__, 2) . '/' . $project['thumbnail'])): ?>
-        <div class="mb-1">
-          <img src="/<?php echo e($project['thumbnail']); ?>" alt="Current thumbnail" style="max-width:180px;max-height:120px;border-radius:4px;">
-          <label class="small" style="display:inline-flex;align-items:center;gap:4px;margin-left:0.8rem;">
+        <div class="file-preview">
+          <img src="/<?php echo e($project['thumbnail']); ?>" alt="Current thumbnail">
+          <label class="file-preview__check">
             <input type="checkbox" name="delete_thumbnail" value="1"> Remove current
           </label>
         </div>
@@ -274,10 +274,10 @@ include dirname(__DIR__) . '/partials/header.php';
     <div class="form-group">
       <label class="form-label" for="layout_file">Download Layout File</label>
       <?php if ($layout): ?>
-        <div class="mb-1">
+        <div class="file-preview">
           <span class="badge"><i class="fa-solid fa-file"></i> <?php echo e($layout['original_name']); ?></span>
           <span class="small muted">(<?php echo number_format((int)$layout['file_size'] / 1024, 1); ?> KB)</span>
-          <label class="small" style="display:inline-flex;align-items:center;gap:4px;margin-left:0.8rem;">
+          <label class="file-preview__check">
             <input type="checkbox" name="delete_layout" value="1"> Remove current
           </label>
         </div>
@@ -306,7 +306,7 @@ include dirname(__DIR__) . '/partials/header.php';
   </div>
   <?php endif; ?>
 
-  <div class="flex mt-2">
+  <div class="card__form-actions">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Save Changes</button>
     <a href="/admin/projects/view?id=<?php echo (int)$id; ?>" class="btn btn--ghost">Cancel</a>
   </div>

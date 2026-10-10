@@ -218,20 +218,16 @@
   function flashLive(msg) {
     if (!toast) {
       toast = document.createElement('div');
-      toast.style.cssText =
-        'position:fixed;bottom:24px;right:24px;z-index:999;background:#16a34a;color:#fff;' +
-        'padding:12px 18px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.4);' +
-        'font-size:.88rem;transition:opacity .3s,transform .3s;';
+      toast.className = 'toast';
+      toast.setAttribute('role', 'status');
       document.body.appendChild(toast);
+      // Force a reflow so the transition runs on the first message.
+      void toast.offsetWidth;
     }
     toast.textContent = msg;
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateY(0)';
+    toast.classList.add('show');
     clearTimeout(toast._t);
-    toast._t = setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateY(-8px)';
-    }, 4000);
+    toast._t = setTimeout(() => toast.classList.remove('show'), 4000);
   }
 
   /* ---------- Helpers ---------- */
@@ -280,8 +276,8 @@
       Array.from(imageInput.files).forEach((f) => {
         const url = URL.createObjectURL(f);
         const el = document.createElement('div');
-        el.style.cssText = 'position:relative;width:110px;height:82px;border-radius:8px;overflow:hidden;border:1px solid var(--color-border);';
-        el.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
+        el.className = 'preview-item';
+        el.innerHTML = `<img src="${url}" alt="">`;
         preview.appendChild(el);
       });
     }
@@ -308,18 +304,25 @@
   /* ---------- Lightbox ---------- */
   const lightbox = $('#lightbox');
   const lightboxImg = $('#lightboxImg');
-  if (lightbox) {
+  if (lightbox && lightboxImg) {
     document.addEventListener('click', (e) => {
-      const item = e.target.closest('.gallery__item img');
-      if (!item) return;
-      lightboxImg.src = item.src;
+      const img = e.target.closest('.gallery__item:not(.gallery__item--static) img');
+      if (!img) return;
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt || '';
       lightbox.classList.add('open');
     });
     lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox || e.target.closest('.lightbox__close')) lightbox.classList.remove('open');
+      if (e.target === lightbox || e.target.closest('.lightbox__close')) {
+        lightbox.classList.remove('open');
+        lightboxImg.src = '';
+      }
     });
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') lightbox.classList.remove('open');
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) {
+        lightbox.classList.remove('open');
+        lightboxImg.src = '';
+      }
     });
   }
 

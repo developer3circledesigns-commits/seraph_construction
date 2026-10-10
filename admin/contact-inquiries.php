@@ -58,13 +58,13 @@ include __DIR__ . '/partials/header.php';
     <p class="muted small">Filter by name, email, phone, or service type.</p>
   </div>
 
-  <form method="GET" action="/admin/contact-inquiries" class="filter-form" style="max-width:400px">
+  <form method="GET" action="/admin/contact-inquiries" class="filter-form">
     <div class="form-group">
       <label class="form-label" for="search">Search</label>
-      <input class="form-control" type="text" id="search" name="search" placeholder="Search by name, email, phone..." value="<?php echo e($search); ?>">
+      <input class="form-control" type="search" id="search" name="search" placeholder="Search name, email, phone..." value="<?php echo e($search); ?>">
     </div>
     <button class="btn btn--primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Filter</button>
-    <a href="/admin/contact-inquiries" class="btn btn--secondary" style="margin-left:8px">Clear</a>
+    <a href="/admin/contact-inquiries" class="btn btn--secondary">Clear</a>
   </form>
 </div>
 
@@ -84,7 +84,7 @@ include __DIR__ . '/partials/header.php';
     </div>
   <?php else: ?>
     <div class="table-wrap">
-      <table class="table">
+      <table class="table table--dense">
         <thead>
           <tr>
             <th>Client</th>
@@ -93,7 +93,7 @@ include __DIR__ . '/partials/header.php';
             <th>Service</th>
             <th>Estimate</th>
             <th>Date</th>
-            <th style="width:180px;">Actions</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -118,7 +118,7 @@ include __DIR__ . '/partials/header.php';
     </div>
 
     <?php if ($pages > 1): ?>
-      <nav class="pagination" aria-label="Enquiries pagination" style="margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+      <nav class="pagination" aria-label="Enquiries pagination">
         <?php
         $buildPageUrl = function (int $p) use ($queryBase, $queryParams): string {
             $params = array_merge($queryParams, ['page' => $p]);
@@ -128,7 +128,7 @@ include __DIR__ . '/partials/header.php';
         <?php if ($page > 1): ?>
           <a class="btn btn--secondary btn--sm" href="<?php echo e($buildPageUrl($page - 1)); ?>">&larr; Previous</a>
         <?php endif; ?>
-        <span class="small muted" style="align-self:center">Page <?php echo $page; ?> of <?php echo $pages; ?></span>
+        <span class="small muted">Page <?php echo $page; ?> of <?php echo $pages; ?></span>
         <?php if ($page < $pages): ?>
           <a class="btn btn--secondary btn--sm" href="<?php echo e($buildPageUrl($page + 1)); ?>">Next &rarr;</a>
         <?php endif; ?>

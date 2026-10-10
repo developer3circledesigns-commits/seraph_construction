@@ -254,7 +254,7 @@ include dirname(__DIR__) . '/partials/header.php';
     </div>
   </div>
 
-  <div class="flex mt-2">
+  <div class="card__form-actions">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Create Project</button>
     <a href="/admin/projects" class="btn btn--ghost">Cancel</a>
   </div>

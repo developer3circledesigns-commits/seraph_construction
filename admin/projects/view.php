@@ -47,7 +47,7 @@ include dirname(__DIR__) . '/partials/header.php';
   </div>
 </div>
 
-<div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+<div class="stats-grid stats-grid--compact">
   <div class="stat-card">
     <div class="stat-card__label">Status</div>
     <div class="stat-card__value"><span class="badge badge--<?php echo e($project['status']); ?>"><?php echo e(str_replace('_', ' ', $project['status'])); ?></span></div>
@@ -62,7 +62,7 @@ include dirname(__DIR__) . '/partials/header.php';
   </div>
   <div class="stat-card">
     <div class="stat-card__label">Budget</div>
-    <div class="stat-card__value small" style="font-size:1.05rem"><?php echo $project['budget'] ? money($project['budget']) : '—'; ?></div>
+    <div class="stat-card__value stat-card__value--text"><?php echo $project['budget'] ? money($project['budget']) : '—'; ?></div>
   </div>
 </div>
 
@@ -102,7 +102,7 @@ include dirname(__DIR__) . '/partials/header.php';
                 <?php foreach ($images as $img): ?>
                   <div class="gallery__item">
                     <img src="/image?id=<?php echo $img; ?>" alt="Update photo" loading="lazy">
-                    <div class="image-id" style="display:none;"><?php echo $img; ?></div>
+                    <div class="image-id"><?php echo $img; ?></div>
                   </div>
                 <?php endforeach; ?>
               </div>
@@ -130,34 +130,34 @@ include dirname(__DIR__) . '/partials/header.php';
   <div>
     <div class="card">
       <h2 class="card__title mb-2">Project Info</h2>
-      <div class="small">
-        <div class="flex flex--between mb-1"><span class="muted">Client</span><strong><?php echo e($project['company_name'] ?: '—'); ?></strong></div>
-        <div class="flex flex--between mb-1"><span class="muted">Contact</span><strong><?php echo e($project['contact_person'] ?: '—'); ?></strong></div>
-        <div class="flex flex--between mb-1"><span class="muted">Email</span><strong><?php echo e($project['client_email'] ?: '—'); ?></strong></div>
-        <?php if ($project['category']): ?><div class="flex flex--between mb-1"><span class="muted">Category</span><strong><?php echo e($project['category']); ?></strong></div><?php endif; ?>
-        <?php if ($project['location']): ?><div class="flex flex--between mb-1"><span class="muted">Location</span><strong><?php echo e($project['location']); ?></strong></div><?php endif; ?>
-        <?php if ($project['plot_size']): ?><div class="flex flex--between mb-1"><span class="muted">Plot Size</span><strong><?php echo e($project['plot_size']); ?></strong></div><?php endif; ?>
-        <?php if ($project['built_up_area']): ?><div class="flex flex--between mb-1"><span class="muted">Built-up Area</span><strong><?php echo e($project['built_up_area']); ?></strong></div><?php endif; ?>
-        <?php if ($project['floors'] !== null): ?><div class="flex flex--between mb-1"><span class="muted">Floors</span><strong><?php echo (int)$project['floors']; ?></strong></div><?php endif; ?>
-        <?php if ($project['bedrooms'] !== null): ?><div class="flex flex--between mb-1"><span class="muted">Bedrooms</span><strong><?php echo (int)$project['bedrooms']; ?></strong></div><?php endif; ?>
-        <?php if ($project['bathrooms'] !== null): ?><div class="flex flex--between mb-1"><span class="muted">Bathrooms</span><strong><?php echo (int)$project['bathrooms']; ?></strong></div><?php endif; ?>
-        <?php if ($project['style']): ?><div class="flex flex--between mb-1"><span class="muted">Style</span><strong><?php echo e($project['style']); ?></strong></div><?php endif; ?>
-        <hr style="border-color:var(--color-surface-2);margin:0.6rem 0;">
-        <div class="flex flex--between mb-1"><span class="muted">Start</span><strong><?php echo e($project['start_date'] ? date('d M Y', strtotime($project['start_date'])) : '—'); ?></strong></div>
-        <div class="flex flex--between mb-1"><span class="muted">Est. End</span><strong><?php echo e($project['estimated_end_date'] ? date('d M Y', strtotime($project['estimated_end_date'])) : '—'); ?></strong></div>
-        <div class="flex flex--between mb-1"><span class="muted">Created</span><strong><?php echo e(date('d M Y', strtotime($project['created_at']))); ?></strong></div>
+      <div class="detail-list small">
+        <div class="flex"><span class="detail-list__label">Client</span><strong class="detail-list__value"><?php echo e($project['company_name'] ?: '—'); ?></strong></div>
+        <div class="flex"><span class="detail-list__label">Contact</span><strong class="detail-list__value"><?php echo e($project['contact_person'] ?: '—'); ?></strong></div>
+        <div class="flex"><span class="detail-list__label">Email</span><strong class="detail-list__value"><?php echo e($project['client_email'] ?: '—'); ?></strong></div>
+        <?php if ($project['category']): ?><div class="flex"><span class="detail-list__label">Category</span><strong class="detail-list__value"><?php echo e($project['category']); ?></strong></div><?php endif; ?>
+        <?php if ($project['location']): ?><div class="flex"><span class="detail-list__label">Location</span><strong class="detail-list__value"><?php echo e($project['location']); ?></strong></div><?php endif; ?>
+        <?php if ($project['plot_size']): ?><div class="flex"><span class="detail-list__label">Plot Size</span><strong class="detail-list__value"><?php echo e($project['plot_size']); ?></strong></div><?php endif; ?>
+        <?php if ($project['built_up_area']): ?><div class="flex"><span class="detail-list__label">Built-up Area</span><strong class="detail-list__value"><?php echo e($project['built_up_area']); ?></strong></div><?php endif; ?>
+        <?php if ($project['floors'] !== null): ?><div class="flex"><span class="detail-list__label">Floors</span><strong class="detail-list__value"><?php echo (int)$project['floors']; ?></strong></div><?php endif; ?>
+        <?php if ($project['bedrooms'] !== null): ?><div class="flex"><span class="detail-list__label">Bedrooms</span><strong class="detail-list__value"><?php echo (int)$project['bedrooms']; ?></strong></div><?php endif; ?>
+        <?php if ($project['bathrooms'] !== null): ?><div class="flex"><span class="detail-list__label">Bathrooms</span><strong class="detail-list__value"><?php echo (int)$project['bathrooms']; ?></strong></div><?php endif; ?>
+        <?php if ($project['style']): ?><div class="flex"><span class="detail-list__label">Style</span><strong class="detail-list__value"><?php echo e($project['style']); ?></strong></div><?php endif; ?>
+        <hr>
+        <div class="flex"><span class="detail-list__label">Start</span><strong class="detail-list__value"><?php echo e($project['start_date'] ? date('d M Y', strtotime($project['start_date'])) : '—'); ?></strong></div>
+        <div class="flex"><span class="detail-list__label">Est. End</span><strong class="detail-list__value"><?php echo e($project['estimated_end_date'] ? date('d M Y', strtotime($project['estimated_end_date'])) : '—'); ?></strong></div>
+        <div class="flex"><span class="detail-list__label">Created</span><strong class="detail-list__value"><?php echo e(date('d M Y', strtotime($project['created_at']))); ?></strong></div>
       </div>
     </div>
 
     <div class="card">
       <h2 class="card__title mb-2">Layout File</h2>
       <?php if ($layout): ?>
-        <div class="small">
-          <div class="flex flex--between mb-1"><span class="muted">File</span><strong><?php echo e($layout['original_name']); ?></strong></div>
-          <div class="flex flex--between mb-1"><span class="muted">Type</span><strong><?php echo e($layout['file_type']); ?></strong></div>
-          <div class="flex flex--between mb-1"><span class="muted">Size</span><strong><?php echo number_format((int)$layout['file_size'] / 1024, 1); ?> KB</strong></div>
-          <a href="/download-layout.php?id=<?php echo (int)$id; ?>" class="btn btn--secondary btn--sm mt-1"><i class="fa-solid fa-download"></i> Download</a>
+        <div class="detail-list small">
+          <div class="flex"><span class="detail-list__label">File</span><strong class="detail-list__value"><?php echo e($layout['original_name']); ?></strong></div>
+          <div class="flex"><span class="detail-list__label">Type</span><strong class="detail-list__value"><?php echo e($layout['file_type']); ?></strong></div>
+          <div class="flex"><span class="detail-list__label">Size</span><strong class="detail-list__value"><?php echo number_format((int)$layout['file_size'] / 1024, 1); ?> KB</strong></div>
         </div>
+        <a href="/download-layout.php?id=<?php echo (int)$id; ?>" class="btn btn--secondary btn--sm mt-1"><i class="fa-solid fa-download"></i> Download</a>
       <?php else: ?>
         <p class="muted small">No layout file uploaded.</p>
       <?php endif; ?>
@@ -168,12 +168,14 @@ include dirname(__DIR__) . '/partials/header.php';
       <?php if (empty($assignedAdmins)): ?>
         <p class="muted small">No admins assigned.</p>
       <?php endif; ?>
+      <div class="detail-list small">
       <?php foreach ($assignedAdmins as $a): ?>
-        <div class="flex flex--between mb-1">
-          <span><i class="fa-solid fa-user-shield muted"></i> <?php echo e($a['full_name']); ?></span>
-          <span class="badge <?php echo $a['role'] === 'super_admin' ? 'badge--milestone' : ''; ?>" style="background:var(--color-surface-2);color:var(--color-text-muted)"><?php echo e($a['role']); ?></span>
+        <div class="flex">
+          <span class="detail-list__label"><i class="fa-solid fa-user-shield muted"></i> <?php echo e($a['full_name']); ?></span>
+          <span class="detail-list__value"><span class="badge <?php echo $a['role'] === 'super_admin' ? 'badge--milestone' : ''; ?>" style="background:var(--color-surface-2);color:var(--color-text-muted)"><?php echo e($a['role']); ?></span></span>
         </div>
       <?php endforeach; ?>
+      </div>
     </div>
   </div>
 </div>

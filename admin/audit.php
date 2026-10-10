@@ -21,7 +21,7 @@ include __DIR__ . '/partials/header.php';
 </div>
 
 <div class="table-wrap">
-  <table class="table">
+  <table class="table table--dense">
     <thead>
       <tr>
         <th>When</th>

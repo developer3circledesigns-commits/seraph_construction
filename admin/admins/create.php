@@ -54,7 +54,7 @@ include dirname(__DIR__) . '/partials/header.php';
 
 <form method="POST" action="/admin/admins/create">
   <?php echo CSRF::field(); ?>
-  <div class="card" style="max-width:560px">
+  <div class="card narrow">
     <div class="form-group">
       <label class="form-label" for="full_name">Full Name *</label>
       <input class="form-control" type="text" id="full_name" name="full_name" required value="<?php echo e($old['full_name']); ?>">
@@ -82,7 +82,7 @@ include dirname(__DIR__) . '/partials/header.php';
       <div class="form-help">Super admins see all projects and can manage other admins.</div>
     </div>
   </div>
-  <div class="flex mt-2">
+  <div class="card__form-actions">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Create Admin</button>
     <a href="/admin/admins" class="btn btn--ghost">Cancel</a>
   </div>

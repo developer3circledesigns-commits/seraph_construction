@@ -102,7 +102,7 @@ include __DIR__ . '/partials/header.php';
         <a href="/admin/projects" class="btn btn--ghost btn--sm">View all</a>
       </div>
       <div class="table-wrap">
-        <table class="table">
+        <table class="table table--dense">
           <thead>
             <tr>
               <th>Project</th>
@@ -122,8 +122,8 @@ include __DIR__ . '/partials/header.php';
               <td class="muted"><?php echo e($p['company_name'] ?: $p['contact_person']); ?></td>
               <td><span class="badge badge--<?php echo e($p['status']); ?>"><?php echo e(str_replace('_', ' ', $p['status'])); ?></span></td>
               <td>
-                <div class="flex" style="min-width:110px">
-                  <div class="progress progress--sm" style="flex:1"><div class="progress__bar" style="width:<?php echo (int)$p['progress_percentage']; ?>%"></div></div>
+                <div class="table__progress">
+                  <div class="progress progress--sm progress--inline"><div class="progress__bar" style="width:<?php echo (int)$p['progress_percentage']; ?>%"></div></div>
                   <span class="small muted"><?php echo (int)$p['progress_percentage']; ?>%</span>
                 </div>
               </td>
@@ -145,7 +145,7 @@ include __DIR__ . '/partials/header.php';
         <p class="muted small">No updates posted yet.</p>
       <?php endif; ?>
       <?php foreach ($recentUpdates as $u): ?>
-        <a href="/admin/projects/view?id=<?php echo (int)$u['project_id']; ?>" class="dashboard-update-row" style="display:block;padding:10px 0;border-bottom:1px solid var(--color-border);text-decoration:none;color:inherit">
+        <a href="/admin/projects/view?id=<?php echo (int)$u['project_id']; ?>" class="dashboard-update-row">
           <div class="flex flex--between">
             <strong class="small"><?php echo e($u['project_name']); ?></strong>
             <span class="badge badge--<?php echo e($u['status']); ?>"><?php echo e(str_replace('_', ' ', $u['status'])); ?></span>
@@ -161,13 +161,13 @@ include __DIR__ . '/partials/header.php';
   </div>
 </div>
 
-<div class="card" style="margin-top:18px">
+<div class="card mt-2">
   <div class="card__header">
     <h2 class="card__title">Most Recent Contact Enquiries</h2>
     <a href="/admin/contact-inquiries" class="btn btn--ghost btn--sm">View all</a>
   </div>
   <div class="table-wrap">
-    <table class="table">
+    <table class="table table--dense">
       <thead>
         <tr>
           <th>Client</th>

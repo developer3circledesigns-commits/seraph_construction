@@ -179,19 +179,19 @@ include __DIR__ . '/../partials/header.php';
         <div>Drag & drop images here, or click to browse</div>
         <input type="file" name="images[]" id="imageInput" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
       </div>
-      <div class="flex flex--wrap mt-1" id="preview"></div>
+      <div class="preview-grid" id="preview"></div>
     </div>
 
     <div class="form-group">
-      <label class="flex" style="cursor:pointer;gap:10px">
-        <input type="checkbox" name="is_milestone" value="1" style="accent-color:var(--color-gold);width:16px;height:16px"
+      <label class="check-field">
+        <input type="checkbox" name="is_milestone" value="1" class="check-control"
           <?php echo !empty($old['is_milestone']) ? 'checked' : ''; ?>>
         <span><strong>Mark as Milestone</strong> <span class="muted small">(e.g. foundation done, slab pour, roof complete)</span></span>
       </label>
     </div>
   </div>
 
-  <div class="flex mt-2">
+  <div class="card__form-actions">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-paper-plane"></i> Post Update</button>
     <a href="/admin/projects/view?id=<?php echo (int)$projectId; ?>" class="btn btn--ghost">Cancel</a>
   </div>

@@ -175,11 +175,11 @@ include __DIR__ . '/../partials/header.php';
         <label class="form-label">Current Photos</label>
         <div class="gallery">
           <?php foreach ($existingImages as $img): ?>
-            <div class="gallery__item" style="cursor:default">
+            <div class="gallery__item gallery__item--static">
               <img src="/image?id=<?php echo $img; ?>" alt="Existing">
-              <div class="image-id" style="display:none;"><?php echo $img; ?></div>
+              <div class="image-id"><?php echo $img; ?></div>
               <button type="button" class="remove-img-btn" data-id="<?php echo $img; ?>"
-                style="position:absolute;top:6px;right:6px;background:rgba(224,91,91,0.9);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer" title="Remove photo">
+                title="Remove photo" aria-label="Remove photo">
                 <i class="fa-solid fa-xmark"></i>
               </button>
             </div>
@@ -196,19 +196,19 @@ include __DIR__ . '/../partials/header.php';
         <div>Drag & drop images here, or click to browse</div>
         <input type="file" name="images[]" id="imageInput" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
       </div>
-      <div class="flex flex--wrap mt-1" id="preview"></div>
+      <div class="preview-grid" id="preview"></div>
     </div>
 
     <div class="form-group">
-      <label class="flex" style="cursor:pointer;gap:10px">
-        <input type="checkbox" name="is_milestone" value="1" style="accent-color:var(--color-gold);width:16px;height:16px"
+      <label class="check-field">
+        <input type="checkbox" name="is_milestone" value="1" class="check-control"
           <?php echo !empty($old['is_milestone']) ? 'checked' : ''; ?>>
         <span><strong>Mark as Milestone</strong></span>
       </label>
     </div>
   </div>
 
-  <div class="flex mt-2">
+  <div class="card__form-actions">
     <button type="submit" class="btn btn--primary"><i class="fa-solid fa-check"></i> Save Changes</button>
     <a href="/admin/projects/view?id=<?php echo (int)$project['id']; ?>" class="btn btn--ghost">Cancel</a>
   </div>

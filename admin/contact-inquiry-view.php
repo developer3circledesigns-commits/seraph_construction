@@ -38,47 +38,47 @@ include __DIR__ . '/partials/header.php';
   </div>
 </div>
 
-<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:stretch">
-<div class="card" style="flex:1 1 260px;padding:14px 16px;margin-top:0">
+<div class="enquiry-grid">
+<div class="card">
   <div class="card__header">
-    <h2>Contact Details</h2>
+    <h2 class="card__title">Contact Details</h2>
   </div>
-  <div class="small">
-    <div class="flex flex--between mb-1"><span class="muted">Full Name</span><strong><?php echo e($inquiry['full_name']); ?></strong></div>
-    <div class="flex flex--between mb-1"><span class="muted">Email</span><a href="mailto:<?php echo e($inquiry['email']); ?>"><?php echo e($inquiry['email']); ?></a></div>
-    <div class="flex flex--between mb-1"><span class="muted">Phone</span><a href="tel:<?php echo e(preg_replace('/\D/', '', (string)$inquiry['phone'])); ?>"><?php echo e($inquiry['phone']); ?></a></div>
-    <div class="flex flex--between mb-1"><span class="muted">Service Type</span><strong><?php echo e(ContactInquiry::serviceLabel($inquiry['service_type'] ?? null)); ?></strong></div>
-    <div class="flex flex--between mb-1"><span class="muted">Submitted</span><strong><?php echo e(date('d M Y, h:i A', strtotime((string)$inquiry['created_at']))); ?></strong></div>
+  <div class="detail-list small">
+    <div class="flex"><span class="detail-list__label">Full Name</span><strong class="detail-list__value"><?php echo e($inquiry['full_name']); ?></strong></div>
+    <div class="flex"><span class="detail-list__label">Email</span><a class="detail-list__value" href="mailto:<?php echo e($inquiry['email']); ?>"><?php echo e($inquiry['email']); ?></a></div>
+    <div class="flex"><span class="detail-list__label">Phone</span><a class="detail-list__value" href="tel:<?php echo e(preg_replace('/\D/', '', (string)$inquiry['phone'])); ?>"><?php echo e($inquiry['phone']); ?></a></div>
+    <div class="flex"><span class="detail-list__label">Service Type</span><strong class="detail-list__value"><?php echo e(ContactInquiry::serviceLabel($inquiry['service_type'] ?? null)); ?></strong></div>
+    <div class="flex"><span class="detail-list__label">Submitted</span><strong class="detail-list__value"><?php echo e(date('d M Y, h:i A', strtotime((string)$inquiry['created_at']))); ?></strong></div>
     <?php if (!empty($inquiry['ip_address'])): ?>
-    <div class="flex flex--between mb-1"><span class="muted">IP Address</span><span><?php echo e($inquiry['ip_address']); ?></span></div>
+    <div class="flex"><span class="detail-list__label">IP Address</span><span class="detail-list__value"><?php echo e($inquiry['ip_address']); ?></span></div>
     <?php endif; ?>
   </div>
 </div>
 
 <?php $calcView = !empty($inquiry['calc_json']) ? json_decode((string)$inquiry['calc_json'], true) : null; ?>
 <?php if (is_array($calcView)): ?>
-<div class="card" style="flex:1 1 260px;padding:14px 16px;margin-top:0">
+<div class="card">
   <div class="card__header">
-    <h2>Cost Calculator Estimate</h2>
+    <h2 class="card__title">Cost Calculator Estimate</h2>
   </div>
-  <div class="small">
-    <div class="flex flex--between mb-1"><span class="muted">Package</span><strong><?php echo e(ucfirst((string)$calcView['package'])); ?> @ ₹<?php echo inr_format($calcView['rate']); ?>/sqft</strong></div>
+  <div class="detail-list small">
+    <div class="flex"><span class="detail-list__label">Package</span><strong class="detail-list__value"><?php echo e(ucfirst((string)$calcView['package'])); ?> @ ₹<?php echo inr_format($calcView['rate']); ?>/sqft</strong></div>
     <?php foreach ((array)($calcView['floors'] ?? []) as $f): ?>
-      <div class="flex flex--between mb-1"><span class="muted"><?php echo e($f['label']); ?></span><strong><?php echo e((string)$f['area']); ?> sqft</strong></div>
+      <div class="flex"><span class="detail-list__label"><?php echo e($f['label']); ?></span><strong class="detail-list__value"><?php echo e((string)$f['area']); ?> sqft</strong></div>
     <?php endforeach; ?>
-    <div class="flex flex--between mb-1"><span class="muted">RCC Water Sump</span><strong><?php echo e((string)$calcView['sump_ltr']); ?> ltr</strong></div>
-    <div class="flex flex--between mb-1"><span class="muted">Septic Tank</span><strong><?php echo e((string)$calcView['septic_ltr']); ?> ltr</strong></div>
-    <div class="flex flex--between mb-1"><span class="muted">Compound Wall</span><strong><?php echo e((string)$calcView['wall_l']); ?> × <?php echo e((string)$calcView['wall_h']); ?> sqft</strong></div>
-    <div class="flex flex--between mb-1"><span class="muted"><strong>Estimated Total</strong></span><strong>₹<?php echo inr_format($calcView['total']); ?></strong></div>
+    <div class="flex"><span class="detail-list__label">RCC Water Sump</span><strong class="detail-list__value"><?php echo e((string)$calcView['sump_ltr']); ?> ltr</strong></div>
+    <div class="flex"><span class="detail-list__label">Septic Tank</span><strong class="detail-list__value"><?php echo e((string)$calcView['septic_ltr']); ?> ltr</strong></div>
+    <div class="flex"><span class="detail-list__label">Compound Wall</span><strong class="detail-list__value"><?php echo e((string)$calcView['wall_l']); ?> × <?php echo e((string)$calcView['wall_h']); ?> sqft</strong></div>
+    <div class="flex"><span class="detail-list__label"><strong>Estimated Total</strong></span><strong class="detail-list__value">₹<?php echo inr_format($calcView['total']); ?></strong></div>
   </div>
 </div>
 <?php endif; ?>
 
-<div class="card" style="flex:2 1 320px;padding:14px 16px;margin-top:0">
+<div class="card enquiry-card--wide">
   <div class="card__header">
-    <h2>Message</h2>
+    <h2 class="card__title">Message</h2>
   </div>
-  <p class="small" style="white-space:pre-wrap;line-height:1.7"><?php echo e(trim((string)($inquiry['message'] ?? '')) !== '' ? $inquiry['message'] : '(Not provided)'); ?></p>
+  <p class="small" style="white-space:pre-wrap;line-height:1.7;overflow-wrap:anywhere"><?php echo e(trim((string)($inquiry['message'] ?? '')) !== '' ? $inquiry['message'] : '(Not provided)'); ?></p>
 </div>
 </div>
 
